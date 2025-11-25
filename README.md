@@ -143,39 +143,102 @@ Propor, testar e validar um conjunto inicial de métricas estruturais específic
 
 ## 4. Escopo e contexto do experimento
 ### 4.1 Escopo funcional / de processo (incluído e excluído)
-Explique claramente o que será coberto (atividades, artefatos, equipes, módulos) e o que ficará fora do experimento, para evitar interpretações divergentes.
+
+**Incluído no experimento**: 
+- Componentes React em JavaScript ou TypeScript presentes em projetos open-source de médio/grande porte tanto sistemas React quanto Next.js.
+- Análise estática dos componentes usando AST (Babel Parser, TypeScript Compiler API e ESLint Rules).
+- Métricas estruturais definidas no GQM (complexidade, acoplamento, tamanho, violações de hooks, uso de subcomponentes etc.).
+- Aplicação das métricas em repositórios selecionados e comparação entre componentes.
+- Avaliação qualitativa por especialistas sobre utilidade e validade das métricas.
+  
+**Excluído do experimento:**
+- Métricas de desempenho em tempo de execução.
+- Avaliação de UX, design visual ou qualidade subjetiva da interface.
+- Código não relacionado a componentes React (ex.: utils, serviços, configurações).
+- Métricas específicas de frameworks externos (Next.js, Remix), a menos que envolvam componentes React.
 
 ### 4.2 Contexto do estudo (tipo de organização, projeto, experiência)
-Caracterize o contexto em que o estudo ocorrerá: tipo e tamanho de organização, tipo de projeto, criticidade e perfil de experiência dos participantes.
+
+O experimento ocorrerá em ambiente acadêmico, utilizando:
+- Projetos React open-source populares, com histórico de commits e múltiplos contribuidores.
+- Repositórios variando entre **50 e 500+ componentes**, permitindo análise heterogênea.
+- Participação eventual de **2 a 4 desenvolvedores experientes** (avaliadores) com prática em React, para julgamento qualitativo de algumas métricas.
+
+O objetivo é simular um cenário de engenharia de software realista, mas controlado, permitindo replicabilidade.
 
 ### 4.3 Premissas
-Liste as suposições consideradas verdadeiras para o plano funcionar (por exemplo, disponibilidade de ambiente, estabilidade do sistema), mesmo que não possam ser garantidas.
+
+- Os projetos open-source selecionados permanecerão acessíveis durante a execução.
+- As ferramentas de análise estática serão capazes de processar todos os componentes analisados.
+- Os especialistas convidados terão disponibilidade para revisar e avaliar as métricas qualitativas.
+- O histórico de commits dos projetos contém informação suficiente para medir crescimento estrutural (M5).
+- As métricas definidas são aplicáveis a componentes funcionais (forma dominante no React atual).
 
 ### 4.4 Restrições
-Registre limitações práticas como tempo, orçamento, ferramentas, acessos ou regras organizacionais que impõem limites ao desenho.
+
+- Tempo limitado para análise manual e para entrevistas com especialistas.
+- Ferramentas de AST podem apresentar limitações com sintaxes menos comuns ou configurações específicas.
+- Amostragem restrita a repositórios open-source, podendo não refletir o contexto de empresas.
+- A extração de métricas históricas depende da estrutura do repositório (granularidade dos commits).
 
 ### 4.5 Limitações previstas
-Explique fatores que podem prejudicar a generalização dos resultados (validez externa), como contexto muito específico ou amostra pouco representativa.
+
+- **Validade externa:** resultados podem não generalizar para equipes com padrões internos muito específicos.
+- **Validade de construto:** algumas métricas podem capturar parcialmente um antipadrão, não sua totalidade.
+- **Validade estatística:** sample size limitado pode reduzir poder inferencial.
+- **Viés de seleção:** escolha dos repositórios pode influenciar os resultados.
 
 ## 5. Stakeholders e impacto esperado
 ### 5.1 Stakeholders principais
-Liste os grupos ou papéis que têm interesse ou serão impactados pelo experimento (por exemplo, devs, QA, produto, gestores, clientes internos).
+
+- **Pesquisador.**
+- **Desenvolvedores de React.**
+- **Arquitetos de software frontend.**
+- **Comunidade acadêmica em engenharia de software.**
 
 ### 5.2 Interesses e expectativas dos stakeholders
-Descreva o que cada grupo espera obter do experimento (insights, evidências, validação de decisão, mitigação de risco, etc.).
+
+| Stakeholder     | Interesse / Expectativa                                                                   |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| Pesquisador     | Validar a viabilidade, utilidade e consistência das métricas propostas.                   |
+| Desenvolvedores | Obter métricas objetivas para apoiar refatorações, manutenção e revisão de código.        |
+| Arquitetos      | Ferramentas para detectar degradação estrutural ao longo do ciclo de vida do projeto.     |
+| Academia        | Produzir evidências empíricas sobre métricas estruturais aplicadas a frameworks modernos. |
 
 ### 5.3 Impactos potenciais no processo / produto
-Antecipe como a execução do experimento pode afetar prazos, qualidade, carga de trabalho ou o próprio produto durante e após o estudo.
+
+- Introdução de métricas úteis para orientar decisões de refatoração.
+- Identificação de componentes candidatos a melhoria ou redesign.
+- Criação de uma base empírica para futuros estudos sobre qualidade de componentes no ecossistema React.
+- Possível adoção preliminar das métricas (ou de subset delas) por equipes de desenvolvimento.
 
 ## 6. Riscos de alto nível, premissas e critérios de sucesso
 ### 6.1 Riscos de alto nível (negócio, técnicos, etc.)
-Identifique os principais riscos para negócio e tecnologia (atrasos, falhas de ambiente, indisponibilidade de dados, etc.) em nível macro.
+
+| Categoria      | Risco                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------- |
+| Técnico        | Ferramentas de análise podem falhar com certos padrões de código ou sintaxes avançadas.     |
+| Organizacional | Indisponibilidade de especialistas para avaliação qualitativa.                              |
+| Científico     | Métricas definidas podem não apresentar correlação clara com antipadrões.                   |
+| Operacional    | Tempo insuficiente para processar todos os repositórios ou componentes desejados.           |
+| Dados          | Repositórios podem ter histórico de commits granular insuficiente para métricas históricas. |
 
 ### 6.2 Critérios de sucesso globais (go / no-go)
-Defina as condições sob as quais o experimento será considerado útil e viável, inclusive critérios que sustentem uma decisão de seguir ou não com mudanças.
+
+O experimento será considerado **bem-sucedido** se:
+- Um conjunto mínimo viável de métricas estruturais (≥ 8) puder ser definido e operacionalizado.
+- As métricas forem aplicáveis em pelo menos 80% dos componentes analisados.
+- A análise empírica mostrar variação real das métricas entre componentes saudáveis e degradados.
+- Pelo menos dois especialistas confirmarem utilidade parcial ou total das métricas.
+- Houver evidência de que algumas métricas correlacionam-se com antipadrões observados.
 
 ### 6.3 Critérios de parada antecipada (pré-execução)
-Descreva situações em que o experimento deve ser adiado ou cancelado antes de começar (falta de recursos críticos, reprovação ética, mudanças de contexto).
+
+O experimento será suspenso antes de iniciar caso:
+- Não haja repositórios adequados para análise (tamanho, histórico, estrutura).
+- As ferramentas de análise estática não consigam ser configuradas para operar no ambiente definido.
+- Falta completa de disponibilidade de especialistas para avaliação qualitativa.
+- Mudança significativa no escopo que inviabilize o objetivo original do experimento.
 
 7. Modelo conceitual e hipóteses
 7.1 Modelo conceitual do experimento
