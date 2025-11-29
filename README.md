@@ -1,10 +1,10 @@
 # Plano de Experimento – Scoping e Planejamento
 ## 1. Identificação básica
 ### 1.1 Título do experimento
-Proposição e Validação Experimental de Métricas Estruturais para Avaliar a Saúde de Componentes React.
+Proposição e Validação de Métricas Estruturais para Detecção de Code Smells em Componentes React.
 
 ### 1.1.1 Título do futuro TCC 
-Avaliação da Saúde Estrutural de Componentes React por Meio de Métricas Baseadas em Más Práticas.
+Identificação de Code Smells em Componentes React por Meio de Métricas Estruturais.
 
 ### 1.2 ID / código
 001
@@ -240,52 +240,311 @@ O experimento será suspenso antes de iniciar caso:
 - Falta completa de disponibilidade de especialistas para avaliação qualitativa.
 - Mudança significativa no escopo que inviabilize o objetivo original do experimento.
 
-7. Modelo conceitual e hipóteses
-7.1 Modelo conceitual do experimento
-Explique, em texto ou esquema, como você acredita que os fatores influenciam as respostas (por exemplo, “técnica A reduz defeitos em relação a B”).
+## 7. Modelo conceitual e hipóteses
+### 7.1 Modelo conceitual do experimento
 
-7.2 Hipóteses formais (H0, H1)
-Formule explicitamente as hipóteses nulas e alternativas para cada questão principal, incluindo a direção esperada do efeito quando fizer sentido.
+O modelo conceitual deste experimento baseia-se na seguinte premissa:
 
-7.3 Nível de significância e considerações de poder
-Defina o nível de significância (por exemplo, α = 0,05) e comente o que se espera em termos de poder estatístico, relacionando-o ao tamanho de amostra planejado.
+**Componentes React com presença de code smells e más práticas estruturais apresentam valores elevados em métricas estruturais específicas (complexidade, acoplamento, tamanho e violações de regras), e essas métricas podem identificá-los objetivamente.**
 
-8. Variáveis, fatores, tratamentos e objetos de estudo
-8.1 Objetos de estudo
-Descreva o que será efetivamente manipulado ou analisado (módulos de código, requisitos, tarefas, casos de teste, issues, etc.).
+O modelo assume que:
+- Tamanho excessivo (LOC elevado) está associado a violação do Princípio de Responsabilidade Única (SRP).
+- Complexidade ciclomática elevada indica dificuldade de compreensão e manutenção.
+- Alto acoplamento (muitos imports, dependências externas) reduz modularidade e aumenta fragilidade.
+- Violações das Rules of Hooks e dependências incorretas em useEffect são indicadores diretos de más práticas.
+- Componentes com antipadrões apresentam padrões estruturais detectáveis por análise estática.
 
-8.2 Sujeitos / participantes (visão geral)
-Caracterize em alto nível quem serão os participantes (desenvolvedores, testadores, estudantes, etc.), sem ainda entrar em detalhes de seleção.
+Esses fatores estruturais atuam como variáveis independentes observáveis que influenciam a qualidade estrutural percebida (variável dependente), a qual pode ser confirmada por análise de especialistas e por histórico de defeitos.
 
-8.3 Variáveis independentes (fatores) e seus níveis
-Liste os fatores que serão manipulados (por exemplo, técnica, ferramenta, processo) e indique os níveis de cada um (A/B, X/Y, alto/baixo).
+### 7.2 Hipóteses formais (H0, H1)
 
-8.4 Tratamentos (condições experimentais)
-Descreva claramente cada condição de experimento (grupo controle, tratamento 1, tratamento 2, etc.) e o que distingue uma da outra.
+#### Hipótese 1 – Tamanho e Complexidade
+- H0₁: Não há correlação significativa entre o tamanho do componente (LOC) e sua complexidade ciclomática.
+- H1₁: Componentes maiores apresentam complexidade ciclomática significativamente maior (correlação positiva).
 
-8.5 Variáveis dependentes (respostas)
-Informe as medidas de resultado que você observará (por exemplo, número de defeitos, esforço em horas, tempo de conclusão, satisfação).
+#### Hipótese 2 – Acoplamento e Antipadrões
+- H0₂: Componentes com alto acoplamento (número de imports) não apresentam mais violações de boas práticas do que componentes com baixo acoplamento.
+- H1₂: Componentes com alto acoplamento apresentam significativamente mais violações das Rules of Hooks e dependências incorretas.
 
-8.6 Variáveis de controle / bloqueio
-Liste fatores que você não está estudando diretamente, mas que serão mantidos constantes ou usados para formar blocos (por exemplo, experiência, tipo de tarefa).
+#### Hipótese 3 – Modularização e Qualidade
+- H0₃: O uso de subcomponentes e hooks customizados não está associado a menores valores de complexidade e acoplamento.
+- H1₃: Componentes que utilizam subcomponentes e hooks customizados apresentam menor complexidade e acoplamento.
 
-8.7 Possíveis variáveis de confusão conhecidas
-Identifique fatores que podem distorcer os resultados (como diferenças de contexto, motivação ou carga de trabalho) e que você pretende monitorar.
+#### Hipótese 4 – Métricas e Avaliação de Especialistas
+- H0₄: Não há diferença significativa nos valores das métricas entre componentes classificados como "saudáveis" e "problemáticos" por especialistas.
+- H1₄: Componentes classificados como "problemáticos" por especialistas apresentam valores significativamente mais elevados nas métricas estruturais propostas.
 
-9. Desenho experimental
-9.1 Tipo de desenho (completamente randomizado, blocos, fatorial, etc.)
-Indique qual tipo de desenho será utilizado e justifique brevemente por que ele é adequado ao problema e às restrições.
+#### Hipótese 5 – Histórico de Defeitos
+- H0₅: Não há correlação entre métricas estruturais elevadas e o histórico de defeitos do componente.
+- H1₅: Componentes com métricas estruturais elevadas apresentam maior quantidade de defeitos registrados no histórico.
 
-9.2 Randomização e alocação
-Explique o que será randomizado (sujeitos, tarefas, ordem de tratamentos) e como a randomização será feita na prática (ferramentas, procedimentos).
+### 7.3 Nível de significância e considerações de poder
 
-9.3 Balanceamento e contrabalanço
-Descreva como você garantirá que os grupos fiquem comparáveis (balanceamento) e como lidará com efeitos de ordem ou aprendizagem (contrabalanço).
+- Nível de significância: α = 0,05 (5%), padrão para estudos experimentais em engenharia de software.
+- Poder estatístico desejado: β ≥ 0,80 (80%), indicando 80% de chance de detectar um efeito real quando ele existir.
 
-9.4 Número de grupos e sessões
-Informe quantos grupos existirão e quantas sessões ou rodadas cada sujeito ou grupo irá executar, com uma breve justificativa.
+Considerações:
+- Dado que a amostra será composta por 50 a 200 componentes de projetos open-source, espera-se poder estatístico adequado para detectar correlações moderadas a fortes (r ≥ 0,3).
+- Para testes de comparação entre grupos (componentes saudáveis vs. problemáticos), o tamanho amostral planejado permite detectar diferenças de tamanho de efeito médio (d de Cohen ≥ 0,5).
+- Caso o poder se mostre insuficiente durante análises preliminares, a amostra poderá ser expandida com novos repositórios.
+- Análises não paramétricas (Spearman, Mann-Whitney) serão utilizadas quando premissas de normalidade não forem atendidas, mantendo robustez estatística.
 
-10. População, sujeitos e amostragem
+## 8. Variáveis, fatores, tratamentos e objetos de estudo
+### 8.1 Objetos de estudo
+
+Os objetos de estudo deste experimento são componentes React extraídos de projetos open-source de médio e grande porte. Especificamente:
+
+- Componentes funcionais escritos em JavaScript ou TypeScript.
+- Componentes que utilizam React Hooks (useState, useEffect, useContext, useMemo, useCallback, hooks customizados).
+- Componentes presentes em repositórios com:
+  - Pelo menos 50 componentes no total.
+  - Múltiplos contribuidores (≥ 3 desenvolvedores).
+
+Exemplos de repositórios candidatos:
+- Projetos de dashboards administrativos.
+- Aplicações de e-commerce.
+- Sistemas de gerenciamento de conteúdo (CMS).
+- Plataformas SaaS open-source.
+
+Cada componente será analisado individualmente, e suas métricas estruturais serão extraídas via análise estática (AST).
+
+### 8.2 Sujeitos / participantes (visão geral)
+
+O experimento envolverá dois tipos de participantes:
+
+#### 8.2.1 Participantes Diretos: Especialistas Avaliadores
+- Quantidade: 2 a 4 desenvolvedores.
+- Perfil: Experiência profissional com React (≥ 2 anos), familiaridade com hooks, boas práticas e padrões de código.
+- Papel: Avaliar qualitativamente um subconjunto de componentes (classificando-os como "saudáveis", "moderados" ou "problemáticos") para validar as métricas.
+
+#### 8.2.2 Participantes Indiretos: Desenvolvedores dos Projetos Open-Source
+- Os componentes analisados foram escritos por desenvolvedores reais, mas estes não participarão ativamente do experimento.
+- Seus commits e histórico de defeitos (issues, pull requests) serão usados como dados secundários.
+
+### 8.3 Variáveis independentes (fatores) e seus níveis
+
+As variáveis independentes são características estruturais observadas nos componentes, categorizadas em níveis para análise comparativa.
+
+#### Tabela de Variáveis Independentes
+
+| Variável Independente              | Descrição                                                      | Níveis                          | Como será medida                     |
+| -------------------------------------- | ------------------------------------------------------------------ | ----------------------------------- | ---------------------------------------- |
+| Tamanho do Componente              | Quantidade de linhas de código do componente                       | Pequeno (<100 LOC), Médio (100-300 LOC), Grande (>300 LOC) | Análise estática via AST                 |
+| Complexidade Ciclomática           | Número de caminhos independentes no código                         | Baixa (≤5), Média (6-15), Alta (>15) | Ferramenta de análise estática           |
+| Acoplamento Externo                | Número de imports e dependências externas                          | Baixo (≤5), Médio (6-15), Alto (>15) | Contagem de imports via AST              |
+| Uso de Hooks Customizados         | Quantidade de hooks customizados utilizados                        | Nenhum (0), Poucos (1-3), Muitos (>3) | Análise de padrão de nomenclatura (use*) |
+| Número de Subcomponentes          | Quantidade de componentes filhos diretos                           | Nenhum (0), Poucos (1-2), Muitos (>2) | Análise de declarações JSX internas      |
+| Violações das Rules of Hooks       | Presença de violações das regras oficiais do React                 | Sem violações (0), Com violações (≥1) | ESLint rules (exhaustive-deps, rules-of-hooks) |
+| Dependências Incorretas em Effects | Erros no array de dependências do useEffect                        | Sem erros (0), Com erros (≥1)       | ESLint rule: exhaustive-deps             |
+| Histórico de Crescimento           | Taxa de crescimento do componente (LOC ao longo do tempo)          | Estável (<10%), Moderado (10-50%), Acelerado (>50%) | Análise de histórico Git                 |
+
+### 8.4 Tratamentos (condições experimentais)
+
+Este experimento é observacional (não há manipulação ativa de tratamentos). No entanto, os componentes serão estratificados em grupos para análise comparativa:
+
+#### Tabela de Fatores e Tratamentos
+
+| Fator                    | Tratamento / Condição         | Descrição                                                                 | Critério de Classificação                  |
+| ---------------------------- | --------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------- |
+| Categoria de Tamanho     | Grupo 1: Componentes Pequenos | Componentes com menos de 100 linhas                                           | LOC < 100                                      |
+|                              | Grupo 2: Componentes Médios   | Componentes entre 100 e 300 linhas                                            | 100 ≤ LOC ≤ 300                                |
+|                              | Grupo 3: Componentes Grandes  | Componentes com mais de 300 linhas                                            | LOC > 300                                      |
+| Categoria de Complexidade| Grupo A: Baixa Complexidade   | Complexidade ciclomática ≤ 5                                                  | CC ≤ 5                                         |
+|                              | Grupo B: Média Complexidade   | Complexidade ciclomática entre 6 e 15                                         | 6 ≤ CC ≤ 15                                    |
+|                              | Grupo C: Alta Complexidade    | Complexidade ciclomática > 15                                                 | CC > 15                                        |
+| Categoria de Acoplamento | Grupo X: Baixo Acoplamento    | Componentes com até 5 imports                                                 | Imports ≤ 5                                    |
+|                              | Grupo Y: Médio Acoplamento    | Componentes com 6 a 15 imports                                                | 6 ≤ Imports ≤ 15                               |
+|                              | Grupo Z: Alto Acoplamento     | Componentes com mais de 15 imports                                            | Imports > 15                                   |
+| Presença de Antipadrões  | Grupo Saudável                | Componentes sem violações de hooks e sem erros de dependências                | Violações = 0 e Erros de deps = 0              |
+|                              | Grupo Problemático            | Componentes com pelo menos uma violação de hooks ou erro de dependências      | Violações ≥ 1 ou Erros de deps ≥ 1             |
+| Uso de Modularização     | Grupo Modularizado            | Componentes que usam subcomponentes ou hooks customizados                     | Subcomponentes > 0 ou Hooks customizados > 0   |
+|                              | Grupo Monolítico              | Componentes sem subcomponentes nem hooks customizados                         | Subcomponentes = 0 e Hooks customizados = 0    |
+
+#### Combinações de Tratamentos
+
+Serão analisadas combinações de fatores para investigar interações. Por exemplo:
+- Componentes Grandes + Alta Complexidade + Alto Acoplamento (suspeita de múltiplos code smells).
+- Componentes Pequenos + Baixa Complexidade + Modularizados (referência de boa prática).
+- Componentes Médios + Problemáticos (candidatos a refatoração prioritária).
+
+### 8.5 Variáveis dependentes (respostas)
+
+As variáveis dependentes são as métricas estruturais que serão coletadas e analisadas:
+
+#### Tabela de Variáveis Dependentes
+
+| Variável Dependente                | Descrição                                              | Unidade de Medida | Método de Coleta             |
+| -------------------------------------- | ---------------------------------------------------------- | --------------------- | -------------------------------- |
+| M1 – Violações das Rules of Hooks  | Quantidade de violações detectadas                         | Contagem              | ESLint (rules-of-hooks)          |
+| M2 – Erros de dependências         | Dependências ausentes ou incorretas no useEffect           | Contagem              | ESLint (exhaustive-deps)         |
+| M3 – Lines of Code (LOC)           | Tamanho total do componente                                | Linhas                | AST (Babel/TypeScript)           |
+| M4 – SRP Violations                | Responsabilidades distintas detectadas                     | Contagem              | Heurística baseada em estados/effects |
+| M5 – Crescimento histórico de LOC  | Taxa de crescimento do componente                          | Percentual (%)        | Git log + análise de diffs       |
+| M6 – Branch Complexity             | Número de condicionais e ramificações                      | Contagem              | AST (contagem de if/switch/ternários) |
+| M9 – Complexidade Ciclomática      | Total de caminhos independentes                            | Grau                  | Ferramenta de análise estática   |
+| M12 – Número de imports            | Dependências externas do componente                        | Contagem              | AST (import statements)          |
+| M13 – Hooks customizados usados    | Quantidade de hooks customizados consumidos                | Contagem              | AST (padrão use*)                |
+| M14 – Fan-in / Fan-out             | Acoplamento estrutural interno e externo                   | Grau                  | Análise de dependências          |
+| M15 – Número de subcomponentes     | Quantidade de componentes filhos diretos                   | Contagem              | AST (componentes internos)       |
+| M16 – Avaliação por especialistas  | Classificação qualitativa do componente                    | Escala (0–5)          | Questionário estruturado         |
+| M18 – Histórico de defeitos        | Quantidade de bugs associados ao componente                | Contagem              | GitHub Issues + Git blame        |
+
+### 8.6 Variáveis de controle / bloqueio
+
+Variáveis que serão controladas para reduzir vieses:
+
+| Variável de Controle       | Estratégia de Controle                                                              |
+| ------------------------------ | --------------------------------------------------------------------------------------- |
+| Linguagem                  | Apenas componentes em JavaScript ou TypeScript (ECMAScript 2015+)                       |
+| Versão do React            | Apenas projetos usando React ≥ 16.8 (introdução de hooks)                              |
+| Tipo de Componente         | Apenas componentes funcionais (exclusão de class components)                            |
+| Tamanho do Projeto         | Apenas projetos com 50 a 500 componentes (evitar extremos)                             |
+| Maturidade do Projeto      | Apenas repositórios com ≥ 6 meses de histórico e múltiplos contribuidores               |
+| Configuração do ESLint     | Uso de configuração padrão + regras oficiais do React (eslint-plugin-react-hooks)       |
+| Framework Adicional        | Permitir Next.js, mas apenas analisar componentes React puros (não páginas ou rotas)   |
+
+### 8.7 Possíveis variáveis de confusão conhecidas
+
+Variáveis que podem distorcer os resultados e precisam ser monitoradas:
+
+| Variável de Confusão            | Descrição                                                                           | Como será tratada                                      |
+| ----------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Experiência dos desenvolvedores | Componentes escritos por devs inexperientes podem ter mais problemas estruturais        | Registrar número de contribuidores e tempo de experiência  |
+| Domínio da aplicação            | Componentes de domínios complexos (ex.: dashboards financeiros) podem ser naturalmente maiores | Categorizar componentes por tipo (UI puro, lógica de negócio, misto) |
+| Idade do código                 | Componentes antigos podem usar padrões desatualizados                                   | Registrar data do último commit e versão do React usada    |
+| Pressão de prazo                | Código escrito sob pressão pode ter mais code smells                                    | Não controlável, mas será registrado se houver indícios (commits grandes/rápidos) |
+| Presença de TypeScript          | Projetos TypeScript podem ter menos erros estruturais devido à tipagem                  | Estratificar análise por linguagem (JS vs TS)              |
+| Uso de bibliotecas de UI        | Componentes que usam MUI, Ant Design, etc. podem ter estrutura diferente                | Registrar bibliotecas de UI usadas no projeto               |
+| Contexto de teste               | Componentes bem testados podem ter estrutura mais modular                               | Registrar presença de testes unitários por componente       |
+
+## 9. Desenho experimental
+### 9.1 Tipo de desenho (completamente randomizado, blocos, fatorial, etc.)
+
+O experimento adotará um desenho observacional estratificado com análise fatorial.
+
+#### Justificativa:
+
+1. Desenho Observacional:
+- Não há manipulação ativa de variáveis independentes (não é possível "criar" componentes com diferentes níveis de complexidade de forma controlada).
+- Os componentes já existem em projetos reais, e suas características estruturais serão observadas e medidas.
+- Este tipo de desenho é adequado para estudos exploratórios e descritivos que buscam identificar padrões e correlações em contextos reais.
+
+2. Estratificação:
+- Os componentes serão estratificados em grupos segundo características estruturais (tamanho, complexidade, acoplamento).
+- Isso permite comparações controladas entre estratos (ex.: "componentes pequenos vs. grandes").
+- A estratificação reduz a heterogeneidade dentro dos grupos, aumentando o poder estatístico.
+
+3. Análise Fatorial:
+- Serão investigadas interações entre fatores (ex.: "tamanho × complexidade", "acoplamento × presença de antipadrões").
+- Isso permite compreender se a combinação de fatores amplifica problemas estruturais.
+- Exemplo: componentes grandes E altamente acoplados podem apresentar mais code smells do que grandes OU altamente acoplados isoladamente.
+
+4. Componente de Validação Qualitativa:
+- Um subconjunto de componentes (amostra estratificada) será avaliado por especialistas humanos.
+- Isso introduz um elemento de validação externa das métricas, essencial para verificar se elas refletem problemas reais percebidos por profissionais.
+
+### 9.2 Randomização e alocação
+
+#### O que será randomizado:
+
+1. Seleção de Componentes para Análise Detalhada:
+- De cada repositório, será selecionada uma amostra aleatória estratificada de componentes.
+- Processo:
+  1. Listar todos os componentes do repositório.
+  2. Estratificar por tamanho (pequeno, médio, grande).
+  3. Sortear aleatoriamente componentes de cada estrato (usando `random.sample()` do Python ou similar).
+  4. Garantir representatividade de cada estrato (mínimo de 10 componentes por estrato, se disponível).
+
+2. Ordem de Apresentação aos Especialistas:
+- Os componentes serão apresentados aos especialistas em ordem aleatória para evitar viés de ordem.
+- Processo:
+  1. Gerar lista de componentes selecionados para avaliação qualitativa.
+  2. Embaralhar aleatoriamente a ordem (usando `shuffle()`).
+  3. Cada especialista receberá a mesma lista, mas em ordem diferente (randomização individual).
+
+3. Alocação de Especialistas a Componentes:
+- Cada componente será avaliado por pelo menos 2 especialistas diferentes (para calcular concordância interavaliadores).
+- Processo:
+  1. Dividir o conjunto de componentes em blocos.
+  2. Alocar aleatoriamente especialistas a blocos, garantindo que cada componente seja visto por 2+ avaliadores.
+
+#### Ferramentas e Procedimentos:
+- Linguagem: Python (bibliotecas `random`, `numpy.random`).
+- Seed de randomização: Será fixada e documentada para garantir reprodutibilidade.
+- Registro: Todas as listas randomizadas serão salvas em arquivos CSV com timestamp.
+
+### 9.3 Balanceamento e contrabalanço
+
+#### Balanceamento:
+
+1. Balanceamento entre Estratos:
+- Garantir que cada estrato de tamanho (pequeno/médio/grande) tenha número comparável de componentes na amostra final.
+- Critério: Se um estrato tiver menos componentes disponíveis, ajustar proporcionalmente os outros estratos para manter representatividade.
+
+2. Balanceamento por Projeto:
+- Evitar que um único repositório domine a amostra.
+- Critério: Limitar a contribuição de cada repositório a no máximo 40% da amostra total.
+
+3. Balanceamento por Linguagem:
+- Incluir proporções balanceadas de componentes JavaScript e TypeScript.
+- Critério: Se possível, 50% JS e 50% TS; caso contrário, registrar a proporção real como variável de controle.
+
+#### Contrabalanço:
+
+1. Efeito de Fadiga dos Especialistas:
+- Avaliadores podem se cansar ao analisar muitos componentes sequencialmente.
+- Mitigação:
+  - Limitar a avaliação a no máximo 20 componentes por especialista por sessão.
+  - Permitir pausas entre avaliações.
+  - Randomizar ordem de apresentação (componentes simples e complexos intercalados).
+
+2. Efeito de Aprendizagem:
+- Especialistas podem refinar seus critérios de avaliação ao longo do tempo.
+- Mitigação:
+  - Realizar sessão de calibração prévia, onde todos avaliam os mesmos 5 componentes e discutem critérios.
+  - Registrar ordem de avaliação para análise posterior (verificar se as primeiras avaliações diferem das últimas).
+
+3. Viés de Primazia/Recência:
+- Componentes vistos no início ou no final podem ser julgados de forma diferente.
+- Mitigação:
+  - Randomização da ordem de apresentação.
+  - Análise estatística para detectar padrões relacionados à posição na sequência.
+
+### 9.4 Número de grupos e sessões
+
+#### Grupos de Componentes:
+
+| Grupo                     | Critério de Inclusão               | Tamanho Estimado | Objetivo                                      |
+| ----------------------------- | -------------------------------------- | -------------------- | ------------------------------------------------- |
+| Grupo 1: Pequenos         | LOC < 100                              | 30-50 componentes    | Baseline de simplicidade                          |
+| Grupo 2: Médios           | 100 ≤ LOC ≤ 300                        | 40-60 componentes    | Faixa intermediária (mais comum)                  |
+| Grupo 3: Grandes          | LOC > 300                              | 20-40 componentes    | Suspeita de problemas estruturais                 |
+| Grupo 4: Saudáveis        | Sem violações de hooks nem erros deps | 30-50 componentes    | Referência de boas práticas                       |
+| Grupo 5: Problemáticos    | Com violações ou erros                 | 30-50 componentes    | Casos com code smells confirmados                 |
+| Grupo 6: Modularizados    | Subcomponentes > 0 ou Hooks > 0        | 30-50 componentes    | Análise de impacto da modularização               |
+| Grupo 7: Monolíticos      | Sem subcomponentes nem hooks           | 20-40 componentes    | Suspeita de baixa modularidade                    |
+
+Total estimado: 150-250 componentes (dependendo da disponibilidade nos repositórios).
+
+#### Sessões de Coleta de Dados:
+
+| Sessão                           | Atividade                                         | Duração Estimada | Participantes       |
+| ------------------------------------ | ----------------------------------------------------- | -------------------- | ----------------------- |
+| Sessão 1: Extração Automatizada  | Análise estática de todos os componentes (métricas)   | 2-4 horas (script)   | Nenhum (automatizado)   |
+| Sessão 2: Análise Histórica      | Extração de dados de Git (crescimento, defeitos)      | 4-6 horas (script)   | Nenhum (automatizado)   |
+| Sessão 3: Calibração             | Sessão de treinamento com especialistas               | 1-2 horas            | 2-4 especialistas       |
+| Sessão 4: Avaliação Qualitativa  | Especialistas avaliam subconjunto de componentes      | 3-5 horas/especialista | 2-4 especialistas     |
+| Sessão 5: Análise Estatística    | Processamento e análise dos dados coletados           | 8-12 horas           | Pesquisador             |
+
+#### Justificativa:
+
+- Múltiplos grupos: Permitem análises comparativas ricas (ex.: pequenos vs. grandes, saudáveis vs. problemáticos).
+- Sessões automatizadas: Garantem objetividade e replicabilidade da coleta de métricas.
+- Sessão de calibração: Essencial para alinhar critérios entre especialistas e aumentar concordância interavaliadores.
+- Avaliação qualitativa: Valida as métricas automatizadas com julgamento humano especializado.
+- Análise estatística dedicada: Assegura rigor na interpretação dos resultados.
+
+## 10. População, sujeitos e amostragem
 10.1 População-alvo
 Descreva qual é a população real que você deseja representar com o experimento (por exemplo, “desenvolvedores Java de times de produto web”).
 
