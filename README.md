@@ -532,17 +532,14 @@ Total estimado: 150-250 componentes (dependendo da disponibilidade nos repositó
 | ------------------------------------ | ----------------------------------------------------- | -------------------- | ----------------------- |
 | Sessão 1: Extração Automatizada  | Análise estática de todos os componentes (métricas)   | 2-4 horas (script)   | Nenhum (automatizado)   |
 | Sessão 2: Análise Histórica      | Extração de dados de Git (crescimento, defeitos)      | 4-6 horas (script)   | Nenhum (automatizado)   |
-| Sessão 3: Calibração             | Sessão de treinamento com especialistas               | 1-2 horas            | 2-4 especialistas       |
-| Sessão 4: Avaliação Qualitativa  | Especialistas avaliam subconjunto de componentes      | 3-5 horas/especialista | 2-4 especialistas     |
-| Sessão 5: Análise Estatística    | Processamento e análise dos dados coletados           | 8-12 horas           | Pesquisador             |
+| Sessão 3: Análise Estatística    | Processamento e análise dos dados coletados           | 8-12 horas           | Pesquisador             |
 
 #### Justificativa:
 
-- Múltiplos grupos: Permitem análises comparativas ricas (ex.: pequenos vs. grandes, saudáveis vs. problemáticos).
-- Sessões automatizadas: Garantem objetividade e replicabilidade da coleta de métricas.
-- Sessão de calibração: Essencial para alinhar critérios entre especialistas e aumentar concordância interavaliadores.
-- Avaliação qualitativa: Valida as métricas automatizadas com julgamento humano especializado.
-- Análise estatística dedicada: Assegura rigor na interpretação dos resultados.
+- **Múltiplos grupos:** Permitem análises comparativas ricas (ex.: pequenos vs. grandes, saudáveis vs. problemáticos).
+- **Sessões automatizadas:** Garantem objetividade, replicabilidade e escalabilidade da coleta de métricas.
+- **Foco em dados objetivos:** Evita viés subjetivo de avaliadores humanos, mantendo rigor científico.
+- **Análise estatística dedicada:** Assegura rigor na interpretação dos resultados.
 
 ## 10. População, sujeitos e amostragem
 10.1 População-alvo
@@ -560,34 +557,871 @@ Defina quantos participantes você pretende ter no total e em cada grupo, relaci
 10.5 Método de seleção / recrutamento
 Explique como os participantes serão escolhidos (amostra de conveniência, sorteio, convite aberto, turma de disciplina, time específico).
 
-10.6 Treinamento e preparação dos sujeitos
-Descreva qual treinamento ou material preparatório será fornecido para nivelar entendimento e reduzir vieses por falta de conhecimento.
+### 10.1 População-alvo
 
-11. Instrumentação e protocolo operacional
-11.1 Instrumentos de coleta (questionários, logs, planilhas, etc.)
-Liste todos os instrumentos que serão usados para coletar dados (arquivos, formulários, scripts, ferramentas), com uma breve descrição do papel de cada um.
+A população-alvo deste experimento são **componentes React funcionais** presentes em projetos de software de médio e grande porte, representando:
 
-11.2 Materiais de suporte (instruções, guias)
-Descreva as instruções escritas, guias rápidos, slides ou outros materiais que serão fornecidos a participantes e administradores do experimento.
+- **Projetos open-source consolidados** no ecossistema React.
+- **Aplicações web modernas** que utilizam hooks e padrões contemporâneos de desenvolvimento.
+- **Sistemas mantidos por múltiplos desenvolvedores**, com histórico de evolução e manutenção.
+- **Contextos diversos de aplicação**: dashboards, e-commerce, SaaS, sistemas de gerenciamento de conteúdo.
 
-11.3 Procedimento experimental (protocolo – visão passo a passo)
-Escreva, em ordem, o que acontecerá na operação (do convite ao encerramento), de modo que alguém consiga executar o experimento seguindo esse roteiro.
+Esta população representa o cenário típico de desenvolvimento frontend em organizações que adotam React como framework principal, buscando generalizar os resultados para componentes desenvolvidos em ambientes profissionais reais.
 
-11.4 Plano de piloto (se haverá piloto, escopo e critérios de ajuste)
-Indique se um piloto será realizado, com que participantes e objetivos, e defina que tipo de ajuste do protocolo poderá ser feito com base nesse piloto.
+### 10.2 Critérios de inclusão de componentes
 
-12. Plano de análise de dados (pré-execução)
-12.1 Estratégia geral de análise (como responderá às questões)
-Explique, em alto nível, como os dados coletados serão usados para responder cada questão de pesquisa ou de negócio.
+Para um componente ser elegível para análise, deve atender aos seguintes critérios:
 
-12.2 Métodos estatísticos planejados
-Liste os principais testes ou técnicas estatísticas que pretende usar (por exemplo, t-teste, ANOVA, testes não paramétricos, regressão).
+#### **Critérios Técnicos:**
+- Ser um **componente funcional** React (não class component).
+- Estar escrito em **JavaScript (ES6+)** ou **TypeScript**.
+- Utilizar pelo menos um **React Hook** (useState, useEffect, useContext, useMemo, useCallback, ou hooks customizados).
+- Ter pelo menos **20 linhas de código** (excluindo comentários e linhas em branco).
+- Estar em arquivo dedicado (`.jsx`, `.tsx`, `.js`, `.ts`).
 
-12.3 Tratamento de dados faltantes e outliers
-Defina previamente as regras para lidar com dados ausentes e valores extremos, evitando decisões oportunistas após ver os resultados.
+#### **Critérios do Projeto:**
+- Pertencer a repositório **open-source público** no GitHub.
+- Repositório com **≥ 50 componentes** no total.
+- Projeto com **≥ 6 meses** de histórico de commits.
+- Projeto com **≥ 3 contribuidores** ativos.
+- Projeto usando **React ≥ 16.8** (versão que introduziu hooks).
+- Repositório com **≥ 100 commits** (indicador de maturidade).
 
-12.4 Plano de análise para dados qualitativos (se houver)
-Descreva como você tratará dados qualitativos (entrevistas, comentários, observações), especificando a técnica de análise (codificação, categorias, etc.).
+#### **Critérios de Qualidade dos Dados:**
+- Código deve ser **parseável** por ferramentas AST (Babel Parser / TypeScript Compiler API).
+- Presença de configuração **ESLint** com regras React (para análise de violações).
+- Histórico Git **acessível e completo** (para métricas históricas).
+
+### 10.3 Critérios de exclusão de componentes
+
+Componentes serão **excluídos** da análise se:
+
+#### **Exclusões Técnicas:**
+- Componentes de **classe** (class components) — incompatíveis com análise de hooks.
+- Componentes **triviais** com menos de 20 linhas (muito simples para análise significativa).
+- Arquivos de **configuração** (ex.: `config.js`, `constants.js`).
+- **Utilitários** ou helpers que não são componentes React.
+- Componentes **gerados automaticamente** (ex.: por frameworks, scaffolding tools).
+- Código **minificado** ou ofuscado.
+
+#### **Exclusões por Contexto:**
+- Componentes de **testes** (`.test.js`, `.spec.js`).
+- **Storybook stories** ou exemplos de documentação.
+- Componentes de **demonstração** ou tutoriais.
+- **Páginas do Next.js** (rotas em `/pages` ou `/app`) — são wrappers, não componentes puros.
+
+#### **Exclusões por Qualidade:**
+- Componentes com **erros de sintaxe** que impedem parsing.
+- Repositórios **abandonados** (sem commits nos últimos 12 meses).
+- Projetos **sem licença open-source** clara.
+- Repositórios **privados** ou com restrições de acesso.
+
+### 10.4 Tamanho da amostra planejado
+
+#### **Tamanho Total da Amostra:**
+- **Meta principal:** 150 a 200 componentes.
+- **Mínimo aceitável:** 100 componentes (se houver dificuldades de coleta).
+- **Distribuição por estratos:**
+
+| **Estrato (Tamanho)**      | **Meta**          | **Mínimo**        | **Justificativa**                                |
+| -------------------------- | ----------------- | ----------------- | ------------------------------------------------ |
+| Pequenos (< 100 LOC)       | 50-60 componentes | 30 componentes    | Baseline de simplicidade                         |
+| Médios (100-300 LOC)       | 60-80 componentes | 40 componentes    | Faixa mais comum em projetos reais               |
+| Grandes (> 300 LOC)        | 40-60 componentes | 30 componentes    | Suspeita de problemas estruturais                |
+
+#### **Distribuição por Repositórios:**
+- **3 a 5 repositórios** diferentes para diversidade.
+- **30 a 60 componentes por repositório** para balanceamento.
+- **Nenhum repositório** deve contribuir com mais de 40% da amostra total.
+
+#### **Justificativa Estatística:**
+- Para detectar **correlações moderadas** (r ≥ 0,3) com α=0,05 e poder de 80%, são necessários aproximadamente **84 componentes**.
+- Para comparações entre grupos (testes t) com tamanho de efeito médio (d=0,5), α=0,05 e poder de 80%, são necessários **~64 componentes por grupo**.
+- A meta de **150-200 componentes** fornece margem confortável para análises estratificadas e controle de variáveis de confusão.
+
+### 10.5 Método de seleção / recrutamento
+
+#### **Etapa 1: Identificação de Repositórios Candidatos**
+
+**Critérios de busca no GitHub:**
+- Linguagem: JavaScript ou TypeScript.
+- Framework: React.
+- Estrelas (stars): ≥ 500 (indicador de qualidade e relevância).
+- Forks: ≥ 50.
+- Issues abertas: ≥ 10 (indicador de atividade).
+- Última atualização: nos últimos 6 meses.
+
+**Ferramentas:**
+- GitHub Search API ou GitHub Advanced Search.
+- Filtros: `language:TypeScript OR language:JavaScript topic:react stars:>500`.
+
+**Pré-seleção manual:**
+- Revisar README para confirmar que é um projeto React real (não biblioteca de componentes).
+- Verificar estrutura de pastas (presença de `/src`, `/components`, `/app`).
+- Confirmar presença de `package.json` com dependência `react`.
+
+#### **Etapa 2: Extração de Componentes dos Repositórios**
+
+**Processo automatizado:**
+1. Clonar repositórios selecionados localmente.
+2. Buscar arquivos com extensões `.jsx`, `.tsx`, `.js`, `.ts`.
+3. Filtrar apenas arquivos que contêm componentes React:
+   - Buscar padrões: `export default function`, `export const`, `React.FC`, `function Component`.
+   - Verificar presença de JSX/TSX (tags HTML-like).
+4. Aplicar critérios de inclusão/exclusão.
+5. Extrair metadados: caminho, tamanho, data de criação, número de commits.
+
+#### **Etapa 3: Amostragem Estratificada**
+
+**Estratificação por tamanho:**
+1. Calcular LOC de cada componente extraído.
+2. Classificar em estratos: pequeno, médio, grande.
+3. Dentro de cada estrato, **selecionar aleatoriamente** componentes usando `random.sample()`.
+4. Garantir representatividade proporcional de cada estrato.
+
+**Randomização:**
+- Seed fixado: `random.seed(42)` para reprodutibilidade.
+- Documentar lista de componentes selecionados em CSV.
+
+#### **Etapa 4: Validação da Amostra**
+
+**Verificações pós-seleção:**
+- Confirmar que cada componente é parseável pelo AST.
+- Verificar distribuição de linguagens (JS vs TS).
+- Verificar distribuição de repositórios (balanceamento).
+- Confirmar presença de histórico Git completo.
+
+**Critério de aceitação:**
+- Se ≥ 80% dos componentes selecionados passarem na validação, prosseguir.
+- Caso contrário, repetir amostragem com novos repositórios.
+
+### 10.6 Caracterização da amostra
+
+Após seleção, a amostra será caracterizada documentando:
+
+| **Característica**               | **Como será registrada**                           |
+| -------------------------------- | -------------------------------------------------- |
+| Nome do repositório              | URL completa do GitHub                             |
+| Número de estrelas               | Metadado do repositório                            |
+| Linguagem do componente          | JavaScript ou TypeScript                           |
+| LOC do componente                | Contagem via AST                                   |
+| Número de hooks utilizados       | Contagem via padrão regex                          |
+| Data de criação do componente    | `git log --follow --diff-filter=A`                 |
+| Número de commits no componente  | `git log --oneline <file> \| wc -l`                |
+| Número de contribuidores únicos  | `git log --format='%an' <file> \| sort -u \| wc -l` |
+| Presença de testes               | Existência de arquivo `.test.` ou `.spec.`         |
+| Biblioteca de UI utilizada       | Análise de imports (MUI, Ant Design, etc.)         |
+
+## 11. Instrumentação e protocolo operacional
+### 11.1 Instrumentos de coleta
+
+Os seguintes instrumentos serão utilizados para coleta automatizada de dados:
+
+#### **11.1.1 Ferramentas de Análise Estática**
+
+| **Ferramenta**          | **Função**                                      | **Métricas Coletadas**                          |
+| ----------------------- | ----------------------------------------------- | ----------------------------------------------- |
+| **Babel Parser**        | Parsing de código JavaScript/JSX                | M3 (LOC), M12 (Imports), M15 (Subcomponentes)   |
+| **TypeScript Compiler API** | Parsing de código TypeScript/TSX            | M3 (LOC), M12 (Imports), M15 (Subcomponentes)   |
+| **ESLint**              | Análise de violações de regras React            | M1 (Rules of Hooks), M2 (exhaustive-deps)       |
+| **Esprima / Acorn**     | Análise de complexidade ciclomática             | M9 (Complexidade Ciclomática), M6 (Branch Complexity) |
+| **jscpd**               | Detecção de duplicação de código                | Percentual de código duplicado                  |
+| **AST Walker Custom**   | Análise customizada de estrutura                | M4 (SRP Violations), M13 (Hooks customizados), M14 (Fan-in/Fan-out) |
+| **Dependency Analyzer** | Análise de dependências e acoplamento           | M12 (Imports), M14 (Fan-in/Fan-out)             |
+
+#### **11.1.2 Ferramentas de Análise de Histórico Git**
+
+| **Ferramenta**          | **Função**                                      | **Métricas Coletadas**                          |
+| ----------------------- | ----------------------------------------------- | ----------------------------------------------- |
+| **Git CLI**             | Extração de histórico de commits                | M5 (Crescimento histórico de LOC), M18 (Defeitos) |
+| **PyDriller**           | Biblioteca Python para análise de repositórios  | M5 (Crescimento LOC), M6 (Crescimento de branches), número de commits, contribuidores, churns |
+| **GitHub API**          | Extração de issues e pull requests              | M18 (Histórico de defeitos associados)          |
+| **git log + diff**      | Análise de mudanças estruturais ao longo do tempo | M5 (Crescimento histórico), M6 (Evolução de complexidade) |
+
+#### **11.1.3 Scripts Customizados**
+
+| **Script**                      | **Linguagem** | **Função**                                              | **Métricas Geradas** |
+| ------------------------------- | ------------- | ------------------------------------------------------- | -------------------- |
+| `component_extractor.py`        | Python        | Identifica e lista componentes React no repositório     | Lista de componentes |
+| `metrics_collector.py`          | Python        | Extrai métricas estruturais via AST                     | M3, M4, M6, M7, M9, M12, M13, M14, M15 |
+| `git_history_analyzer.py`       | Python        | Analisa histórico Git e calcula métricas temporais      | M5, M6 (temporal), M18 |
+| `eslint_runner.sh`              | Bash          | Executa ESLint em todos os componentes                  | M1, M2 |
+| `antipattern_detector.py`       | Python        | Detecta antipadrões específicos de React                | M7 (por antipadrão), M8 (cobertura) |
+| `data_aggregator.py`            | Python        | Agrega dados de múltiplas fontes em DataFrame           | Dataset consolidado com M1-M18 |
+| `statistical_analysis.R`        | R             | Realiza análises estatísticas e testes de hipóteses     | Correlações, testes, regressões |
+
+#### **11.1.4 Planilhas e Bancos de Dados**
+
+| **Artefato**                    | **Formato** | **Conteúdo**                                            |
+| ------------------------------- | ----------- | ------------------------------------------------------- |
+| `components_metadata.csv`       | CSV         | Lista de componentes com metadados (repo, path, LOC)    |
+| `metrics_raw.csv`               | CSV         | Métricas estruturais brutas por componente              |
+| `git_history.csv`               | CSV         | Dados históricos (commits, churns, defeitos)            |
+| `eslint_violations.json`        | JSON        | Relatório de violações ESLint por componente            |
+| `final_dataset.csv`             | CSV         | Dataset consolidado para análise estatística            |
+| `experiment.db`                 | SQLite      | Banco de dados relacional com todos os dados coletados  |
+
+#### **11.1.5 Mapeamento Completo: Métricas → Instrumentos**
+
+Esta tabela documenta **todas as 18 métricas do GQM** e os instrumentos responsáveis por sua coleta:
+
+| **Métrica** | **Descrição** | **Ferramenta/Script Principal** | **Técnica de Coleta** |
+| ----------- | ------------- | ------------------------------- | --------------------- |
+| **M1** – Violações das Rules of Hooks | Hooks em condições, loops, etc. | ESLint + `eslint_runner.sh` | Regra `react-hooks/rules-of-hooks` |
+| **M2** – Erros de dependências do useEffect | Dependências ausentes/incorretas | ESLint + `eslint_runner.sh` | Regra `react-hooks/exhaustive-deps` |
+| **M3** – Lines of Code (LOC) | Tamanho total do componente | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de linhas de código (sem comentários/vazias) |
+| **M4** – SRP Violations | Responsabilidades distintas | AST Walker Custom + `metrics_collector.py` | Análise semântica de funções/lógica no componente |
+| **M5** – Crescimento histórico de LOC | Aumento de tamanho ao longo do tempo | PyDriller + `git_history_analyzer.py` | Comparação LOC (primeiro commit vs atual) |
+| **M6** – Branch Complexity | Condicionais e ramificações | Esprima/Acorn + `metrics_collector.py` | Contagem de `if`, `switch`, ternários, `&&`, `\|\|` |
+| **M7** – Métricas por antipadrão | Quantificação de bad smells específicos | `antipattern_detector.py` | Detecção de padrões: prop drilling, god component, etc. |
+| **M8** – Mapeamento métrica ↔ má prática | Cobertura de más práticas | `antipattern_detector.py` | Percentual de antipadrões cobertos por métricas |
+| **M9** – Complexidade Ciclomática | Caminhos independentes no código | Esprima/Acorn + `metrics_collector.py` | Algoritmo de McCabe (V(G) = E - N + 2P) |
+| **M10** – Variabilidade por executor | Consistência entre execuções | Todos os scripts | Comparação de resultados em múltiplas execuções |
+| **M11** – Precisão da análise estática | Acurácia das ferramentas AST | Validação manual + `metrics_collector.py` | Comparação amostra manual vs automatizada |
+| **M12** – Número de imports | Dependências externas | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de declarações `import` |
+| **M13** – Hooks customizados usados | Hooks consumidos (use*) | AST Walker Custom + `metrics_collector.py` | Contagem de chamadas a funções `use*` |
+| **M14** – Fan-in / Fan-out | Acoplamento estrutural | Dependency Analyzer + `metrics_collector.py` | Fan-in: quantos importam este / Fan-out: quantos este importa |
+| **M15** – Número de subcomponentes | Componentes filhos internos | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de componentes declarados dentro do componente |
+| **M16** – Avaliação por especialistas | Nota qualitativa (0-5) | **REMOVIDO** – Experimento agora é 100% automatizado | N/A |
+| **M17** – Concordância entre avaliadores | Medida de consenso (Kappa) | **REMOVIDO** – Experimento agora é 100% automatizado | N/A |
+| **M18** – Histórico de defeitos | Bugs associados ao componente | GitHub API + Git CLI + `git_history_analyzer.py` | Issues mencionando componente + commits com "fix\|bug" |
+
+**Observação:** As métricas M16 e M17 foram removidas do experimento após ajuste metodológico para focar exclusivamente em coleta automatizada objetiva, eliminando avaliação subjetiva por especialistas.
+
+### 11.2 Materiais de suporte
+
+Os seguintes materiais serão preparados para documentar e padronizar o experimento:
+
+#### **11.2.1 Documentação Técnica**
+
+| **Documento**                   | **Conteúdo**                                                    |
+| ------------------------------- | --------------------------------------------------------------- |
+| `README_EXPERIMENTO.md`         | Visão geral do experimento, objetivos e estrutura               |
+| `SETUP_GUIDE.md`                | Guia de instalação de ferramentas e dependências                |
+| `DATA_DICTIONARY.md`            | Dicionário de dados (todas as variáveis e métricas)             |
+| `SCRIPTS_DOCUMENTATION.md`      | Documentação dos scripts (parâmetros, saídas, exemplos)         |
+| `REPRODUCIBILITY_GUIDE.md`      | Instruções para replicar o experimento                          |
+
+#### **11.2.2 Configurações Padronizadas**
+
+| **Arquivo**                     | **Função**                                                      |
+| ------------------------------- | --------------------------------------------------------------- |
+| `.eslintrc.json`                | Configuração ESLint com regras React oficiais                   |
+| `tsconfig.json`                 | Configuração TypeScript para parsing consistente                |
+| `babel.config.js`               | Configuração Babel para parsing de JSX                          |
+| `requirements.txt`              | Dependências Python necessárias                                 |
+| `package.json`                  | Dependências Node.js necessárias                                |
+
+#### **11.2.3 Templates de Relatórios**
+
+| **Template**                    | **Formato** | **Uso**                                                 |
+| ------------------------------- | ----------- | ------------------------------------------------------- |
+| `analysis_report_template.Rmd`  | R Markdown  | Template para relatórios estatísticos automatizados     |
+| `visualization_notebook.ipynb`  | Jupyter     | Notebook para visualizações e análises exploratórias    |
+
+### 11.3 Procedimento experimental (protocolo passo a passo)
+
+O experimento seguirá o protocolo detalhado abaixo:
+
+#### **FASE 1: PREPARAÇÃO (Semana 1)**
+
+**Passo 1.1 - Configuração do Ambiente**
+- Instalar Python 3.9+, Node.js 18+, R 4.0+, Git 2.30+.
+- Instalar dependências: `pip install -r requirements.txt`, `npm install`.
+- Configurar ESLint com plugin React: `npm install eslint eslint-plugin-react eslint-plugin-react-hooks`.
+- Testar ferramentas de parsing em componente de exemplo.
+
+**Passo 1.2 - Seleção de Repositórios**
+- Executar busca no GitHub com critérios definidos (seção 10.5).
+- Listar repositórios candidatos em `repositories_candidates.csv`.
+- Revisar manualmente os 10 primeiros candidatos.
+- Selecionar **3 a 5 repositórios** que atendem aos critérios.
+- Clonar repositórios localmente: `git clone <repo_url>`.
+
+**Passo 1.3 - Extração de Componentes**
+- Executar `component_extractor.py` em cada repositório.
+- Gerar lista de componentes candidatos em `components_candidates.csv`.
+- Aplicar critérios de inclusão/exclusão (seção 10.2 e 10.3).
+- Gerar lista final de componentes em `components_selected.csv`.
+
+#### **FASE 2: COLETA AUTOMATIZADA DE MÉTRICAS (Semana 2)**
+
+**Passo 2.1 - Extração de Métricas Estruturais (Sessão 1)**
+- **Duração estimada:** 2-4 horas (automatizado).
+- **Responsável:** Script `metrics_collector.py`.
+- **Entrada:** `components_selected.csv`.
+- **Saída:** `metrics_raw.csv`.
+
+**Ações:**
+1. Para cada componente na lista:
+   - Ler arquivo do componente.
+   - Parsear código com Babel Parser (JS/JSX) ou TypeScript Compiler API (TS/TSX).
+   - Extrair métricas estruturais:
+     - M3 (LOC): contar linhas de código (excluindo comentários e linhas vazias).
+     - M12 (Imports): contar declarações `import`.
+     - M13 (Hooks customizados): contar chamadas a funções `use*`.
+     - M15 (Subcomponentes): contar componentes declarados internamente.
+     - M6 (Branch Complexity): contar `if`, `switch`, `? :`, `&&`, `||`.
+   - Calcular M9 (Complexidade Ciclomática) usando biblioteca `esprima` ou `escomplex`.
+   - Salvar métricas em `metrics_raw.csv`.
+2. Registrar log de execução (componentes processados com sucesso vs. erros).
+
+**Passo 2.2 - Análise de Violações ESLint**
+- **Duração estimada:** 1-2 horas (automatizado).
+- **Responsável:** Script `eslint_runner.sh`.
+- **Entrada:** `components_selected.csv`.
+- **Saída:** `eslint_violations.json`.
+
+**Ações:**
+1. Executar ESLint em cada componente:
+   ```bash
+   eslint --format json --output-file eslint_violations.json src/**/*.{js,jsx,ts,tsx}
+   ```
+2. Filtrar apenas violações de regras React:
+   - `react-hooks/rules-of-hooks` (M1).
+   - `react-hooks/exhaustive-deps` (M2).
+3. Contar violações por componente.
+4. Agregar resultados em `metrics_raw.csv`.
+
+**Passo 2.3 - Análise de Histórico Git (Sessão 2)**
+- **Duração estimada:** 4-6 horas (automatizado).
+- **Responsável:** Script `git_history_analyzer.py`.
+- **Entrada:** `components_selected.csv`.
+- **Saída:** `git_history.csv`.
+
+**Ações:**
+1. Para cada componente:
+   - Extrair histórico de commits:
+     ```bash
+     git log --follow --oneline -- <component_path>
+     ```
+   - Calcular M5 (Crescimento histórico de LOC):
+     - LOC inicial (primeiro commit).
+     - LOC atual.
+     - Taxa de crescimento: `(LOC_atual - LOC_inicial) / LOC_inicial * 100`.
+   - Extrair número de commits, contribuidores únicos, data de criação.
+2. Buscar defeitos associados (M18):
+   - Usar GitHub API para buscar issues que mencionam o componente.
+   - Usar `git log --grep="fix\|bug"` para encontrar commits de correção.
+3. Salvar dados em `git_history.csv`.
+
+#### **FASE 3: CONSOLIDAÇÃO DOS DADOS (Semana 3)**
+
+**Passo 3.1 - Agregação de Dados**
+- Executar `data_aggregator.py`.
+- Mesclar `metrics_raw.csv`, `eslint_violations.json`, `git_history.csv`.
+- Gerar dataset consolidado: `final_dataset.csv`.
+- Importar para SQLite: `experiment.db`.
+
+**Passo 3.2 - Limpeza e Validação**
+- Verificar dados faltantes (missing values).
+- Identificar outliers extremos (valores impossíveis).
+- Verificar consistência (ex.: LOC > 0, violações ≥ 0).
+- Documentar anomalias em `data_quality_report.md`.
+
+**Passo 3.3 - Classificação em Grupos Experimentais**
+- Aplicar critérios de estratificação (seção 8.4).
+- Adicionar coluna `grupo_tamanho` (Pequeno/Médio/Grande).
+- Adicionar coluna `grupo_complexidade` (Baixa/Média/Alta).
+- Adicionar coluna `grupo_acoplamento` (Baixo/Médio/Alto).
+- Adicionar coluna `grupo_saude` (Saudável/Problemático).
+
+#### **FASE 4: ANÁLISE ESTATÍSTICA (Semana 4)**
+
+**Passo 4.1 - Análise Exploratória de Dados (EDA)**
+- Carregar `final_dataset.csv` em Python/R.
+- Gerar estatísticas descritivas (média, mediana, desvio padrão, min, max).
+- Criar visualizações:
+  - Histogramas das métricas principais.
+  - Boxplots por grupos.
+  - Matriz de correlação entre métricas.
+  - Gráficos de dispersão (LOC vs. Complexidade, etc.).
+- Salvar visualizações em `/outputs/figures/`.
+
+**Passo 4.2 - Testes de Hipóteses**
+- **Hipótese 1 (Tamanho vs. Complexidade):**
+  - Calcular correlação de Pearson (ou Spearman se não-normal).
+  - Teste: `cor.test(LOC, Complexidade_Ciclomatica)`.
+- **Hipótese 2 (Acoplamento vs. Violações):**
+  - Comparar grupos (Baixo/Médio/Alto acoplamento) usando ANOVA ou Kruskal-Wallis.
+  - Teste: `kruskal.test(Violacoes ~ Grupo_Acoplamento)`.
+- **Hipótese 3 (Modularização vs. Qualidade):**
+  - Teste t independente (ou Mann-Whitney) comparando modularizados vs. monolíticos.
+  - Teste: `wilcox.test(Complexidade ~ Grupo_Modularizacao)`.
+- **Hipótese 5 (Métricas vs. Defeitos):**
+  - Regressão linear: `lm(Defeitos ~ LOC + Complexidade + Acoplamento)`.
+
+**Passo 4.3 - Análise Multivariada**
+- PCA (Análise de Componentes Principais) para identificar padrões.
+- Análise de cluster para agrupar componentes similares.
+- Regressão múltipla para identificar preditores mais fortes de code smells.
+
+**Passo 4.4 - Geração de Relatório Estatístico**
+- Executar `analysis_report_template.Rmd` para gerar relatório HTML/PDF.
+- Incluir tabelas de resultados, gráficos e interpretações.
+- Documentar todos os testes realizados e decisões metodológicas.
+
+#### **FASE 5: DOCUMENTAÇÃO E VALIDAÇÃO (Semana 5)**
+
+**Passo 5.1 - Validação de Validade**
+- Revisar ameaças à validade (seção 13).
+- Verificar se premissas estatísticas foram atendidas.
+- Documentar limitações observadas.
+
+**Passo 5.2 - Empacotamento para Replicação**
+- Organizar todos os scripts, dados e documentação em estrutura padronizada.
+- Gerar arquivo `REPRODUCIBILITY_PACKAGE.zip` contendo:
+  - Todos os scripts.
+  - Dados anonimizados.
+  - Documentação completa.
+  - Instruções de execução.
+
+**Passo 5.3 - Relatório Final**
+- Elaborar relatório final do experimento.
+- Responder às questões de pesquisa (seção 3.3).
+- Avaliar critérios de sucesso (seção 6.2).
+
+### 11.4 Fluxograma do Experimento
+
+```mermaid
+graph TD
+    A[Início: Configuração do Ambiente] --> B[Busca e Seleção de Repositórios GitHub]
+    B --> C[Clonagem dos Repositórios Selecionados]
+    C --> D[Extração de Componentes React]
+    D --> E[Aplicação de Critérios de Inclusão/Exclusão]
+    E --> F[Amostragem Estratificada por Tamanho]
+    F --> G[Lista Final de Componentes Selecionados]
+    
+    G --> H[Sessão 1: Extração de Métricas Estruturais]
+    H --> H1[Parsing com Babel/TypeScript API]
+    H1 --> H2[Coleta de M3, M6, M9, M12, M13, M15]
+    H2 --> H3[Execução de ESLint]
+    H3 --> H4[Coleta de M1, M2]
+    H4 --> I[Métricas Estruturais Coletadas]
+    
+    G --> J[Sessão 2: Análise de Histórico Git]
+    J --> J1[git log: Histórico de Commits]
+    J1 --> J2[Cálculo de M5: Crescimento Histórico]
+    J2 --> J3[GitHub API: Issues e Pull Requests]
+    J3 --> J4[Coleta de M18: Histórico de Defeitos]
+    J4 --> K[Métricas Históricas Coletadas]
+    
+    I --> L[Agregação de Dados]
+    K --> L
+    L --> M[Dataset Consolidado: final_dataset.csv]
+    
+    M --> N[Classificação em Grupos Experimentais]
+    N --> N1[Grupos por Tamanho]
+    N --> N2[Grupos por Complexidade]
+    N --> N3[Grupos por Acoplamento]
+    N --> N4[Grupos por Presença de Code Smells]
+    
+    N1 --> O[Análise Exploratória de Dados]
+    N2 --> O
+    N3 --> O
+    N4 --> O
+    
+    O --> P[Sessão 5: Análise Estatística]
+    P --> P1[Estatísticas Descritivas]
+    P --> P2[Testes de Correlação]
+    P --> P3[Testes de Comparação entre Grupos]
+    P --> P4[Regressão Multivariada]
+    P --> P5[Testes de Hipóteses H1-H5]
+    
+    P1 --> Q[Resultados Estatísticos]
+    P2 --> Q
+    P3 --> Q
+    P4 --> Q
+    P5 --> Q
+    
+    Q --> R[Validação de Validade do Experimento]
+    R --> S[Interpretação dos Resultados]
+    S --> T[Resposta às Questões de Pesquisa]
+    T --> U[Avaliação dos Critérios de Sucesso]
+    U --> V[Relatório Final do Experimento]
+    V --> W[Fim: Empacotamento para Replicação]
+    
+    style A fill:#e1f5ff
+    style G fill:#fff4e1
+    style I fill:#e8f5e9
+    style K fill:#e8f5e9
+    style M fill:#fff9c4
+    style Q fill:#f3e5f5
+    style V fill:#ffebee
+    style W fill:#e1f5ff
+```
+
+**Legenda do Fluxograma:**
+- **Azul claro:** Preparação e configuração.
+- **Amarelo claro:** Seleção e amostragem.
+- **Verde claro:** Coleta de dados automatizada.
+- **Amarelo:** Dataset consolidado.
+- **Roxo claro:** Análise estatística.
+- **Vermelho claro:** Resultados finais.
+
+### 11.5 Plano de piloto
+
+#### **Objetivo do Piloto:**
+
+Executar uma versão reduzida do experimento para:
+- Validar a viabilidade técnica dos scripts de coleta.
+- Identificar problemas de parsing ou incompatibilidades.
+- Estimar tempo real de execução.
+- Ajustar thresholds de classificação de grupos.
+- Verificar qualidade dos dados coletados.
+
+#### **Escopo do Piloto:**
+
+- **1 repositório** (médio porte, ~100 componentes).
+- **20 componentes** selecionados aleatoriamente.
+- Executar apenas Fase 1, Fase 2 (Sessões 1 e 2) e Passo 3.1.
+- **Duração:** 2-3 dias.
+
+#### **Critérios de Sucesso do Piloto:**
+
+| **Critério**                              | **Meta**                                      |
+| ----------------------------------------- | --------------------------------------------- |
+| Taxa de parsing bem-sucedido              | ≥ 90% dos componentes                         |
+| Métricas coletadas sem erros              | ≥ 85% das métricas por componente             |
+| Tempo de execução                         | < 2 horas para 20 componentes                 |
+| Dados históricos recuperáveis             | ≥ 80% dos componentes com histórico completo  |
+| Violações ESLint detectadas               | Pelo menos 1 violação em ≥ 30% dos componentes|
+
+#### **Ajustes Previstos Após Piloto:**
+
+- **Se taxa de parsing < 90%:** Revisar configurações do Babel/TypeScript ou adicionar tratamento de erros.
+- **Se tempo > 2h para 20 componentes:** Otimizar scripts (paralelização, cache).
+- **Se dados históricos < 80%:** Ajustar critérios de seleção de repositórios (exigir mais commits).
+- **Se poucas violações detectadas:** Revisar configuração ESLint ou adicionar mais regras.
+- **Se muitos componentes triviais:** Aumentar threshold mínimo de LOC (de 20 para 30 linhas).
+
+## 12. Plano de análise de dados (pré-execução)
+### 12.1 Estratégia geral de análise
+
+A análise dos dados seguirá uma abordagem estruturada alinhada às questões de pesquisa definidas na seção 3.3:
+
+#### **Estratégia por Objetivo:**
+
+| **Objetivo**                                  | **Questões de Pesquisa**      | **Estratégia de Análise**                                               | **Métricas Utilizadas**     |
+| --------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------- | --------------------------- |
+| **O1: Identificar más práticas**              | Q1.1, Q1.2, Q1.3              | Estatística descritiva + análise de frequência de violações            | M1, M2, M3, M4, M5, M6      |
+| **O2: Definir métricas estruturais**          | Q2.1, Q2.2, Q2.3              | Análise de cobertura + validação de constructo                         | M7, M8, M10, M11            |
+| **O3: Aplicar métricas em componentes reais** | Q3.1, Q3.2, Q3.3              | Análise de variação + identificação de outliers                        | M3, M9, M12, M13, M15       |
+| **O4: Analisar resultados estruturais**       | Q4.1, Q4.2, Q4.3              | Testes de correlação + comparação entre grupos                         | M3, M9, M12, M13, M14, M15  |
+| **O5: Avaliar validade das métricas**         | Q5.1, Q5.2, Q5.3              | Análise de consistência + correlação com defeitos                      | M1-M18                      |
+
+#### **Pipeline de Análise:**
+
+```
+1. PREPARAÇÃO DOS DADOS
+   ├── Importação do dataset consolidado
+   ├── Verificação de integridade
+   ├── Tratamento de dados faltantes
+   └── Detecção e tratamento de outliers
+
+2. ANÁLISE EXPLORATÓRIA (EDA)
+   ├── Estatísticas descritivas por métrica
+   ├── Distribuições (histogramas, boxplots)
+   ├── Matriz de correlação
+   └── Identificação de padrões visuais
+
+3. ANÁLISE INFERENCIAL
+   ├── Testes de normalidade
+   ├── Testes de correlação (Pearson/Spearman)
+   ├── Testes de comparação entre grupos (t-test, ANOVA, Kruskal-Wallis)
+   ├── Regressão linear/múltipla
+   └── Testes de hipóteses (H1-H5)
+
+4. ANÁLISE MULTIVARIADA
+   ├── Análise de Componentes Principais (PCA)
+   ├── Análise de Clusters (K-means, Hierarchical)
+   └── Regressão logística (predição de code smells)
+
+5. VALIDAÇÃO E INTERPRETAÇÃO
+   ├── Verificação de premissas estatísticas
+   ├── Análise de sensibilidade
+   ├── Discussão de implicações práticas
+   └── Resposta às questões de pesquisa
+```
+
+#### **Mapeamento Questão → Análise → Métrica:**
+
+**Q1.1: Quais más práticas aparecem com maior frequência?**
+- Análise: Estatística descritiva de M1 (violações de hooks) e M2 (erros de dependências).
+- Técnica: Contagem de frequências, gráficos de barras.
+- Resultado esperado: Ranking de más práticas mais comuns.
+
+**Q1.2: Quais antipadrões estão associados a componentes maiores?**
+- Análise: Correlação entre M3 (LOC) e M1, M2, M4 (violações).
+- Técnica: Correlação de Spearman + regressão linear.
+- Resultado esperado: Coeficiente de correlação (r) e valor-p.
+
+**Q3.1: Métricas variam entre componentes simples e complexos?**
+- Análise: Comparação de grupos (Pequeno vs. Médio vs. Grande).
+- Técnica: ANOVA ou Kruskal-Wallis + testes post-hoc (Dunn).
+- Resultado esperado: Diferenças significativas entre grupos.
+
+**Q4.1: Quais métricas diferenciam componentes saudáveis de problemáticos?**
+- Análise: Teste t independente (Saudáveis vs. Problemáticos).
+- Técnica: Mann-Whitney U test + cálculo de tamanho de efeito (d de Cohen).
+- Resultado esperado: Métricas com diferenças significativas (p < 0,05).
+
+**Q5.1: Métricas representam corretamente más práticas?**
+- Análise: Validação de constructo — correlação entre métricas automáticas e presença confirmada de code smells.
+- Técnica: Análise de casos extremos + inspeção manual de amostra.
+- Resultado esperado: Concordância entre métricas e observação manual.
+
+### 12.2 Métodos estatísticos planejados
+
+Os seguintes testes e técnicas serão aplicados:
+
+#### **12.2.1 Estatística Descritiva**
+
+| **Métrica/Grupo**       | **Estatísticas Calculadas**                           |
+| ----------------------- | ----------------------------------------------------- |
+| Todas as métricas       | Média, mediana, desvio padrão, mínimo, máximo, IQR    |
+| Variáveis categóricas   | Frequências absolutas e relativas, tabelas de contingência |
+| Por grupo experimental  | Estatísticas descritivas estratificadas               |
+
+#### **12.2.2 Testes de Normalidade**
+
+- **Teste de Shapiro-Wilk:** Para amostras < 50 em cada grupo.
+- **Teste de Kolmogorov-Smirnov:** Para amostras maiores.
+- **Critério:** p > 0,05 indica normalidade.
+- **Alternativa:** Se não-normal, usar testes não paramétricos.
+
+#### **12.2.3 Testes de Correlação**
+
+| **Objetivo**                          | **Teste**                     | **Quando Usar**               | **Hipóteses Relacionadas** |
+| ------------------------------------- | ----------------------------- | ----------------------------- | -------------------------- |
+| Correlação entre métricas contínuas   | Correlação de Pearson         | Dados normais                 | H1, H5                     |
+| Correlação entre métricas não-normais | Correlação de Spearman        | Dados não-normais             | H1, H5                     |
+| Associação entre variáveis categóricas| Qui-quadrado (χ²)             | Variáveis categóricas         | H2                         |
+
+**Exemplo:**
+```r
+# Hipótese 1: Tamanho vs. Complexidade
+cor.test(data$LOC, data$Complexidade_Ciclomatica, method="spearman")
+```
+
+#### **12.2.4 Testes de Comparação entre Grupos**
+
+| **Comparação**                      | **Teste Paramétrico**     | **Teste Não Paramétrico**  | **Post-hoc**        |
+| ----------------------------------- | ------------------------- | -------------------------- | ------------------- |
+| 2 grupos independentes              | Teste t independente      | Mann-Whitney U test        | —                   |
+| 3+ grupos independentes             | ANOVA (One-way)           | Kruskal-Wallis             | Dunn's test         |
+| 2 grupos pareados                   | Teste t pareado           | Wilcoxon signed-rank       | —                   |
+
+**Exemplos:**
+```r
+# Hipótese 2: Acoplamento (Baixo vs. Médio vs. Alto) vs. Violações
+kruskal.test(Violacoes ~ Grupo_Acoplamento, data=data)
+dunn.test(data$Violacoes, data$Grupo_Acoplamento, method="bonferroni")
+
+# Hipótese 3: Modularizados vs. Monolíticos
+wilcox.test(Complexidade ~ Grupo_Modularizacao, data=data)
+```
+
+#### **12.2.5 Regressão**
+
+| **Tipo de Regressão**         | **Objetivo**                                           | **Variáveis**                         |
+| ----------------------------- | ------------------------------------------------------ | ------------------------------------- |
+| Regressão Linear Simples      | Predizer Complexidade a partir de LOC                  | Y = Complexidade, X = LOC             |
+| Regressão Linear Múltipla     | Predizer Defeitos a partir de múltiplas métricas       | Y = Defeitos, X = LOC + CC + Imports  |
+| Regressão Logística           | Predizer presença de code smells (binário)             | Y = Problemático (0/1), X = métricas  |
+
+**Exemplo:**
+```r
+# Hipótese 5: Métricas vs. Defeitos
+model <- lm(Defeitos ~ LOC + Complexidade_Ciclomatica + Acoplamento, data=data)
+summary(model)
+```
+
+#### **12.2.6 Análise Multivariada**
+
+| **Técnica**                       | **Objetivo**                                           | **Saída Esperada**                |
+| --------------------------------- | ------------------------------------------------------ | --------------------------------- |
+| PCA (Principal Component Analysis)| Reduzir dimensionalidade e identificar padrões         | Componentes principais, loadings  |
+| Análise de Clusters (K-means)     | Agrupar componentes similares                          | Clusters de componentes           |
+| Heatmap de Correlação             | Visualizar inter-relações entre métricas               | Matriz de correlação visual       |
+
+#### **12.2.7 Tamanho de Efeito**
+
+Além de p-valores, calcular tamanhos de efeito:
+
+| **Teste**               | **Medida de Tamanho de Efeito**  | **Interpretação (Cohen)**         |
+| ----------------------- | -------------------------------- | --------------------------------- |
+| Teste t / Mann-Whitney  | d de Cohen / r                   | Pequeno: 0.2, Médio: 0.5, Grande: 0.8 |
+| ANOVA / Kruskal-Wallis  | η² (eta quadrado) / ε² (epsilon) | Pequeno: 0.01, Médio: 0.06, Grande: 0.14 |
+| Correlação              | r (coeficiente de correlação)    | Fraca: 0.1-0.3, Moderada: 0.3-0.5, Forte: >0.5 |
+
+### 12.3 Tratamento de dados faltantes e outliers
+
+#### **12.3.1 Dados Faltantes (Missing Values)**
+
+**Identificação:**
+- Verificar percentual de dados faltantes por variável.
+- Criar matriz de padrões de missingness.
+
+**Critérios de Tratamento:**
+
+| **% Missing**  | **Ação**                                                      |
+| -------------- | ------------------------------------------------------------- |
+| < 5%           | Excluir casos com dados faltantes (listwise deletion)         |
+| 5% - 20%       | Imputação pela mediana (variáveis contínuas) ou moda (categóricas) |
+| > 20%          | Considerar exclusão da variável ou análise de sensibilidade   |
+
+**Métodos de Imputação:**
+- **Mediana:** Para métricas com distribuição assimétrica (LOC, Complexidade).
+- **Média:** Para métricas com distribuição normal.
+- **Moda:** Para variáveis categóricas (Linguagem, Grupo).
+- **Imputação múltipla (MICE):** Se > 10% de missingness e dados MCAR (Missing Completely At Random).
+
+**Documentação:**
+- Registrar todos os casos de imputação em `missing_data_report.csv`.
+- Justificar decisões no relatório final.
+
+#### **12.3.2 Outliers**
+
+**Detecção:**
+
+| **Método**                  | **Critério**                                    | **Quando Usar**           |
+| --------------------------- | ----------------------------------------------- | ------------------------- |
+| IQR (Interquartile Range)   | Valor < Q1 - 1.5×IQR ou > Q3 + 1.5×IQR         | Primeira triagem          |
+| Z-score                     | \|Z\| > 3                                        | Dados normais             |
+| Grubbs' test                | Teste estatístico formal                        | Confirmar outlier extremo |
+| Inspeção visual             | Boxplots, scatter plots                         | Validação visual          |
+
+**Tratamento:**
+
+| **Tipo de Outlier**         | **Ação**                                                      |
+| --------------------------- | ------------------------------------------------------------- |
+| **Erro de coleta**          | Corrigir ou excluir                                           |
+| **Outlier válido extremo**  | Manter, mas reportar; realizar análise com e sem outlier      |
+| **Outlier moderado**        | Manter; considerar transformação (log, sqrt)                  |
+
+**Regras Específicas:**
+
+- **LOC outliers (ex.: componente com 5000+ linhas):**
+  - Manter se for componente legítimo (não gerado automaticamente).
+  - Flagear como caso especial.
+  - Realizar análise de sensibilidade excluindo outliers extremos.
+
+- **Complexidade Ciclomática > 100:**
+  - Investigar manualmente.
+  - Se legítimo, manter e reportar.
+
+- **Violações > 50:**
+  - Verificar se não há erro de configuração ESLint.
+  - Manter se for real.
+
+**Transformações:**
+
+- **Log-transformação:** Para métricas com distribuição muito assimétrica (LOC, Imports).
+  - `LOC_log <- log10(LOC + 1)`
+- **Winsorização:** Substituir outliers pelo valor do percentil 95 ou 99.
+  - `LOC_winsorized <- Winsorize(LOC, probs=c(0.01, 0.99))`
+
+**Documentação:**
+- Listar todos os outliers detectados em `outliers_report.csv`.
+- Justificar cada decisão de manutenção/exclusão.
+- Reportar resultados com e sem outliers extremos.
+
+### 12.4 Verificação de Premissas Estatísticas
+
+Antes de aplicar testes paramétricos, verificar:
+
+#### **12.4.1 Normalidade**
+
+- **Teste:** Shapiro-Wilk (n < 50) ou Kolmogorov-Smirnov (n ≥ 50).
+- **Visual:** Q-Q plots.
+- **Decisão:** Se p < 0,05, usar testes não paramétricos.
+
+#### **12.4.2 Homocedasticidade (Homogeneidade de Variâncias)**
+
+- **Teste:** Levene's test (para ANOVA).
+- **Decisão:** Se p < 0,05, usar Welch's ANOVA ou Kruskal-Wallis.
+
+#### **12.4.3 Independência**
+
+- **Verificação:** Confirmar que componentes são independentes (não há componentes duplicados ou altamente relacionados).
+- **Teste:** Durbin-Watson (se houver suspeita de autocorrelação temporal).
+
+#### **12.4.4 Linearidade (para Regressão)**
+
+- **Visual:** Scatter plots de Y vs. X.
+- **Teste:** Análise de resíduos (resíduos vs. fitted values).
+
+### 12.5 Plano de Visualizações
+
+As seguintes visualizações serão geradas:
+
+#### **Visualizações Descritivas:**
+
+| **Gráfico**                  | **Objetivo**                                      | **Variáveis**                 |
+| ---------------------------- | ------------------------------------------------- | ----------------------------- |
+| Histogramas                  | Distribuição de cada métrica                      | M1-M18                        |
+| Boxplots por grupo           | Comparar distribuições entre grupos               | Métricas × Grupos experimentais |
+| Barras de frequência         | Contagem de violações por tipo                    | M1, M2                        |
+| Gráfico de pizza             | Proporção de componentes saudáveis vs. problemáticos | Grupo Saúde                 |
+
+#### **Visualizações de Relações:**
+
+| **Gráfico**                  | **Objetivo**                                      | **Variáveis**                 |
+| ---------------------------- | ------------------------------------------------- | ----------------------------- |
+| Scatter plots                | Relação entre duas métricas contínuas             | LOC × Complexidade            |
+| Matriz de correlação (heatmap)| Inter-relações entre todas as métricas           | M1-M18                        |
+| Pairplots                    | Múltiplas relações bivariadas                     | LOC, CC, Imports, Violações   |
+| Gráfico de regressão         | Linha de tendência + intervalos de confiança      | Y = Defeitos, X = LOC         |
+
+#### **Visualizações Multivariadas:**
+
+| **Gráfico**                  | **Objetivo**                                      | **Variáveis**                 |
+| ---------------------------- | ------------------------------------------------- | ----------------------------- |
+| Biplot (PCA)                 | Visualizar componentes principais                 | PCs 1-2                       |
+| Dendrograma                  | Hierarquia de clusters                            | Todas as métricas             |
+| Heatmap de clusters          | Padrões em grupos de componentes similares        | Componentes × Métricas        |
+
+### 12.6 Software e Pacotes Estatísticos
+
+#### **Ambiente R:**
+```r
+# Pacotes necessários
+library(tidyverse)    # Manipulação de dados e visualização
+library(ggplot2)      # Gráficos
+library(corrplot)     # Matriz de correlação
+library(car)          # Testes de premissas (Levene, VIF)
+library(effectsize)   # Cálculo de tamanho de efeito
+library(dunn.test)    # Testes post-hoc para Kruskal-Wallis
+library(factoextra)   # PCA e clustering
+library(mice)         # Imputação múltipla
+library(rmarkdown)    # Relatórios automatizados
+```
+
+#### **Ambiente Python (alternativo):**
+```python
+import pandas as pd
+import numpy as np
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+from sklearn.linear_model import LinearRegression, LogisticRegression
+```
+
+### 12.7 Cronograma da Análise
+
+| **Atividade**                         | **Duração Estimada** | **Dependências**               |
+| ------------------------------------- | -------------------- | ------------------------------ |
+| Preparação dos dados                  | 4 horas              | Dataset consolidado            |
+| Análise exploratória (EDA)            | 8 horas              | Dados preparados               |
+| Testes de hipóteses                   | 6 horas              | EDA concluída                  |
+| Análise multivariada                  | 4 horas              | Testes de hipóteses            |
+| Geração de visualizações              | 6 horas              | Todas as análises              |
+| Relatório estatístico                 | 8 horas              | Visualizações                  |
+| Revisão e validação                   | 4 horas              | Relatório inicial              |
+| **Total**                             | **40 horas (~1 semana)** | —                          |
 
 13. Avaliação de validade (ameaças e mitigação)
 13.1 Validade de conclusão
