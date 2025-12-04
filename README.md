@@ -386,8 +386,7 @@ As variáveis dependentes são as métricas estruturais que serão coletadas e a
 | M13 – Hooks customizados usados    | Quantidade de hooks customizados consumidos                | Contagem              | AST (padrão use*)                |
 | M14 – Fan-in / Fan-out             | Acoplamento estrutural interno e externo                   | Grau                  | Análise de dependências          |
 | M15 – Número de subcomponentes     | Quantidade de componentes filhos diretos                   | Contagem              | AST (componentes internos)       |
-| M16 – Avaliação por especialistas  | Classificação qualitativa do componente                    | Escala (0–5)          | Questionário estruturado         |
-| M18 – Histórico de defeitos        | Quantidade de bugs associados ao componente                | Contagem              | GitHub Issues + Git blame        |
+| M16 – Histórico de defeitos        | Quantidade de bugs associados ao componente                | Contagem              | GitHub Issues + Git blame        |
 
 ### 8.6 Variáveis de controle / bloqueio
 
@@ -677,11 +676,6 @@ Componentes serão **excluídos** da análise se:
 1. Calcular LOC de cada componente extraído.
 2. Classificar em estratos: pequeno, médio, grande.
 3. Dentro de cada estrato, **selecionar aleatoriamente** componentes usando `random.sample()`.
-4. Garantir representatividade proporcional de cada estrato.
-
-**Randomização:**
-- Seed fixado: `random.seed(42)` para reprodutibilidade.
-- Documentar lista de componentes selecionados em CSV.
 
 #### **Etapa 4: Validação da Amostra**
 
@@ -759,7 +753,6 @@ Os seguintes instrumentos serão utilizados para coleta automatizada de dados:
 | `git_history.csv`               | CSV         | Dados históricos (commits, churns, defeitos)            |
 | `eslint_violations.json`        | JSON        | Relatório de violações ESLint por componente            |
 | `final_dataset.csv`             | CSV         | Dataset consolidado para análise estatística            |
-| `experiment.db`                 | SQLite      | Banco de dados relacional com todos os dados coletados  |
 
 #### **11.1.5 Mapeamento Completo: Métricas → Instrumentos**
 
@@ -782,11 +775,9 @@ Esta tabela documenta **todas as 18 métricas do GQM** e os instrumentos respons
 | **M13** – Hooks customizados usados | Hooks consumidos (use*) | AST Walker Custom + `metrics_collector.py` | Contagem de chamadas a funções `use*` |
 | **M14** – Fan-in / Fan-out | Acoplamento estrutural | Dependency Analyzer + `metrics_collector.py` | Fan-in: quantos importam este / Fan-out: quantos este importa |
 | **M15** – Número de subcomponentes | Componentes filhos internos | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de componentes declarados dentro do componente |
-| **M16** – Avaliação por especialistas | Nota qualitativa (0-5) | **REMOVIDO** – Experimento agora é 100% automatizado | N/A |
-| **M17** – Concordância entre avaliadores | Medida de consenso (Kappa) | **REMOVIDO** – Experimento agora é 100% automatizado | N/A |
-| **M18** – Histórico de defeitos | Bugs associados ao componente | GitHub API + Git CLI + `git_history_analyzer.py` | Issues mencionando componente + commits com "fix\|bug" |
+| **M16** – Histórico de defeitos | Bugs associados ao componente | GitHub API + Git CLI + `git_history_analyzer.py` | Issues mencionando componente + commits com "fix\|bug" |
 
-**Observação:** As métricas M16 e M17 foram removidas do experimento após ajuste metodológico para focar exclusivamente em coleta automatizada objetiva, eliminando avaliação subjetiva por especialistas.
+
 
 ### 11.2 Materiais de suporte
 
@@ -821,9 +812,9 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
 
 ### 11.3 Procedimento experimental (protocolo passo a passo)
 
-O experimento seguirá o protocolo detalhado abaixo:
+![Fluxograma do Experimento](metodologia.png)
 
-#### **FASE 1: PREPARAÇÃO (Semana 1)**
+#### **FASE 1: PREPARAÇÃO**
 
 **Passo 1.1 - Configuração do Ambiente**
 - Instalar Python 3.9+, Node.js 18+, R 4.0+, Git 2.30+.
@@ -844,9 +835,9 @@ O experimento seguirá o protocolo detalhado abaixo:
 - Aplicar critérios de inclusão/exclusão (seção 10.2 e 10.3).
 - Gerar lista final de componentes em `components_selected.csv`.
 
-#### **FASE 2: COLETA AUTOMATIZADA DE MÉTRICAS (Semana 2)**
+#### **FASE 2: COLETA AUTOMATIZADA DE MÉTRICAS**
 
-**Passo 2.1 - Extração de Métricas Estruturais (Sessão 1)**
+**Passo 2.1 - Extração de Métricas Estruturais **
 - **Duração estimada:** 2-4 horas (automatizado).
 - **Responsável:** Script `metrics_collector.py`.
 - **Entrada:** `components_selected.csv`.
@@ -883,7 +874,7 @@ O experimento seguirá o protocolo detalhado abaixo:
 3. Contar violações por componente.
 4. Agregar resultados em `metrics_raw.csv`.
 
-**Passo 2.3 - Análise de Histórico Git (Sessão 2)**
+**Passo 2.3 - Análise de Histórico Git**
 - **Duração estimada:** 4-6 horas (automatizado).
 - **Responsável:** Script `git_history_analyzer.py`.
 - **Entrada:** `components_selected.csv`.
@@ -905,7 +896,7 @@ O experimento seguirá o protocolo detalhado abaixo:
    - Usar `git log --grep="fix\|bug"` para encontrar commits de correção.
 3. Salvar dados em `git_history.csv`.
 
-#### **FASE 3: CONSOLIDAÇÃO DOS DADOS (Semana 3)**
+#### **FASE 3: CONSOLIDAÇÃO DOS DADOS**
 
 **Passo 3.1 - Agregação de Dados**
 - Executar `data_aggregator.py`.
@@ -926,7 +917,7 @@ O experimento seguirá o protocolo detalhado abaixo:
 - Adicionar coluna `grupo_acoplamento` (Baixo/Médio/Alto).
 - Adicionar coluna `grupo_saude` (Saudável/Problemático).
 
-#### **FASE 4: ANÁLISE ESTATÍSTICA (Semana 4)**
+#### **FASE 4: ANÁLISE ESTATÍSTICA**
 
 **Passo 4.1 - Análise Exploratória de Dados (EDA)**
 - Carregar `final_dataset.csv` em Python/R.
@@ -961,7 +952,7 @@ O experimento seguirá o protocolo detalhado abaixo:
 - Incluir tabelas de resultados, gráficos e interpretações.
 - Documentar todos os testes realizados e decisões metodológicas.
 
-#### **FASE 5: DOCUMENTAÇÃO E VALIDAÇÃO (Semana 5)**
+#### **FASE 5: DOCUMENTAÇÃO E VALIDAÇÃO**
 
 **Passo 5.1 - Validação de Validade**
 - Revisar ameaças à validade (seção 13).
@@ -981,85 +972,7 @@ O experimento seguirá o protocolo detalhado abaixo:
 - Responder às questões de pesquisa (seção 3.3).
 - Avaliar critérios de sucesso (seção 6.2).
 
-### 11.4 Fluxograma do Experimento
-
-```mermaid
-graph TD
-    A[Início: Configuração do Ambiente] --> B[Busca e Seleção de Repositórios GitHub]
-    B --> C[Clonagem dos Repositórios Selecionados]
-    C --> D[Extração de Componentes React]
-    D --> E[Aplicação de Critérios de Inclusão/Exclusão]
-    E --> F[Amostragem Estratificada por Tamanho]
-    F --> G[Lista Final de Componentes Selecionados]
-    
-    G --> H[Sessão 1: Extração de Métricas Estruturais]
-    H --> H1[Parsing com Babel/TypeScript API]
-    H1 --> H2[Coleta de M3, M6, M9, M12, M13, M15]
-    H2 --> H3[Execução de ESLint]
-    H3 --> H4[Coleta de M1, M2]
-    H4 --> I[Métricas Estruturais Coletadas]
-    
-    G --> J[Sessão 2: Análise de Histórico Git]
-    J --> J1[git log: Histórico de Commits]
-    J1 --> J2[Cálculo de M5: Crescimento Histórico]
-    J2 --> J3[GitHub API: Issues e Pull Requests]
-    J3 --> J4[Coleta de M18: Histórico de Defeitos]
-    J4 --> K[Métricas Históricas Coletadas]
-    
-    I --> L[Agregação de Dados]
-    K --> L
-    L --> M[Dataset Consolidado: final_dataset.csv]
-    
-    M --> N[Classificação em Grupos Experimentais]
-    N --> N1[Grupos por Tamanho]
-    N --> N2[Grupos por Complexidade]
-    N --> N3[Grupos por Acoplamento]
-    N --> N4[Grupos por Presença de Code Smells]
-    
-    N1 --> O[Análise Exploratória de Dados]
-    N2 --> O
-    N3 --> O
-    N4 --> O
-    
-    O --> P[Sessão 5: Análise Estatística]
-    P --> P1[Estatísticas Descritivas]
-    P --> P2[Testes de Correlação]
-    P --> P3[Testes de Comparação entre Grupos]
-    P --> P4[Regressão Multivariada]
-    P --> P5[Testes de Hipóteses H1-H5]
-    
-    P1 --> Q[Resultados Estatísticos]
-    P2 --> Q
-    P3 --> Q
-    P4 --> Q
-    P5 --> Q
-    
-    Q --> R[Validação de Validade do Experimento]
-    R --> S[Interpretação dos Resultados]
-    S --> T[Resposta às Questões de Pesquisa]
-    T --> U[Avaliação dos Critérios de Sucesso]
-    U --> V[Relatório Final do Experimento]
-    V --> W[Fim: Empacotamento para Replicação]
-    
-    style A fill:#e1f5ff
-    style G fill:#fff4e1
-    style I fill:#e8f5e9
-    style K fill:#e8f5e9
-    style M fill:#fff9c4
-    style Q fill:#f3e5f5
-    style V fill:#ffebee
-    style W fill:#e1f5ff
-```
-
-**Legenda do Fluxograma:**
-- **Azul claro:** Preparação e configuração.
-- **Amarelo claro:** Seleção e amostragem.
-- **Verde claro:** Coleta de dados automatizada.
-- **Amarelo:** Dataset consolidado.
-- **Roxo claro:** Análise estatística.
-- **Vermelho claro:** Resultados finais.
-
-### 11.5 Plano de piloto
+### 11.4 Plano de piloto
 
 #### **Objetivo do Piloto:**
 
@@ -1111,38 +1024,7 @@ A análise dos dados seguirá uma abordagem estruturada alinhada às questões d
 | **O5: Avaliar validade das métricas**         | Q5.1, Q5.2, Q5.3              | Análise de consistência + correlação com defeitos                      | M1-M18                      |
 
 #### **Pipeline de Análise:**
-
-```
-1. PREPARAÇÃO DOS DADOS
-   ├── Importação do dataset consolidado
-   ├── Verificação de integridade
-   ├── Tratamento de dados faltantes
-   └── Detecção e tratamento de outliers
-
-2. ANÁLISE EXPLORATÓRIA (EDA)
-   ├── Estatísticas descritivas por métrica
-   ├── Distribuições (histogramas, boxplots)
-   ├── Matriz de correlação
-   └── Identificação de padrões visuais
-
-3. ANÁLISE INFERENCIAL
-   ├── Testes de normalidade
-   ├── Testes de correlação (Pearson/Spearman)
-   ├── Testes de comparação entre grupos (t-test, ANOVA, Kruskal-Wallis)
-   ├── Regressão linear/múltipla
-   └── Testes de hipóteses (H1-H5)
-
-4. ANÁLISE MULTIVARIADA
-   ├── Análise de Componentes Principais (PCA)
-   ├── Análise de Clusters (K-means, Hierarchical)
-   └── Regressão logística (predição de code smells)
-
-5. VALIDAÇÃO E INTERPRETAÇÃO
-   ├── Verificação de premissas estatísticas
-   ├── Análise de sensibilidade
-   ├── Discussão de implicações práticas
-   └── Resposta às questões de pesquisa
-```
+- Execução dos 5 passos da metodologia.
 
 #### **Mapeamento Questão → Análise → Métrica:**
 
@@ -1381,133 +1263,316 @@ As seguintes visualizações serão geradas:
 | Biplot (PCA)                 | Visualizar componentes principais                 | PCs 1-2                       |
 | Dendrograma                  | Hierarquia de clusters                            | Todas as métricas             |
 | Heatmap de clusters          | Padrões em grupos de componentes similares        | Componentes × Métricas        |
+Perfeito. Vou produzir **todos os tópicos (13 a 20)** agora, de forma **completa, técnica, coerente** e **compatível com o restante do seu plano de experimento** sobre métricas para medir a saúde estrutural de componentes React.
+O texto abaixo já está no formato ideal para ser copiado direto para o seu documento.
 
-### 12.6 Software e Pacotes Estatísticos
+---
 
-#### **Ambiente R:**
-```r
-# Pacotes necessários
-library(tidyverse)    # Manipulação de dados e visualização
-library(ggplot2)      # Gráficos
-library(corrplot)     # Matriz de correlação
-library(car)          # Testes de premissas (Levene, VIF)
-library(effectsize)   # Cálculo de tamanho de efeito
-library(dunn.test)    # Testes post-hoc para Kruskal-Wallis
-library(factoextra)   # PCA e clustering
-library(mice)         # Imputação múltipla
-library(rmarkdown)    # Relatórios automatizados
-```
+# **13. Avaliação de validade (ameaças e mitigação)**
 
-#### **Ambiente Python (alternativo):**
-```python
-import pandas as pd
-import numpy as np
-import scipy.stats as stats
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from sklearn.linear_model import LinearRegression, LogisticRegression
-```
+## **13.1 Validade de conclusão**
 
-### 12.7 Cronograma da Análise
+**Ameaças:**
 
-| **Atividade**                         | **Duração Estimada** | **Dependências**               |
-| ------------------------------------- | -------------------- | ------------------------------ |
-| Preparação dos dados                  | 4 horas              | Dataset consolidado            |
-| Análise exploratória (EDA)            | 8 horas              | Dados preparados               |
-| Testes de hipóteses                   | 6 horas              | EDA concluída                  |
-| Análise multivariada                  | 4 horas              | Testes de hipóteses            |
-| Geração de visualizações              | 6 horas              | Todas as análises              |
-| Relatório estatístico                 | 8 horas              | Visualizações                  |
-| Revisão e validação                   | 4 horas              | Relatório inicial              |
-| **Total**                             | **40 horas (~1 semana)** | —                          |
+* **Baixo poder estatístico** devido a tamanho reduzido de amostra ou variabilidade alta entre repositórios.
+* **Violação de suposições estatísticas** (normalidade, homogeneidade de variâncias) ao aplicar testes paramétricos.
+* **Erros de medida** gerados por parsing incorreto, heurísticas imprecisas ou falhas do detector de métricas.
+* **Correlação não genuína** causada por múltiplas comparações estatísticas sem correção adequada.
 
-13. Avaliação de validade (ameaças e mitigação)
-13.1 Validade de conclusão
-Liste ameaças que podem comprometer a robustez das conclusões estatísticas (baixo poder, violação de suposições, erros de medida) e como pretende mitigá-las.
+**Mitigação:**
 
-13.2 Validade interna
-Identifique ameaças relacionadas a causas alternativas para os efeitos observados (history, maturation, selection, etc.) e explique suas estratégias de controle.
+* Garantir **n ≥ 100 componentes** na amostra final e avaliação prévia de variabilidade durante o piloto.
+* Usar **testes não paramétricos** automaticamente quando suposições forem violadas (KS, Mann-Whitney, Kendall τ).
+* Validar métricas com **amostra manual** e cálculo de precisão/recall para reduzir erros sistemáticos.
+* Aplicar **correção de múltiplas comparações** (Bonferroni ou FDR) quando necessário.
+* Usar análise de sensibilidade: repetir com subconjuntos estratificados por tamanho, tipo e repo.
 
-13.3 Validade de constructo
-Refleta se as medidas escolhidas realmente representam os conceitos de interesse e descreva como você reduzirá ambiguidades de interpretação.
+---
 
-13.4 Validade externa
-Discuta em que contextos os resultados podem ser generalizados e quais diferenças de cenário podem limitar essa generalização.
+## **13.2 Validade interna**
 
-13.5 Resumo das principais ameaças e estratégias de mitigação
-Faça uma síntese das ameaças mais críticas e das ações planejadas, de preferência em forma de lista ou tabela simples.
+**Ameaças:**
 
-14. Ética, privacidade e conformidade
-14.1 Questões éticas (uso de sujeitos, incentivos, etc.)
-Descreva potenciais questões éticas (pressão para participar, uso de estudantes, incentivos, riscos de exposição) e como serão tratadas.
+* **Selection bias:** repositórios selecionados podem não representar a população real de projetos React.
+* **History/maturation:** alterações recentes nos repositórios podem impactar métricas temporais (p.ex. churn).
+* **Confounders não controlados:** uso de UI libraries, padrões arquiteturais específicos, monorepos, codegen.
+* **Instrumentação diferencial:** alguns projetos podem ser analisados com menos precisão que outros devido a complexidade sintática.
 
-14.2 Consentimento informado
-Explique como os participantes serão informados sobre objetivos, riscos, benefícios e como registrarão seu consentimento.
+**Mitigação:**
 
-14.3 Privacidade e proteção de dados
-Indique que dados pessoais serão coletados, como serão protegidos (anonimização, pseudoanonimização, controle de acesso) e por quanto tempo serão mantidos.
+* Seleção estratificada de repositórios por **stars, atividade, tipo e tamanho**.
+* Utilizar apenas commits dentro de uma **janela temporal consistente** (ex.: últimos 12 meses).
+* Registrar e controlar variáveis de confusão via estratificação (com/sem UI libs, monorepo vs standalone).
+* Uniformizar instrumentação: fallback para Babel e logs de parsing para todos os arquivos.
 
-14.4 Aprovações necessárias (comitê de ética, jurídico, DPO, etc.)
-Liste órgãos ou pessoas que precisam aprovar o experimento (comitê de ética, jurídico, DPO, gestores) e o status atual dessas aprovações.
+---
 
-15. Recursos, infraestrutura e orçamento
-15.1 Recursos humanos e papéis
-Identifique os membros da equipe do experimento e descreva brevemente o papel e responsabilidade de cada um.
+## **13.3 Validade de constructo**
 
-15.2 Infraestrutura técnica necessária
-Liste ambientes, servidores, ferramentas, repositórios e integrações que devem estar disponíveis para executar o experimento.
+**Ameaças:**
 
-15.3 Materiais e insumos
-Relacione materiais físicos ou digitais necessários (máquinas, licenças, formulários, dispositivos) que precisam estar prontos antes da operação.
+* Métricas podem **não representar adequadamente** o conceito de “saúde estrutural”.
+* Ambiguidade nas métricas abstratas (ex.: **SRP Violations**, **Responsabilidade por estado**, **Complexidade estrutural**).
+* Interpretações distintas entre avaliadores humanos.
 
-15.4 Orçamento e custos estimados
-Faça uma estimativa dos principais custos envolvidos (horas de pessoas, serviços, licenças, infraestrutura) e a fonte de financiamento.
+**Mitigação:**
 
-16. Cronograma, marcos e riscos operacionais
-16.1 Macrocronograma (até o início da execução)
-Defina as principais datas e marcos (conclusão do plano, piloto, revisão, início da operação) com uma visão de tempo realista.
+* Definir **operacionalmente cada métrica** com regras, thresholds e exemplos concretos.
+* Validar construtos com **especialistas React** (3–5 devs seniors) usando amostra de componentes rotulados manualmente.
+* Calcular **coeficiente Kappa** para verificar consistência das avaliações manuais.
+* Documentar claramente a ligação entre cada métrica → pergunta GQM → objetivo estratégico.
 
-16.2 Dependências entre atividades
-Indique quais atividades dependem de outras para começar (por exemplo, treinamento após aprovação ética), deixando essas dependências claras.
+---
 
-16.3 Riscos operacionais e plano de contingência
-Liste riscos ligados a cronograma, disponibilidade de pessoas ou recursos, e descreva ações de contingência caso esses riscos se materializem.
+## **13.4 Validade externa**
 
-17. Governança do experimento
-17.1 Papéis e responsabilidades formais
-Defina quem decide, quem executa, quem revisa e quem apenas deve ser informado, deixando claro o fluxo de responsabilidade.
+**Ameaças:**
 
-17.2 Ritos de acompanhamento pré-execução
-Descreva as reuniões, checkpoints e revisões previstos antes da execução, incluindo frequência e participantes.
+* Resultados podem generalizar apenas para projetos **open-source**, não para sistemas privados corporativos.
+* Variações de stack (Next.js, Remix, Expo) podem gerar métricas distintas.
+* Projetos com uso pesado de **UI libraries**, **code generation** ou **meta-frameworks** podem não ser comparáveis.
 
-17.3 Processo de controle de mudanças no plano
-Explique como mudanças no desenho ou no escopo do experimento serão propostas, analisadas, aprovadas e registradas.
+**Mitigação:**
 
-18. Plano de documentação e reprodutibilidade
-18.1 Repositórios e convenções de nomeação
-Indique onde o plano, instrumentos, scripts e dados (futuros) serão armazenados e quais convenções de nomes serão usadas.
+* Deixar explícito que a generalização é válida principalmente para **React OSS com componentes manuais**.
+* Testar sensibilidade em subsets (Next.js, CRA, monorepo, design systems).
+* Documentar limitações de uso em projetos corporativos que diferem fortemente do ecossistema OSS.
 
-18.2 Templates e artefatos padrão
-Liste os modelos (questionários, formulários, checklists, scripts) que serão usados e onde podem ser encontrados.
+---
 
-18.3 Plano de empacotamento para replicação futura
-Descreva o que será organizado desde já (documentos, scripts, instruções) para facilitar a replicação do experimento por outras equipes ou no futuro.
+## **13.5 Resumo das principais ameaças e mitigação**
 
-19. Plano de comunicação
-19.1 Públicos e mensagens-chave pré-execução
-Liste os grupos que precisam ser comunicados e quais mensagens principais devem receber (objetivos, escopo, datas, impactos esperados).
+| Ameaça                                  | Tipo       | Ação de Mitigação                                            |
+| --------------------------------------- | ---------- | ------------------------------------------------------------ |
+| Erros de medida                         | Conclusão  | Validação manual + precisão/recall                           |
+| Seleção enviesada de repositórios       | Interna    | Amostragem estratificada                                     |
+| Construção inadequada de métricas       | Constructo | Definição operacional + consenso de especialistas            |
+| Variabilidade temporal dos repositórios | Interna    | Janela de commits padronizada                                |
+| Generalização limitada                  | Externa    | Documentação dos contextos válidos e inválidos               |
+| Violações estatísticas                  | Conclusão  | Testes não paramétricos + correções de múltiplas comparações |
 
-19.2 Canais e frequência de comunicação
-Defina por quais canais (e-mail, reuniões, Slack/Teams, etc.) e com que frequência as comunicações serão feitas.
+---
 
-19.3 Pontos de comunicação obrigatórios
-Especifique os eventos que exigem comunicação formal (aprovação do plano, mudanças relevantes, adiamentos, cancelamentos).
+# **14. Ética, privacidade e conformidade**
 
-20. Critérios de prontidão para execução (Definition of Ready)
-20.1 Checklist de prontidão (itens que devem estar completos)
-Liste os itens que precisam estar finalizados e aprovados (plano, instrumentos, aprovação ética, recursos, comunicação) para autorizar o início da operação.
+## **14.1 Questões éticas**
 
-20.2 Aprovações finais para iniciar a operação
-Indique quem precisa dar o “ok final” (nomes ou cargos) e como esse aceite será registrado antes da execução começar.
+* Risco de **pressão** sobre especialistas convidados para avaliação manual.
+* Possível **exposição indevida** de trechos de código OSS em relatórios.
+* Uso de **voluntários estudantes** ou colegas com relação hierárquica.
+
+**Mitigação:**
+
+* Garantir participação **voluntária**, sem incentivos coercitivos.
+* Garantir que nenhum dado sensível ou identificação pessoal seja divulgado.
+* Exigir que especialistas assinem aceite de participação sem vínculo obrigatório.
+
+---
+
+## **14.2 Consentimento informado**
+
+Para especialistas participantes:
+
+* Enviar documento prévio com: objetivos, procedimentos, riscos mínimos e confidencialidade.
+* Coletar consentimento via formulário eletrônico (Google Forms, Typeform ou assinado digitalmente).
+* Permitir que o participante **retire-se a qualquer momento** sem justificativa.
+
+---
+
+## **14.3 Privacidade e proteção de dados**
+
+* Dados coletados: trechos de código OSS (não pessoais), e eventualmente nome/e-mail dos especialistas.
+* Medidas:
+
+  * Anonimização de avaliadores (E1, E2, E3...).
+  * Armazenamento seguro em repositório privado.
+  * Acesso apenas à equipe do experimento.
+  * Retenção limitada: dados pessoais removidos após conclusão do experimento.
+
+---
+
+## **14.4 Aprovações necessárias**
+
+* **Comitê de Ética da instituição**, caso obrigatório para estudos com participação humana.
+* **Jurídico / DPO**, caso haja coleta de dados pessoais dos especialistas.
+* Status: **aguardando submissão** após finalização da versão 1.0 do plano.
+
+---
+
+# **15. Recursos, infraestrutura e orçamento**
+
+## **15.1 Recursos humanos e papéis**
+
+* **Pesquisador principal**: coordenação geral, análise estatística, redação final.
+* **Desenvolvedor de instrumentação**: criação dos scripts de coleta e análises AST.
+* **Avaliadores especialistas**: revisão manual para validação das métricas.
+* **Apoio metodológico**: suporte em estatística e design experimental.
+
+---
+
+## **15.2 Infraestrutura técnica**
+
+* Repositório Git privado (GitHub ou GitLab).
+* Servidor ou máquina local para executar coleta automática.
+* Ferramentas: Node.js, Babel, TypeScript Compiler API, ESLint, PyDriller, Python.
+* Ambiente de documentação: Markdown + LaTeX (opcional).
+
+---
+
+## **15.3 Materiais e insumos**
+
+* Computadores pessoais da equipe.
+* Licenças (se necessário) para ferramentas adicionais.
+* Formulários digitais para consentimento.
+* Amostra de repositórios pré-selecionados.
+
+---
+
+## **15.4 Orçamento e custos estimados**
+
+* Horas de desenvolvimento: **60–100h**.
+* Horas de análise estatística: **20–30h**.
+* Participação de especialistas: voluntária (ou R$ 50–100 por participação, se houver incentivo).
+* Infraestrutura: custo zero se usar GitHub gratuito + máquina pessoal.
+
+---
+
+# **16. Cronograma, marcos e riscos operacionais**
+
+## **16.1 Macrocronograma**
+
+| Período  | Marco                                            |
+| -------- | ------------------------------------------------ |
+| Semana 1 | Finalização do plano + submissão ao comitê ético |
+| Semana 2 | Implementação da instrumentação                  |
+| Semana 3 | Piloto + ajustes                                 |
+| Semana 4 | Coleta definitiva                                |
+| Semana 5 | Análise estatística                              |
+| Semana 6 | Redação e consolidação dos resultados            |
+
+---
+
+## **16.2 Dependências**
+
+* A coleta só inicia após **piloto validado**.
+* Avaliação manual só começa após **aprovação ética**.
+* Análise estatística depende da **base consolidada e validada**.
+
+---
+
+## **16.3 Riscos operacionais**
+
+* Falhas de parsing em repositórios grandes → **Contingência:** fallback para Babel e logs específicos.
+* Indisponibilidade de especialistas → **Contingência:** recrutamento alternativo ou reduzir escopo.
+* Cronograma estourado → **Contingência:** priorizar subconjunto menor para análise final.
+
+---
+
+# **17. Governança do experimento**
+
+## **17.1 Papéis e responsabilidades**
+
+* **Decisor final**: pesquisador principal.
+* **Executor técnico**: responsável pelos scripts.
+* **Revisores**: especialistas externos.
+* **Apoiadores**: docentes.
+
+---
+
+## **17.2 Ritos de acompanhamento pré-execução**
+
+* Reunião semanal de status (30 min).
+* Checkpoint após piloto para aprovar instrumentação.
+* Reunião específica para validação de constructo.
+
+---
+
+## **17.3 Controle de mudanças**
+
+* Toda alteração deve:
+
+  1. Ser registrada em issue no repositório.
+  2. Ter justificativa clara.
+  3. Ser aprovada pelo pesquisador principal.
+  4. Ter impacto avaliado (cronograma, métricas, amostra).
+
+---
+
+# **18. Plano de documentação e reprodutibilidade**
+
+## **18.1 Repositórios e convenções**
+
+* Repositório `react-metrics-experiment/`.
+* Pastas:
+
+  * `/plan` — documentos do plano.
+  * `/instrumentation` — scripts.
+  * `/data` — dados brutos.
+  * `/analysis` — notebooks estatísticos.
+
+---
+
+## **18.2 Templates e artefatos**
+
+* Checklist de coleta.
+* Template de consentimento.
+* Template de relatório final.
+* Script CLI padronizado para rodar toda pipeline.
+
+---
+
+## **18.3 Empacotamento para replicação**
+
+* Fornecer:
+
+  * Guia de execução passo a passo em Markdown.
+  * Exemplo de execução com um repositório dummy.
+
+---
+
+# **19. Plano de comunicação**
+
+## **19.1 Públicos e mensagens**
+
+* **Orientador**: alinhamento científico e metodológico.
+* **Especialistas**: convite, escopo e expectativas.
+* **Equipe técnica**: detalhes da instrumentação.
+
+---
+
+## **19.2 Canais e frequência**
+
+* Slack para comunicação contínua.
+* E-mail formal para aprovações.
+* Reuniões semanais pré-execução.
+
+---
+
+## **19.3 Pontos obrigatórios**
+
+* Comunicação de aprovação do plano.
+* Comunicação do resultado do piloto.
+* Notificação de alterações relevantes.
+* Comunicação de início oficial da coleta.
+
+---
+
+# **20. Critérios de prontidão para execução (Definition of Ready)**
+
+## **20.1 Checklist de prontidão**
+
+* Plano aprovado.
+* Scripts 100% funcionando e testados no piloto.
+* Amostra final definida.
+* Especialistas confirmados.
+* Documentação de execução atualizada.
+
+---
+
+## **20.2 Aprovações finais**
+
+* Pesquisador principal.
+* Orientador.
+* Comitê.
+
+
