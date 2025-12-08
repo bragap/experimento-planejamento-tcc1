@@ -155,7 +155,7 @@ Propor, testar e validar um conjunto inicial de métricas estruturais específic
 **Incluído no experimento**: 
 - Componentes React em JavaScript ou TypeScript presentes em projetos open-source de médio/grande porte tanto sistemas React quanto Next.js.
 - Análise estática dos componentes usando AST (Babel Parser, TypeScript Compiler API e ESLint Rules).
-- Métricas estruturais definidas no GQM (complexidade, acoplamento, tamanho, violações de hooks, uso de subcomponentes etc.).
+- Métricas estruturais definidas no GQM.
 - Aplicação das métricas em repositórios selecionados e comparação entre componentes.
 - Avaliação qualitativa por especialistas sobre utilidade e validade das métricas.
   
@@ -167,7 +167,7 @@ Propor, testar e validar um conjunto inicial de métricas estruturais específic
 
 ### 4.2 Contexto do estudo (tipo de organização, projeto, experiência)
 
-O experimento ocorrerá em ambiente acadêmico, utilizando:
+O experimento ocorrerá em:
 - Projetos React open-source populares, com histórico de commits e múltiplos contribuidores.
 - Repositórios variando entre **50 e 500+ componentes**, permitindo análise heterogênea.
 - Participação eventual de **2 a 4 desenvolvedores experientes** (avaliadores) com prática em React, para julgamento qualitativo de algumas métricas.
@@ -179,7 +179,6 @@ O objetivo é simular um cenário de engenharia de software realista, mas contro
 - Os projetos open-source selecionados permanecerão acessíveis durante a execução.
 - As ferramentas de análise estática serão capazes de processar todos os componentes analisados.
 - Os especialistas convidados terão disponibilidade para revisar e avaliar as métricas qualitativas.
-- O histórico de commits dos projetos contém informação suficiente para medir crescimento estrutural (M5).
 - As métricas definidas são aplicáveis a componentes funcionais (forma dominante no React atual).
 
 ### 4.4 Restrições
@@ -187,14 +186,14 @@ O objetivo é simular um cenário de engenharia de software realista, mas contro
 - Tempo limitado para análise manual e para entrevistas com especialistas.
 - Ferramentas de AST podem apresentar limitações com sintaxes menos comuns ou configurações específicas.
 - Amostragem restrita a repositórios open-source, podendo não refletir o contexto de empresas.
-- A extração de métricas históricas depende da estrutura do repositório (granularidade dos commits).
 
 ### 4.5 Limitações previstas
 
 - **Validade externa:** resultados podem não generalizar para equipes com padrões internos muito específicos.
 - **Validade de construto:** algumas métricas podem capturar parcialmente um antipadrão, não sua totalidade.
-- **Validade estatística:** sample size limitado pode reduzir poder inferencial.
+- **Validade estatística:** tamanho reduzido da amostra pode reduzir poder inferencial.
 - **Viés de seleção:** escolha dos repositórios pode influenciar os resultados.
+- **Subjetividade na avaliação de especialistas:** métricas qualitativas podem variar conforme a experiência ou interpretação dos avaliadores.
 
 ## 5. Stakeholders e impacto esperado
 ### 5.1 Stakeholders principais
