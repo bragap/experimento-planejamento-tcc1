@@ -302,7 +302,7 @@ O objetivo é simular um cenário de engenharia de software realista, mas contro
 ### 6.2 Critérios de sucesso globais (go / no-go)
 
 O experimento será considerado bem-sucedido se:
-- Um conjunto mínimo viável de métricas estruturais (≥ 8) puder ser definido e operacionalizado.
+- Um conjunto mínimo viável de métricas estruturais (≥ 4) puder ser definido e operacionalizado.
 - As métricas forem aplicáveis em pelo menos 80% dos componentes analisados.
 - A análise empírica mostrar variação real das métricas entre componentes saudáveis e degradados.
 - Pelo menos dois especialistas confirmarem utilidade parcial ou total das métricas.
@@ -317,53 +317,98 @@ O experimento será suspenso antes de iniciar caso:
 - Mudança significativa no escopo que inviabilize o objetivo original do experimento.
 
 ## 7. Modelo conceitual e hipóteses
-### 7.1 Modelo conceitual do experimento
 
-O modelo conceitual deste experimento baseia-se na seguinte premissa:
+### 7.1 Modelo conceitual do experimento 
 
-Componentes React com presença de code smells e más práticas estruturais apresentam valores elevados em métricas estruturais específicas (complexidade, acoplamento, tamanho e violações de regras), e essas métricas podem identificá-los objetivamente.
+O modelo conceitual adotado neste experimento parte da premissa de que a saúde estrutural de um componente React pode ser explicada por quatro pilares fundamentais, que representam dimensões arquiteturais inerentes ao modelo declarativo do framework:
 
-O modelo assume que:
-- Tamanho excessivo (LOC elevado) está associado a violação do Princípio de Responsabilidade Única (SRP).
-- Complexidade ciclomática elevada indica dificuldade de compreensão e manutenção.
-- Alto acoplamento (muitos imports, dependências externas) reduz modularidade e aumenta fragilidade.
-- Violações das Rules of Hooks e dependências incorretas em useEffect são indicadores diretos de más práticas.
-- Componentes com antipadrões apresentam padrões estruturais detectáveis por análise estática.
+1. Estado: qualidade da modelagem e derivação do estado.
+2. Renderização (JSX): clareza e simplicidade da estrutura declarativa.
+3. Hooks e Efeitos: coerência na aplicação das APIs de hooks.
+4. Acoplamento e Modularidade: grau de dependência interna e externa.
 
-Esses fatores estruturais atuam como variáveis independentes observáveis que influenciam a qualidade estrutural percebida (variável dependente), a qual pode ser confirmada por análise de especialistas e por histórico de defeitos.
+A partir desses pilares, o modelo assume que:
 
-### 7.2 Hipóteses formais (H0, H1)
+* Problemas na modelagem do estado (ex.: estados redundantes, estados derivados manualmente, múltiplas dependências) refletem-se em métricas elevadas de complexidade de estado.
+* Problemas de renderização (JSX profundo, muitas condicionais, alta densidade visual) indicam componentes inflados e pouco modulados.
+* Violação da lógica de hooks (regras, dependências incorretas, efeitos redundantes) manifesta-se em métricas associadas à coerência da lógica interna.
+* Alto acoplamento estrutural (imports, contextos, prop drilling, subcomponentes internos) reduz modularidade e dificulta reutilização.
 
-#### Hipótese 1 – Tamanho e Complexidade
-- H0₁: Não há correlação significativa entre o tamanho do componente (LOC) e sua complexidade ciclomática.
-- H1₁: Componentes maiores apresentam complexidade ciclomática significativamente maior (correlação positiva).
+Essas quatro dimensões são variáveis independentes, observadas por meio das métricas M1–M22, que influenciam a qualidade estrutural percebida do componente, a qual será confirmada por:
 
-#### Hipótese 2 – Acoplamento e Antipadrões
-- H0₂: Componentes com alto acoplamento (número de imports) não apresentam mais violações de boas práticas do que componentes com baixo acoplamento.
-- H1₂: Componentes com alto acoplamento apresentam significativamente mais violações das Rules of Hooks e dependências incorretas.
+* especialistas,
+* métricas históricas,
+* e presença de antipadrões estruturais.
 
-#### Hipótese 3 – Modularização e Qualidade
-- H0₃: O uso de subcomponentes e hooks customizados não está associado a menores valores de complexidade e acoplamento.
-- H1₃: Componentes que utilizam subcomponentes e hooks customizados apresentam menor complexidade e acoplamento.
+Assim como o modelo CK para classes Java, este modelo propõe que smells de código em React são capturáveis por métricas estruturais consistentes.
 
-#### Hipótese 4 – Métricas e Avaliação de Especialistas
-- H0₄: Não há diferença significativa nos valores das métricas entre componentes classificados como "saudáveis" e "problemáticos" por especialistas.
-- H1₄: Componentes classificados como "problemáticos" por especialistas apresentam valores significativamente mais elevados nas métricas estruturais propostas.
+---
 
-#### Hipótese 5 – Histórico de Defeitos
-- H0₅: Não há correlação entre métricas estruturais elevadas e o histórico de defeitos do componente.
-- H1₅: Componentes com métricas estruturais elevadas apresentam maior quantidade de defeitos registrados no histórico.
+##  7.2 Hipóteses formais
 
-### 7.3 Nível de significância e considerações de poder
+### Hipótese 1 – Estado e complexidade estrutural
 
-- Nível de significância: α = 0,05 (5%), padrão para estudos experimentais em engenharia de software.
-- Poder estatístico desejado: β ≥ 0,80 (80%), indicando 80% de chance de detectar um efeito real quando ele existir.
+* H0₁: Não há relação significativa entre complexidade da estrutura de estado (M6, M21, M20) e a complexidade geral do componente.
+* H1₁: Componentes com maior complexidade de estado apresentam maior complexidade estrutural (ex.: complexidade ciclomática, profundidade de encadeamento).
 
-Considerações:
-- Dado que a amostra será composta por 50 a 200 componentes de projetos open-source, espera-se poder estatístico adequado para detectar correlações moderadas a fortes (r ≥ 0,3).
-- Para testes de comparação entre grupos (componentes saudáveis vs. problemáticos), o tamanho amostral planejado permite detectar diferenças de tamanho de efeito médio (d de Cohen ≥ 0,5).
-- Caso o poder se mostre insuficiente durante análises preliminares, a amostra poderá ser expandida com novos repositórios.
-- Análises não paramétricas (Spearman, Mann-Whitney) serão utilizadas quando premissas de normalidade não forem atendidas, mantendo robustez estatística.
+---
+
+### Hipótese 2 – Renderização (JSX) e má qualidade estrutural
+
+* H0₂: Métricas da renderização (densidade de JSX, profundidade do JSX e condicionais) não diferenciam componentes saudáveis de problemáticos.
+* H1₂: Componentes considerados problemáticos apresentam valores mais elevados de profundidade de JSX, densidade de JSX e condicionais no JSX.
+
+---
+
+### Hipótese 3 – Hooks/Efeitos e antipadrões
+
+* H0₃: Violações das regras de hooks, dependências incorretas e uso excessivo de efeitos não estão associados a menor qualidade estrutural.
+* H1₃: Componentes com mais violações de hooks e erros de efeitos apresentam maior acoplamento, maior complexidade e maior risco de re-renderização.
+
+---
+
+### Hipótese 4 – Acoplamento e modularidade
+
+* H0₄: Métricas de acoplamento (imports, prop drilling, pressão de contextos) não estão associadas à presença de code smells.
+* H1₄: Componentes com maior acoplamento apresentam significativamente mais antipadrões estruturais.
+
+---
+
+### Hipótese 5 – Modularização (subcomponentes e hooks customizados)
+
+* H0₅: Uso de subcomponentes internos ou hooks customizados não está associado à melhora das métricas.
+* H1₅: Componentes que utilizam subcomponentes e hooks customizados apresentam menor complexidade e menor densidade de JSX.
+
+---
+
+### Hipótese 6 – Métricas e avaliação de especialistas
+
+* H0₆: Especialistas não diferenciam componentes problemáticos e saudáveis com base nas métricas estruturais.
+* H1₆: Componentes considerados problemáticos por especialistas apresentam valores significativamente maiores em métricas dos quatro pilares.
+
+---
+
+### Hipótese 7 – Histórico de defeitos
+
+* H0₇: Métricas elevadas não se correlacionam com histórico de defeitos.
+* H1₇: Componentes com histórico de defeitos apresentam maior risco de re-renderização, maior profundidade de JSX e maior acoplamento.
+
+---
+
+## 7.3 Nível de significância e considerações de poder
+
+Mantém-se sua estrutura, mas com pequenas adequações:
+
+* Nível de significância: α = 0,05
+* Poder estatístico desejado: ≥ 0,80
+
+Considerações revisadas:
+
+* A amostra estimada é adequada para detectar efeitos moderados em pilares como complexidade do estado, riscos de renderização e acoplamento.
+* Testes não paramétricos (Spearman, Mann–Whitney) serão usados para lidar com distribuição assimétrica típica de métricas estruturais.
+* A análise de correlação permitirá mapear quais pilares explicam mais smells reais.
+* Caso os dados indiquem baixa potência estatística para alguma métrica, novos repositórios poderão ser adicionados.
+
 
 ## 8. Variáveis, fatores, tratamentos e objetos de estudo
 ### 8.1 Objetos de estudo
