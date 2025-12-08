@@ -98,68 +98,137 @@ Propor, testar e validar um conjunto inicial de métricas estruturais específic
 - O5. Avaliar a utilidade e validade das métricas propostas.
   - Q5.1 As métricas representam corretamente as más práticas documentadas e reconhecidas por profissionais?
   - Q5.2 Especialistas consideram as métricas adequadas para avaliar qualidade em React?  
-  - Q5.3 As métricas são consistentes ao analisar componentes de naturezas diferentes? 
+  - Q5.3 As métricas são consistentes ao analisar componentes de naturezas diferentes
 
 ### 3.4 Tabela GQM
-| **Objetivo (O)**                                                                                       | **Perguntas (Q)**                                                                                            | **Métricas (M)**                                                                                                            |
+| Objetivo (O)                                                                                       | Perguntas (Q)                                                                                            | Métricas (M)                                                                                                            |
 | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| **O1. Identificar más práticas estruturais presentes em componentes React.**                           | **Q1.1** Quais más práticas aparecem com maior frequência nos componentes?                                   | **M1 – Violações das regras de hooks**<br>**M2 – Erros no array de dependências**                                           |
-|                                                                                                        | **Q1.2** Quais antipadrões são mais comuns em componentes grandes ou complexos?                              | **M3 – Densidade de JSX**<br>**M22 – Número de responsabilidades declaradas**                                               |
-|                                                                                                        | **Q1.3** Que sinais estruturais indicam degradação ao longo da evolução do componente?                       | **M19 – Crescimento histórico de linhas**<br>**M20 – Mudanças na estrutura de estado**                                      |
-| **O2. Definir e validar métricas estruturais adequadas para medir qualidade e más práticas em React.** | **Q2.1** Cada má prática pode ser quantificada por uma métrica objetiva e automática?                        | **M7 – Profundidade de passagem de propriedades (prop drilling)**<br>**M10 – Risco de re-renderização**                     |
-|                                                                                                        | **Q2.2** As métricas capturam corretamente aspectos de complexidade reconhecidos pela literatura?            | **M14 – Complexidade ciclomatática**<br>**M8 – Profundidade de aninhamento JSX**                                            |
-|                                                                                                        | **Q2.3** As métricas são estáveis ao serem executadas diferentes vezes ou em diferentes máquinas?            | **M10 – Risco de re-renderização** (verifica variação por ambiente)<br>**M21 – Estados não derivados**                      |
-|                                                                                                        | **Q2.4** As métricas são reproduzíveis entre diferentes executores/ferramentas?                              | **M11 – Pressão de uso de contextos**<br>**M4 – Coesão entre hooks**                                                        |
-| **O3. Aplicar as métricas a componentes reais de projetos React.**                                     | **Q3.1** As métricas diferenciam componentes simples de componentes complexos?                               | **M13 – Linhas de código (LOC)**<br>**M14 – Complexidade ciclomatática**                                                    |
-|                                                                                                        | **Q3.2** O acoplamento interno e externo varia conforme o tamanho do componente?                             | **M15 – Número de importações**<br>**M17 – Acoplamento reativo (entrada/saída)**                                            |
-|                                                                                                        | **Q3.3** Há correlação entre antipadrões e aumento de tamanho/complexidade?                                  | **M5 – Uso excessivo de efeitos**<br>**M12 – Profundidade de encadeamento de funções**                                      |
-| **O4. Analisar resultados segundo complexidade, acoplamento, modularidade e presença de antipadrões.** | **Q4.1** Quais métricas são mais eficazes para separar componentes saudáveis de problemáticos?               | **M8 – Aninhamento JSX**<br>**M10 – Risco de re-renderização**                                                              |
-|                                                                                                        | **Q4.2** O acoplamento é um bom indicador de baixa qualidade estrutural?                                     | **M15 – Número de importações**<br>**M17 – Acoplamento reativo**                                                            |
-|                                                                                                        | **Q4.3** A modularização melhora os indicadores de saúde estrutural?                                         | **M18 – Subcomponentes declarados internamente**<br>**M16 – Hooks personalizados utilizados**                               |
-| **O5. Avaliar a utilidade e validade das métricas propostas.**                                         | **Q5.1** As métricas representam corretamente as más práticas documentadas e reconhecidas por profissionais? | **M1 – Violações de hooks**<br>**M2 – Erros no array de dependências**<br>**M7 – Profundidade de passagem de propriedades** |
-|                                                                                                        | **Q5.2** Especialistas consideram as métricas adequadas para avaliar qualidade em React?                     | **M16 – Avaliação por especialistas** (nota qualitativa)<br>**M17 – Concordância entre avaliadores**                        |
-|                                                                                                        | **Q5.3** As métricas são consistentes ao analisar componentes de naturezas diferentes?                       | **M13 – Linhas de código** (componente pequeno vs. grande)<br>**M14 – Complexidade ciclomatática**                          |
+| O1. Identificar más práticas estruturais presentes em componentes React.                           | Q1.1 Quais más práticas aparecem com maior frequência nos componentes?                                   | M1 – Violações das regras de hooks<br>M2 – Erros no array de dependências                                           |
+|                                                                                                        | Q1.2 Quais antipadrões são mais comuns em componentes grandes ou complexos?                              | M3 – Densidade de JSX<br>M22 – Número de responsabilidades declaradas                                               |
+|                                                                                                        | Q1.3 Que sinais estruturais indicam degradação ao longo da evolução do componente?                       | M19 – Crescimento histórico de linhas<br>M20 – Mudanças na estrutura de estado                                      |
+| O2. Definir e validar métricas estruturais adequadas para medir qualidade e más práticas em React. | Q2.1 Cada má prática pode ser quantificada por uma métrica objetiva e automática?                        | M7 – Profundidade de passagem de propriedades (prop drilling)<br>M10 – Risco de re-renderização                     |
+|                                                                                                        | Q2.2 As métricas capturam corretamente aspectos de complexidade reconhecidos pela literatura?            | M14 – Complexidade ciclomatática<br>M8 – Profundidade de aninhamento JSX                                            |
+|                                                                                                        | Q2.3 As métricas são estáveis ao serem executadas diferentes vezes ou em diferentes máquinas?            | M10 – Risco de re-renderização (verifica variação por ambiente)<br>M21 – Estados não derivados                      |
+|                                                                                                        | Q2.4 As métricas são reproduzíveis entre diferentes executores/ferramentas?                              | M11 – Pressão de uso de contextos<br>M4 – Coesão entre hooks                                                        |
+| O3. Aplicar as métricas a componentes reais de projetos React.                                     | Q3.1 As métricas diferenciam componentes simples de componentes complexos?                               | M13 – Linhas de código (LOC)<br>M14 – Complexidade ciclomatática                                                    |
+|                                                                                                        | Q3.2 O acoplamento interno e externo varia conforme o tamanho do componente?                             | M15 – Número de importações<br>M17 – Acoplamento reativo (entrada/saída)                                            |
+|                                                                                                        | Q3.3 Há correlação entre antipadrões e aumento de tamanho/complexidade?                                  | M5 – Uso excessivo de efeitos<br>M12 – Profundidade de encadeamento de funções                                      |
+| O4. Analisar resultados segundo complexidade, acoplamento, modularidade e presença de antipadrões. | Q4.1 Quais métricas são mais eficazes para separar componentes saudáveis de problemáticos?               | M8 – Aninhamento JSX<br>M10 – Risco de re-renderização                                                              |
+|                                                                                                        | Q4.2 O acoplamento é um bom indicador de baixa qualidade estrutural?                                     | M15 – Número de importações<br>M17 – Acoplamento reativo                                                            |
+|                                                                                                        | Q4.3 A modularização melhora os indicadores de saúde estrutural?                                         | M18 – Subcomponentes declarados internamente<br>M16 – Hooks personalizados utilizados                               |
+| O5. Avaliar a utilidade e validade das métricas propostas.                                         | Q5.1 As métricas representam corretamente as más práticas documentadas e reconhecidas por profissionais? | M1 – Violações de hooks<br>M2 – Erros no array de dependências<br>M7 – Profundidade de passagem de propriedades |
+|                                                                                                        | Q5.2 Especialistas consideram as métricas adequadas para avaliar qualidade em React?                     | M16 – Avaliação por especialistas (nota qualitativa)<br>M17 – Concordância entre avaliadores                        |
+|                                                                                                        | Q5.3 As métricas são consistentes ao analisar componentes de naturezas diferentes?                       | M13 – Linhas de código (componente pequeno vs. grande)<br>M14 – Complexidade ciclomatática                          |
 
 
 
  ### 3.5 Métricas associadas (GQM)
-| **Métrica**                                 | **Descrição**                                                              | **Unidade**   |
+| Métrica                                 | Descrição                                                              | Unidade   |
 | ------------------------------------------- | -------------------------------------------------------------------------- | ------------- |
-| **M1 – Violações das Regras de Hooks**            | Quantidade de violações das regras oficiais dos hooks (usar dentro de loops, condicionais, funções internas etc.).   | contagem      |
-| **M2 – Erros no Array de Dependências**           | Número de efeitos (`useEffect`) com dependências faltando, redundantes ou incorretas.                                | contagem      |
-| **M3 – Densidade de JSX**                         | Relação entre linhas de JSX e linhas de lógica JavaScript dentro do componente.                                      | razão         |
-| **M4 – Coesão entre Hooks**                       | Mede quanto os hooks estão relacionados entre si (compartilhamento de estados, variáveis ou lógica).                 | grau          |
-| **M5 – Uso Excessivo de Efeitos**                 | Proporção de `useEffect` em relação ao tamanho do componente ou quantidade de estados.                               | razão         |
-| **M6 – Complexidade da Estrutura de Estado**      | Mede a complexidade dos estados usados: dependências entre estados, estados derivados e profundidade de objetos.     | grau          |
-| **M7 – Profundidade de Passagem de Propriedades** | Número de níveis em que uma propriedade é repassada até chegar ao componente que realmente a utiliza.                | profundidade  |
-| **M8 – Profundidade de Aninhamento JSX**          | Profundidade máxima da árvore JSX (níveis de nós filhos).                                                            | profundidade  |
-| **M9 – Condicionais no JSX**                      | Quantidade de expressões condicionais ou ternários inseridos diretamente na marcação do JSX.                         | contagem      |
-| **M10 – Risco de Re-renderização**                | Número de elementos criados de forma inline (funções, objetos, arrays) que podem gerar renderizações desnecessárias. | contagem      |
-| **M11 – Pressão de Uso de Contextos**             | Quantidade de contextos consumidos pelo componente e o tamanho das informações que ele lê de cada contexto.          | índice        |
-| **M12 – Profundidade de Encadeamento de Funções** | Profundidade de funções aninhadas, closures e chamadas internas, especialmente dentro de hooks.                      | profundidade  |
-| **M13 – Linhas de Código (LOC)**                  | Total de linhas de código do componente, desconsiderando comentários e linhas vazias.                                | linhas        |
-| **M14 – Complexidade Ciclomática**                | Número de caminhos independentes no fluxo do componente.                                                             | grau          |
-| **M15 – Número de Importações**                   | Total de importações externas realizadas pelo componente.                                                            | contagem      |
-| **M16 – Hooks Personalizados Utilizados**         | Quantidade de hooks personalizados (`useX`) usados pelo componente.                                                  | contagem      |
-| **M17 – Acoplamento Reativo (Entrada e Saída)**   | Número de componentes que dependem deste componente e número de componentes dos quais este depende.                  | grau          |
-| **M18 – Subcomponentes Declarados Internamente**  | Número de componentes criados dentro de outro componente (possível acúmulo de responsabilidades).                    | contagem      |
-| **M19 – Crescimento Histórico de Linhas**         | Evolução do tamanho do componente ao longo de commits (indica expansão contínua).                                    | linhas/commit |
-| **M20 – Mudanças na Estrutura de Estado**         | Número de modificações nos hooks de estado ao longo da evolução do componente.                                       | contagem      |
-| **M21 – Estados Não Derivados**                   | Total de estados que poderiam ser calculados a partir de outros valores, mas são armazenados manualmente.            | contagem      |
-| **M22 – Número de Responsabilidades Declaradas**  | Contagem de papéis distintos realizados no componente (UI, estado, dados externos, efeitos, regras de negócio).      | contagem      |
+| M1 – Violações das Regras de Hooks            | Quantidade de violações das regras oficiais dos hooks (usar dentro de loops, condicionais, funções internas etc.).   | contagem      |
+| M2 – Erros no Array de Dependências           | Número de efeitos (`useEffect`) com dependências faltando, redundantes ou incorretas.                                | contagem      |
+| M3 – Densidade de JSX                         | Relação entre linhas de JSX e linhas de lógica JavaScript dentro do componente.                                      | razão         |
+| M4 – Coesão entre Hooks                       | Mede quanto os hooks estão relacionados entre si (compartilhamento de estados, variáveis ou lógica).                 | grau          |
+| M5 – Uso Excessivo de Efeitos                 | Proporção de `useEffect` em relação ao tamanho do componente ou quantidade de estados.                               | razão         |
+| M6 – Complexidade da Estrutura de Estado      | Mede a complexidade dos estados usados: dependências entre estados, estados derivados e profundidade de objetos.     | grau          |
+| M7 – Profundidade de Passagem de Propriedades | Número de níveis em que uma propriedade é repassada até chegar ao componente que realmente a utiliza.                | profundidade  |
+| M8 – Profundidade de Aninhamento JSX          | Profundidade máxima da árvore JSX (níveis de nós filhos).                                                            | profundidade  |
+| M9 – Condicionais no JSX                      | Quantidade de expressões condicionais ou ternários inseridos diretamente na marcação do JSX.                         | contagem      |
+| M10 – Risco de Re-renderização                | Número de elementos criados de forma inline (funções, objetos, arrays) que podem gerar renderizações desnecessárias. | contagem      |
+| M11 – Pressão de Uso de Contextos             | Quantidade de contextos consumidos pelo componente e o tamanho das informações que ele lê de cada contexto.          | índice        |
+| M12 – Profundidade de Encadeamento de Funções | Profundidade de funções aninhadas, closures e chamadas internas, especialmente dentro de hooks.                      | profundidade  |
+| M13 – Linhas de Código (LOC)                  | Total de linhas de código do componente, desconsiderando comentários e linhas vazias.                                | linhas        |
+| M14 – Complexidade Ciclomática                | Número de caminhos independentes no fluxo do componente.                                                             | grau          |
+| M15 – Número de Importações                   | Total de importações externas realizadas pelo componente.                                                            | contagem      |
+| M16 – Hooks Personalizados Utilizados         | Quantidade de hooks personalizados (`useX`) usados pelo componente.                                                  | contagem      |
+| M17 – Acoplamento Reativo (Entrada e Saída)   | Número de componentes que dependem deste componente e número de componentes dos quais este depende.                  | grau          |
+| M18 – Subcomponentes Declarados Internamente  | Número de componentes criados dentro de outro componente (possível acúmulo de responsabilidades).                    | contagem      |
+| M19 – Crescimento Histórico de Linhas         | Evolução do tamanho do componente ao longo de commits (indica expansão contínua).                                    | linhas/commit |
+| M20 – Mudanças na Estrutura de Estado         | Número de modificações nos hooks de estado ao longo da evolução do componente.                                       | contagem      |
+| M21 – Estados Não Derivados                   | Total de estados que poderiam ser calculados a partir de outros valores, mas são armazenados manualmente.            | contagem      |
+| M22 – Número de Responsabilidades Declaradas  | Contagem de papéis distintos realizados no componente (UI, estado, dados externos, efeitos, regras de negócio).      | contagem      |
+
+
+### 3.6 Fundamentos conceituais
+
+A definição das métricas propostas neste estudo parte de um modelo conceitual que representa a estrutura fundamental de um componente React moderno. Embora o React não seja uma linguagem orientada a objetos, sua arquitetura se organiza em torno de quatro conceitos essenciais que determinam a qualidade estrutural de um componente:
+
+---
+
+#### (1) Estado
+
+Refere-se a como o componente armazena, deriva, manipula e propaga estado.
+Problemas comuns incluem:
+
+* estados redundantes
+* estados derivados manualmente
+* dependências entre estados mal definidas
+* uso excessivo de `useState` em vez de composição via hooks
+
+Smells associados: má modelagem de estado, estado inflado, estado inconsistente.
+
+---
+
+#### (2) Renderização (JSX)
+
+Relaciona-se à estrutura da árvore JSX e à forma como o componente produz sua interface declarativa.
+
+Fatores críticos:
+
+* profundidade da árvore JSX
+* quantidade de condicionais no JSX
+* densidade entre lógica e apresentação
+
+Smells associados: componente inflado, JSX profundamente aninhado, renderização difícil de compreender.
+
+---
+
+#### (3) Hooks e Efeitos
+
+Abrange toda a lógica executável do componente, incluindo:
+
+* regras de uso dos hooks
+* efeitos com dependências incorretas
+* funções internas e closures
+* interação entre hooks que impacta coesão
+
+Smells associados: violação das regras de hooks, abuso de `useEffect`, lógica dispersa entre hooks.
+
+---
+
+#### (4) Acoplamento e Modularidade
+
+Avalia como o componente se relaciona com seu entorno:
+
+* importações
+* fan-in / fan-out
+* consumo de contextos
+* subcomponentes internos
+* profundidade de passagem de propriedades (prop drilling)
+
+Smells associados: acoplamento excessivo, dependência global, baixa modularização, God component.
+
+### 3.7 Relação entre conceitos estruturais do React e métricas associadas
+
+|Conceito Estrutural do React                |Descrição do Conceito                                                                                                                      |Métricas Associadas                                                                                                                                                                                                                                                                                                                                                                |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|1. Estado                                | Avalia como o componente armazena, deriva, combina e manipula estado interno. Engloba coesão lógica, dependências e redundâncias no estado. | -M4 – Coesão entre Hooks (parte relacionada a estados)<br>-M5 – Uso excessivo de efeitos (efeitos que atualizam estados desnecessariamente)<br>-M6 – Complexidade da estrutura de estado<br>-M12 – Profundidade de encadeamento de funções (se usado em manipulação de estado)<br>-M20 – Mudanças na estrutura de estado<br>-M21 – Estados não derivados |
+|2. Renderização (JSX)                    | Examina a qualidade da camada de apresentação, incluindo clareza, profundidade estrutural e presença de lógica dispersa na interface.       | -M3 – Densidade de JSX<br>-M8 – Profundidade de aninhamento JSX<br>-M9 – Condicionais no JSX<br>-M10 – Risco de re-renderização (funções/objetos inline influenciam renderização)<br>-M18 – Subcomponentes declarados internamente (impacta clareza e modularização)                                                                                          |
+|3. Hooks e Efeitos                       | Foca na aplicação correta das APIs do React, como regras de hooks, consistência de efeitos, dependências e lógica distribuída.              | -M1 – Violações das regras de hooks<br>-M2 – Erros no array de dependências<br>-M4 – Coesão entre hooks<br>-M5 – Uso excessivo de efeitos<br>-M10 – Risco de re-renderização<br>-M12 – Profundidade de encadeamento de funções                                                                                                                           |
+|4. Acoplamento e Modularidade            | Observa como o componente se conecta com outros módulos, contextos e props; mede dependências e separação de responsabilidades.             | -M7 – Profundidade de passagem de propriedades<br>-M11 – Pressão de uso de contextos<br>-M15 – Número de importações<br>-M16 – Hooks personalizados utilizados<br>-M17 – Acoplamento reativo (entrada/saída)<br>-M18 – Subcomponentes declarados internamente<br>-M22 – Número de responsabilidades declaradas                                      |
 
 
 ## 4. Escopo e contexto do experimento
 ### 4.1 Escopo funcional / de processo (incluído e excluído)
 
-**Incluído no experimento**: 
+Incluído no experimento: 
 - Componentes React em JavaScript ou TypeScript presentes em projetos open-source de médio/grande porte tanto sistemas React quanto Next.js.
 - Análise estática dos componentes usando AST (Babel Parser, TypeScript Compiler API e ESLint Rules).
 - Métricas estruturais definidas no GQM.
 - Aplicação das métricas em repositórios selecionados e comparação entre componentes.
 - Avaliação qualitativa por especialistas sobre utilidade e validade das métricas.
   
-**Excluído do experimento:**
+Excluído do experimento:
 - Métricas de desempenho em tempo de execução.
 - Avaliação de UX, design visual ou qualidade subjetiva da interface.
 - Código não relacionado a componentes React (ex.: utils, serviços, configurações).
@@ -169,8 +238,8 @@ Propor, testar e validar um conjunto inicial de métricas estruturais específic
 
 O experimento ocorrerá em:
 - Projetos React open-source populares, com histórico de commits e múltiplos contribuidores.
-- Repositórios variando entre **50 e 500+ componentes**, permitindo análise heterogênea.
-- Participação eventual de **2 a 4 desenvolvedores experientes** (avaliadores) com prática em React, para julgamento qualitativo de algumas métricas.
+- Repositórios variando entre 50 e 500+ componentes, permitindo análise heterogênea.
+- Participação eventual de 2 a 4 desenvolvedores experientes (avaliadores) com prática em React, para julgamento qualitativo de algumas métricas.
 
 O objetivo é simular um cenário de engenharia de software realista, mas controlado, permitindo replicabilidade.
 
@@ -189,19 +258,19 @@ O objetivo é simular um cenário de engenharia de software realista, mas contro
 
 ### 4.5 Limitações previstas
 
-- **Validade externa:** resultados podem não generalizar para equipes com padrões internos muito específicos.
-- **Validade de construto:** algumas métricas podem capturar parcialmente um antipadrão, não sua totalidade.
-- **Validade estatística:** tamanho reduzido da amostra pode reduzir poder inferencial.
-- **Viés de seleção:** escolha dos repositórios pode influenciar os resultados.
-- **Subjetividade na avaliação de especialistas:** métricas qualitativas podem variar conforme a experiência ou interpretação dos avaliadores.
+- Validade externa: resultados podem não generalizar para equipes com padrões internos muito específicos.
+- Validade de construto: algumas métricas podem capturar parcialmente um antipadrão, não sua totalidade.
+- Validade estatística: tamanho reduzido da amostra pode reduzir poder inferencial.
+- Viés de seleção: escolha dos repositórios pode influenciar os resultados.
+- Subjetividade na avaliação de especialistas: métricas qualitativas podem variar conforme a experiência ou interpretação dos avaliadores.
 
 ## 5. Stakeholders e impacto esperado
 ### 5.1 Stakeholders principais
 
-- **Pesquisador.**
-- **Desenvolvedores de React.**
-- **Arquitetos de software frontend.**
-- **Comunidade acadêmica em engenharia de software.**
+- Pesquisador.
+- Desenvolvedores de React.
+- Arquitetos de software frontend.
+- Comunidade acadêmica em engenharia de software.
 
 ### 5.2 Interesses e expectativas dos stakeholders
 
@@ -232,7 +301,7 @@ O objetivo é simular um cenário de engenharia de software realista, mas contro
 
 ### 6.2 Critérios de sucesso globais (go / no-go)
 
-O experimento será considerado **bem-sucedido** se:
+O experimento será considerado bem-sucedido se:
 - Um conjunto mínimo viável de métricas estruturais (≥ 8) puder ser definido e operacionalizado.
 - As métricas forem aplicáveis em pelo menos 80% dos componentes analisados.
 - A análise empírica mostrar variação real das métricas entre componentes saudáveis e degradados.
@@ -244,7 +313,7 @@ O experimento será considerado **bem-sucedido** se:
 O experimento será suspenso antes de iniciar caso:
 - Não haja repositórios adequados para análise (tamanho, histórico, estrutura).
 - As ferramentas de análise estática não consigam ser configuradas para operar no ambiente definido.
-- Falta completa de disponibilidade de especialistas para avaliação qualitativa.
+- Indisponibilidade de especialistas para avaliação qualitativa.
 - Mudança significativa no escopo que inviabilize o objetivo original do experimento.
 
 ## 7. Modelo conceitual e hipóteses
@@ -252,7 +321,7 @@ O experimento será suspenso antes de iniciar caso:
 
 O modelo conceitual deste experimento baseia-se na seguinte premissa:
 
-**Componentes React com presença de code smells e más práticas estruturais apresentam valores elevados em métricas estruturais específicas (complexidade, acoplamento, tamanho e violações de regras), e essas métricas podem identificá-los objetivamente.**
+Componentes React com presença de code smells e más práticas estruturais apresentam valores elevados em métricas estruturais específicas (complexidade, acoplamento, tamanho e violações de regras), e essas métricas podem identificá-los objetivamente.
 
 O modelo assume que:
 - Tamanho excessivo (LOC elevado) está associado a violação do Princípio de Responsabilidade Única (SRP).
@@ -542,10 +611,10 @@ Total estimado: 150-250 componentes (dependendo da disponibilidade nos repositó
 
 #### Justificativa:
 
-- **Múltiplos grupos:** Permitem análises comparativas ricas (ex.: pequenos vs. grandes, saudáveis vs. problemáticos).
-- **Sessões automatizadas:** Garantem objetividade, replicabilidade e escalabilidade da coleta de métricas.
-- **Foco em dados objetivos:** Evita viés subjetivo de avaliadores humanos, mantendo rigor científico.
-- **Análise estatística dedicada:** Assegura rigor na interpretação dos resultados.
+- Múltiplos grupos: Permitem análises comparativas ricas (ex.: pequenos vs. grandes, saudáveis vs. problemáticos).
+- Sessões automatizadas: Garantem objetividade, replicabilidade e escalabilidade da coleta de métricas.
+- Foco em dados objetivos: Evita viés subjetivo de avaliadores humanos, mantendo rigor científico.
+- Análise estatística dedicada: Assegura rigor na interpretação dos resultados.
 
 ## 10. População, sujeitos e amostragem
 10.1 População-alvo
@@ -565,12 +634,12 @@ Explique como os participantes serão escolhidos (amostra de conveniência, sort
 
 ### 10.1 População-alvo
 
-A população-alvo deste experimento são **componentes React funcionais** presentes em projetos de software de médio e grande porte, representando:
+A população-alvo deste experimento são componentes React funcionais presentes em projetos de software de médio e grande porte, representando:
 
-- **Projetos open-source consolidados** no ecossistema React.
-- **Aplicações web modernas** que utilizam hooks e padrões contemporâneos de desenvolvimento.
-- **Sistemas mantidos por múltiplos desenvolvedores**, com histórico de evolução e manutenção.
-- **Contextos diversos de aplicação**: dashboards, e-commerce, SaaS, sistemas de gerenciamento de conteúdo.
+- Projetos open-source consolidados no ecossistema React.
+- Aplicações web modernas que utilizam hooks e padrões contemporâneos de desenvolvimento.
+- Sistemas mantidos por múltiplos desenvolvedores, com histórico de evolução e manutenção.
+- Contextos diversos de aplicação: dashboards, e-commerce, SaaS, sistemas de gerenciamento de conteúdo.
 
 Esta população representa o cenário típico de desenvolvimento frontend em organizações que adotam React como framework principal, buscando generalizar os resultados para componentes desenvolvidos em ambientes profissionais reais.
 
@@ -578,78 +647,78 @@ Esta população representa o cenário típico de desenvolvimento frontend em or
 
 Para um componente ser elegível para análise, deve atender aos seguintes critérios:
 
-#### **Critérios Técnicos:**
-- Ser um **componente funcional** React (não class component).
-- Estar escrito em **JavaScript (ES6+)** ou **TypeScript**.
-- Utilizar pelo menos um **React Hook** (useState, useEffect, useContext, useMemo, useCallback, ou hooks customizados).
-- Ter pelo menos **20 linhas de código** (excluindo comentários e linhas em branco).
+#### Critérios Técnicos:
+- Ser um componente funcional React (não class component).
+- Estar escrito em JavaScript (ES6+) ou TypeScript.
+- Utilizar pelo menos um React Hook (useState, useEffect, useContext, useMemo, useCallback, ou hooks customizados).
+- Ter pelo menos 20 linhas de código (excluindo comentários e linhas em branco).
 - Estar em arquivo dedicado (`.jsx`, `.tsx`, `.js`, `.ts`).
 
-#### **Critérios do Projeto:**
-- Pertencer a repositório **open-source público** no GitHub.
-- Repositório com **≥ 50 componentes** no total.
-- Projeto com **≥ 6 meses** de histórico de commits.
-- Projeto com **≥ 3 contribuidores** ativos.
-- Projeto usando **React ≥ 16.8** (versão que introduziu hooks).
-- Repositório com **≥ 100 commits** (indicador de maturidade).
+#### Critérios do Projeto:
+- Pertencer a repositório open-source público no GitHub.
+- Repositório com ≥ 50 componentes no total.
+- Projeto com ≥ 6 meses de histórico de commits.
+- Projeto com ≥ 3 contribuidores ativos.
+- Projeto usando React ≥ 16.8 (versão que introduziu hooks).
+- Repositório com ≥ 100 commits (indicador de maturidade).
 
-#### **Critérios de Qualidade dos Dados:**
-- Código deve ser **parseável** por ferramentas AST (Babel Parser / TypeScript Compiler API).
-- Presença de configuração **ESLint** com regras React (para análise de violações).
-- Histórico Git **acessível e completo** (para métricas históricas).
+#### Critérios de Qualidade dos Dados:
+- Código deve ser parseável por ferramentas AST (Babel Parser / TypeScript Compiler API).
+- Presença de configuração ESLint com regras React (para análise de violações).
+- Histórico Git acessível e completo (para métricas históricas).
 
 ### 10.3 Critérios de exclusão de componentes
 
-Componentes serão **excluídos** da análise se:
+Componentes serão excluídos da análise se:
 
-#### **Exclusões Técnicas:**
-- Componentes de **classe** (class components) — incompatíveis com análise de hooks.
-- Componentes **triviais** com menos de 20 linhas (muito simples para análise significativa).
-- Arquivos de **configuração** (ex.: `config.js`, `constants.js`).
-- **Utilitários** ou helpers que não são componentes React.
-- Componentes **gerados automaticamente** (ex.: por frameworks, scaffolding tools).
-- Código **minificado** ou ofuscado.
+#### Exclusões Técnicas:
+- Componentes de classe (class components) — incompatíveis com análise de hooks.
+- Componentes triviais com menos de 20 linhas (muito simples para análise significativa).
+- Arquivos de configuração (ex.: `config.js`, `constants.js`).
+- Utilitários ou helpers que não são componentes React.
+- Componentes gerados automaticamente (ex.: por frameworks, scaffolding tools).
+- Código minificado ou ofuscado.
 
-#### **Exclusões por Contexto:**
-- Componentes de **testes** (`.test.js`, `.spec.js`).
-- **Storybook stories** ou exemplos de documentação.
-- Componentes de **demonstração** ou tutoriais.
-- **Páginas do Next.js** (rotas em `/pages` ou `/app`) — são wrappers, não componentes puros.
+#### Exclusões por Contexto:
+- Componentes de testes (`.test.js`, `.spec.js`).
+- Storybook stories ou exemplos de documentação.
+- Componentes de demonstração ou tutoriais.
+- Páginas do Next.js (rotas em `/pages` ou `/app`) — são wrappers, não componentes puros.
 
-#### **Exclusões por Qualidade:**
-- Componentes com **erros de sintaxe** que impedem parsing.
-- Repositórios **abandonados** (sem commits nos últimos 12 meses).
-- Projetos **sem licença open-source** clara.
-- Repositórios **privados** ou com restrições de acesso.
+#### Exclusões por Qualidade:
+- Componentes com erros de sintaxe que impedem parsing.
+- Repositórios abandonados (sem commits nos últimos 12 meses).
+- Projetos sem licença open-source clara.
+- Repositórios privados ou com restrições de acesso.
 
 ### 10.4 Tamanho da amostra planejado
 
-#### **Tamanho Total da Amostra:**
-- **Meta principal:** 150 a 200 componentes.
-- **Mínimo aceitável:** 100 componentes (se houver dificuldades de coleta).
-- **Distribuição por estratos:**
+#### Tamanho Total da Amostra:
+- Meta principal: 150 a 200 componentes.
+- Mínimo aceitável: 100 componentes (se houver dificuldades de coleta).
+- Distribuição por estratos:
 
-| **Estrato (Tamanho)**      | **Meta**          | **Mínimo**        | **Justificativa**                                |
+| Estrato (Tamanho)      | Meta          | Mínimo        | Justificativa                                |
 | -------------------------- | ----------------- | ----------------- | ------------------------------------------------ |
 | Pequenos (< 100 LOC)       | 50-60 componentes | 30 componentes    | Baseline de simplicidade                         |
 | Médios (100-300 LOC)       | 60-80 componentes | 40 componentes    | Faixa mais comum em projetos reais               |
 | Grandes (> 300 LOC)        | 40-60 componentes | 30 componentes    | Suspeita de problemas estruturais                |
 
-#### **Distribuição por Repositórios:**
-- **3 a 5 repositórios** diferentes para diversidade.
-- **30 a 60 componentes por repositório** para balanceamento.
-- **Nenhum repositório** deve contribuir com mais de 40% da amostra total.
+#### Distribuição por Repositórios:
+- 3 a 5 repositórios diferentes para diversidade.
+- 30 a 60 componentes por repositório para balanceamento.
+- Nenhum repositório deve contribuir com mais de 40% da amostra total.
 
-#### **Justificativa Estatística:**
-- Para detectar **correlações moderadas** (r ≥ 0,3) com α=0,05 e poder de 80%, são necessários aproximadamente **84 componentes**.
-- Para comparações entre grupos (testes t) com tamanho de efeito médio (d=0,5), α=0,05 e poder de 80%, são necessários **~64 componentes por grupo**.
-- A meta de **150-200 componentes** fornece margem confortável para análises estratificadas e controle de variáveis de confusão.
+#### Justificativa Estatística:
+- Para detectar correlações moderadas (r ≥ 0,3) com α=0,05 e poder de 80%, são necessários aproximadamente 84 componentes.
+- Para comparações entre grupos (testes t) com tamanho de efeito médio (d=0,5), α=0,05 e poder de 80%, são necessários ~64 componentes por grupo.
+- A meta de 150-200 componentes fornece margem confortável para análises estratificadas e controle de variáveis de confusão.
 
 ### 10.5 Método de seleção / recrutamento
 
-#### **Etapa 1: Identificação de Repositórios Candidatos**
+#### Etapa 1: Identificação de Repositórios Candidatos
 
-**Critérios de busca no GitHub:**
+Critérios de busca no GitHub:
 - Linguagem: JavaScript ou TypeScript.
 - Framework: React.
 - Estrelas (stars): ≥ 500 (indicador de qualidade e relevância).
@@ -657,18 +726,18 @@ Componentes serão **excluídos** da análise se:
 - Issues abertas: ≥ 10 (indicador de atividade).
 - Última atualização: nos últimos 6 meses.
 
-**Ferramentas:**
+Ferramentas:
 - GitHub Search API ou GitHub Advanced Search.
 - Filtros: `language:TypeScript OR language:JavaScript topic:react stars:>500`.
 
-**Pré-seleção manual:**
+Pré-seleção manual:
 - Revisar README para confirmar que é um projeto React real (não biblioteca de componentes).
 - Verificar estrutura de pastas (presença de `/src`, `/components`, `/app`).
 - Confirmar presença de `package.json` com dependência `react`.
 
-#### **Etapa 2: Extração de Componentes dos Repositórios**
+#### Etapa 2: Extração de Componentes dos Repositórios
 
-**Processo automatizado:**
+Processo automatizado:
 1. Clonar repositórios selecionados localmente.
 2. Buscar arquivos com extensões `.jsx`, `.tsx`, `.js`, `.ts`.
 3. Filtrar apenas arquivos que contêm componentes React:
@@ -677,22 +746,22 @@ Componentes serão **excluídos** da análise se:
 4. Aplicar critérios de inclusão/exclusão.
 5. Extrair metadados: caminho, tamanho, data de criação, número de commits.
 
-#### **Etapa 3: Amostragem Estratificada**
+#### Etapa 3: Amostragem Estratificada
 
-**Estratificação por tamanho:**
+Estratificação por tamanho:
 1. Calcular LOC de cada componente extraído.
 2. Classificar em estratos: pequeno, médio, grande.
-3. Dentro de cada estrato, **selecionar aleatoriamente** componentes usando `random.sample()`.
+3. Dentro de cada estrato, selecionar aleatoriamente componentes usando `random.sample()`.
 
-#### **Etapa 4: Validação da Amostra**
+#### Etapa 4: Validação da Amostra
 
-**Verificações pós-seleção:**
+Verificações pós-seleção:
 - Confirmar que cada componente é parseável pelo AST.
 - Verificar distribuição de linguagens (JS vs TS).
 - Verificar distribuição de repositórios (balanceamento).
 - Confirmar presença de histórico Git completo.
 
-**Critério de aceitação:**
+Critério de aceitação:
 - Se ≥ 80% dos componentes selecionados passarem na validação, prosseguir.
 - Caso contrário, repetir amostragem com novos repositórios.
 
@@ -700,7 +769,7 @@ Componentes serão **excluídos** da análise se:
 
 Após seleção, a amostra será caracterizada documentando:
 
-| **Característica**               | **Como será registrada**                           |
+| Característica               | Como será registrada                           |
 | -------------------------------- | -------------------------------------------------- |
 | Nome do repositório              | URL completa do GitHub                             |
 | Número de estrelas               | Metadado do repositório                            |
@@ -718,30 +787,30 @@ Após seleção, a amostra será caracterizada documentando:
 
 Os seguintes instrumentos serão utilizados para coleta automatizada de dados:
 
-#### **11.1.1 Ferramentas de Análise Estática**
+#### 11.1.1 Ferramentas de Análise Estática
 
-| **Ferramenta**          | **Função**                                      | **Métricas Coletadas**                          |
+| Ferramenta          | Função                                      | Métricas Coletadas                          |
 | ----------------------- | ----------------------------------------------- | ----------------------------------------------- |
-| **Babel Parser**        | Parsing de código JavaScript/JSX                | M3 (LOC), M12 (Imports), M15 (Subcomponentes)   |
-| **TypeScript Compiler API** | Parsing de código TypeScript/TSX            | M3 (LOC), M12 (Imports), M15 (Subcomponentes)   |
-| **ESLint**              | Análise de violações de regras React            | M1 (Rules of Hooks), M2 (exhaustive-deps)       |
-| **Esprima / Acorn**     | Análise de complexidade ciclomática             | M9 (Complexidade Ciclomática), M6 (Branch Complexity) |
-| **jscpd**               | Detecção de duplicação de código                | Percentual de código duplicado                  |
-| **AST Walker Custom**   | Análise customizada de estrutura                | M4 (SRP Violations), M13 (Hooks customizados), M14 (Fan-in/Fan-out) |
-| **Dependency Analyzer** | Análise de dependências e acoplamento           | M12 (Imports), M14 (Fan-in/Fan-out)             |
+| Babel Parser        | Parsing de código JavaScript/JSX                | M3 (LOC), M12 (Imports), M15 (Subcomponentes)   |
+| TypeScript Compiler API | Parsing de código TypeScript/TSX            | M3 (LOC), M12 (Imports), M15 (Subcomponentes)   |
+| ESLint              | Análise de violações de regras React            | M1 (Rules of Hooks), M2 (exhaustive-deps)       |
+| Esprima / Acorn     | Análise de complexidade ciclomática             | M9 (Complexidade Ciclomática), M6 (Branch Complexity) |
+| jscpd               | Detecção de duplicação de código                | Percentual de código duplicado                  |
+| AST Walker Custom   | Análise customizada de estrutura                | M4 (SRP Violations), M13 (Hooks customizados), M14 (Fan-in/Fan-out) |
+| Dependency Analyzer | Análise de dependências e acoplamento           | M12 (Imports), M14 (Fan-in/Fan-out)             |
 
-#### **11.1.2 Ferramentas de Análise de Histórico Git**
+#### 11.1.2 Ferramentas de Análise de Histórico Git
 
-| **Ferramenta**          | **Função**                                      | **Métricas Coletadas**                          |
+| Ferramenta          | Função                                      | Métricas Coletadas                          |
 | ----------------------- | ----------------------------------------------- | ----------------------------------------------- |
-| **Git CLI**             | Extração de histórico de commits                | M5 (Crescimento histórico de LOC), M18 (Defeitos) |
-| **PyDriller**           | Biblioteca Python para análise de repositórios  | M5 (Crescimento LOC), M6 (Crescimento de branches), número de commits, contribuidores, churns |
-| **GitHub API**          | Extração de issues e pull requests              | M18 (Histórico de defeitos associados)          |
-| **git log + diff**      | Análise de mudanças estruturais ao longo do tempo | M5 (Crescimento histórico), M6 (Evolução de complexidade) |
+| Git CLI             | Extração de histórico de commits                | M5 (Crescimento histórico de LOC), M18 (Defeitos) |
+| PyDriller           | Biblioteca Python para análise de repositórios  | M5 (Crescimento LOC), M6 (Crescimento de branches), número de commits, contribuidores, churns |
+| GitHub API          | Extração de issues e pull requests              | M18 (Histórico de defeitos associados)          |
+| git log + diff      | Análise de mudanças estruturais ao longo do tempo | M5 (Crescimento histórico), M6 (Evolução de complexidade) |
 
-#### **11.1.3 Scripts Customizados**
+#### 11.1.3 Scripts Customizados
 
-| **Script**                      | **Linguagem** | **Função**                                              | **Métricas Geradas** |
+| Script                      | Linguagem | Função                                              | Métricas Geradas |
 | ------------------------------- | ------------- | ------------------------------------------------------- | -------------------- |
 | `component_extractor.py`        | Python        | Identifica e lista componentes React no repositório     | Lista de componentes |
 | `metrics_collector.py`          | Python        | Extrai métricas estruturais via AST                     | M3, M4, M6, M7, M9, M12, M13, M14, M15 |
@@ -751,9 +820,9 @@ Os seguintes instrumentos serão utilizados para coleta automatizada de dados:
 | `data_aggregator.py`            | Python        | Agrega dados de múltiplas fontes em DataFrame           | Dataset consolidado com M1-M18 |
 | `statistical_analysis.R`        | R             | Realiza análises estatísticas e testes de hipóteses     | Correlações, testes, regressões |
 
-#### **11.1.4 Planilhas e Bancos de Dados**
+#### 11.1.4 Planilhas e Bancos de Dados
 
-| **Artefato**                    | **Formato** | **Conteúdo**                                            |
+| Artefato                    | Formato | Conteúdo                                            |
 | ------------------------------- | ----------- | ------------------------------------------------------- |
 | `components_metadata.csv`       | CSV         | Lista de componentes com metadados (repo, path, LOC)    |
 | `metrics_raw.csv`               | CSV         | Métricas estruturais brutas por componente              |
@@ -761,28 +830,28 @@ Os seguintes instrumentos serão utilizados para coleta automatizada de dados:
 | `eslint_violations.json`        | JSON        | Relatório de violações ESLint por componente            |
 | `final_dataset.csv`             | CSV         | Dataset consolidado para análise estatística            |
 
-#### **11.1.5 Mapeamento Completo: Métricas → Instrumentos**
+#### 11.1.5 Mapeamento Completo: Métricas → Instrumentos
 
-Esta tabela documenta **todas as 18 métricas do GQM** e os instrumentos responsáveis por sua coleta:
+Esta tabela documenta todas as 18 métricas do GQM e os instrumentos responsáveis por sua coleta:
 
-| **Métrica** | **Descrição** | **Ferramenta/Script Principal** | **Técnica de Coleta** |
+| Métrica | Descrição | Ferramenta/Script Principal | Técnica de Coleta |
 | ----------- | ------------- | ------------------------------- | --------------------- |
-| **M1** – Violações das Rules of Hooks | Hooks em condições, loops, etc. | ESLint + `eslint_runner.sh` | Regra `react-hooks/rules-of-hooks` |
-| **M2** – Erros de dependências do useEffect | Dependências ausentes/incorretas | ESLint + `eslint_runner.sh` | Regra `react-hooks/exhaustive-deps` |
-| **M3** – Lines of Code (LOC) | Tamanho total do componente | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de linhas de código (sem comentários/vazias) |
-| **M4** – SRP Violations | Responsabilidades distintas | AST Walker Custom + `metrics_collector.py` | Análise semântica de funções/lógica no componente |
-| **M5** – Crescimento histórico de LOC | Aumento de tamanho ao longo do tempo | PyDriller + `git_history_analyzer.py` | Comparação LOC (primeiro commit vs atual) |
-| **M6** – Branch Complexity | Condicionais e ramificações | Esprima/Acorn + `metrics_collector.py` | Contagem de `if`, `switch`, ternários, `&&`, `\|\|` |
-| **M7** – Métricas por antipadrão | Quantificação de bad smells específicos | `antipattern_detector.py` | Detecção de padrões: prop drilling, god component, etc. |
-| **M8** – Mapeamento métrica ↔ má prática | Cobertura de más práticas | `antipattern_detector.py` | Percentual de antipadrões cobertos por métricas |
-| **M9** – Complexidade Ciclomática | Caminhos independentes no código | Esprima/Acorn + `metrics_collector.py` | Algoritmo de McCabe (V(G) = E - N + 2P) |
-| **M10** – Variabilidade por executor | Consistência entre execuções | Todos os scripts | Comparação de resultados em múltiplas execuções |
-| **M11** – Precisão da análise estática | Acurácia das ferramentas AST | Validação manual + `metrics_collector.py` | Comparação amostra manual vs automatizada |
-| **M12** – Número de imports | Dependências externas | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de declarações `import` |
-| **M13** – Hooks customizados usados | Hooks consumidos (use*) | AST Walker Custom + `metrics_collector.py` | Contagem de chamadas a funções `use*` |
-| **M14** – Fan-in / Fan-out | Acoplamento estrutural | Dependency Analyzer + `metrics_collector.py` | Fan-in: quantos importam este / Fan-out: quantos este importa |
-| **M15** – Número de subcomponentes | Componentes filhos internos | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de componentes declarados dentro do componente |
-| **M16** – Histórico de defeitos | Bugs associados ao componente | GitHub API + Git CLI + `git_history_analyzer.py` | Issues mencionando componente + commits com "fix\|bug" |
+| M1 – Violações das Rules of Hooks | Hooks em condições, loops, etc. | ESLint + `eslint_runner.sh` | Regra `react-hooks/rules-of-hooks` |
+| M2 – Erros de dependências do useEffect | Dependências ausentes/incorretas | ESLint + `eslint_runner.sh` | Regra `react-hooks/exhaustive-deps` |
+| M3 – Lines of Code (LOC) | Tamanho total do componente | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de linhas de código (sem comentários/vazias) |
+| M4 – SRP Violations | Responsabilidades distintas | AST Walker Custom + `metrics_collector.py` | Análise semântica de funções/lógica no componente |
+| M5 – Crescimento histórico de LOC | Aumento de tamanho ao longo do tempo | PyDriller + `git_history_analyzer.py` | Comparação LOC (primeiro commit vs atual) |
+| M6 – Branch Complexity | Condicionais e ramificações | Esprima/Acorn + `metrics_collector.py` | Contagem de `if`, `switch`, ternários, `&&`, `\|\|` |
+| M7 – Métricas por antipadrão | Quantificação de bad smells específicos | `antipattern_detector.py` | Detecção de padrões: prop drilling, god component, etc. |
+| M8 – Mapeamento métrica ↔ má prática | Cobertura de más práticas | `antipattern_detector.py` | Percentual de antipadrões cobertos por métricas |
+| M9 – Complexidade Ciclomática | Caminhos independentes no código | Esprima/Acorn + `metrics_collector.py` | Algoritmo de McCabe (V(G) = E - N + 2P) |
+| M10 – Variabilidade por executor | Consistência entre execuções | Todos os scripts | Comparação de resultados em múltiplas execuções |
+| M11 – Precisão da análise estática | Acurácia das ferramentas AST | Validação manual + `metrics_collector.py` | Comparação amostra manual vs automatizada |
+| M12 – Número de imports | Dependências externas | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de declarações `import` |
+| M13 – Hooks customizados usados | Hooks consumidos (use*) | AST Walker Custom + `metrics_collector.py` | Contagem de chamadas a funções `use*` |
+| M14 – Fan-in / Fan-out | Acoplamento estrutural | Dependency Analyzer + `metrics_collector.py` | Fan-in: quantos importam este / Fan-out: quantos este importa |
+| M15 – Número de subcomponentes | Componentes filhos internos | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de componentes declarados dentro do componente |
+| M16 – Histórico de defeitos | Bugs associados ao componente | GitHub API + Git CLI + `git_history_analyzer.py` | Issues mencionando componente + commits com "fix\|bug" |
 
 
 
@@ -790,9 +859,9 @@ Esta tabela documenta **todas as 18 métricas do GQM** e os instrumentos respons
 
 Os seguintes materiais serão preparados para documentar e padronizar o experimento:
 
-#### **11.2.1 Documentação Técnica**
+#### 11.2.1 Documentação Técnica
 
-| **Documento**                   | **Conteúdo**                                                    |
+| Documento                   | Conteúdo                                                    |
 | ------------------------------- | --------------------------------------------------------------- |
 | `README_EXPERIMENTO.md`         | Visão geral do experimento, objetivos e estrutura               |
 | `SETUP_GUIDE.md`                | Guia de instalação de ferramentas e dependências                |
@@ -800,9 +869,9 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
 | `SCRIPTS_DOCUMENTATION.md`      | Documentação dos scripts (parâmetros, saídas, exemplos)         |
 | `REPRODUCIBILITY_GUIDE.md`      | Instruções para replicar o experimento                          |
 
-#### **11.2.2 Configurações Padronizadas**
+#### 11.2.2 Configurações Padronizadas
 
-| **Arquivo**                     | **Função**                                                      |
+| Arquivo                     | Função                                                      |
 | ------------------------------- | --------------------------------------------------------------- |
 | `.eslintrc.json`                | Configuração ESLint com regras React oficiais                   |
 | `tsconfig.json`                 | Configuração TypeScript para parsing consistente                |
@@ -810,9 +879,9 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
 | `requirements.txt`              | Dependências Python necessárias                                 |
 | `package.json`                  | Dependências Node.js necessárias                                |
 
-#### **11.2.3 Templates de Relatórios**
+#### 11.2.3 Templates de Relatórios
 
-| **Template**                    | **Formato** | **Uso**                                                 |
+| Template                    | Formato | Uso                                                 |
 | ------------------------------- | ----------- | ------------------------------------------------------- |
 | `analysis_report_template.Rmd`  | R Markdown  | Template para relatórios estatísticos automatizados     |
 | `visualization_notebook.ipynb`  | Jupyter     | Notebook para visualizações e análises exploratórias    |
@@ -821,36 +890,36 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
 
 ![Fluxograma do Experimento](metodologia.png)
 
-#### **FASE 1: PREPARAÇÃO**
+#### FASE 1: PREPARAÇÃO
 
-**Passo 1.1 - Configuração do Ambiente**
+Passo 1.1 - Configuração do Ambiente
 - Instalar Python 3.9+, Node.js 18+, R 4.0+, Git 2.30+.
 - Instalar dependências: `pip install -r requirements.txt`, `npm install`.
 - Configurar ESLint com plugin React: `npm install eslint eslint-plugin-react eslint-plugin-react-hooks`.
 - Testar ferramentas de parsing em componente de exemplo.
 
-**Passo 1.2 - Seleção de Repositórios**
+Passo 1.2 - Seleção de Repositórios
 - Executar busca no GitHub com critérios definidos (seção 10.5).
 - Listar repositórios candidatos em `repositories_candidates.csv`.
 - Revisar manualmente os 10 primeiros candidatos.
-- Selecionar **3 a 5 repositórios** que atendem aos critérios.
+- Selecionar 3 a 5 repositórios que atendem aos critérios.
 - Clonar repositórios localmente: `git clone <repo_url>`.
 
-**Passo 1.3 - Extração de Componentes**
+Passo 1.3 - Extração de Componentes
 - Executar `component_extractor.py` em cada repositório.
 - Gerar lista de componentes candidatos em `components_candidates.csv`.
 - Aplicar critérios de inclusão/exclusão (seção 10.2 e 10.3).
 - Gerar lista final de componentes em `components_selected.csv`.
 
-#### **FASE 2: COLETA AUTOMATIZADA DE MÉTRICAS**
+#### FASE 2: COLETA AUTOMATIZADA DE MÉTRICAS
 
-**Passo 2.1 - Extração de Métricas Estruturais **
-- **Duração estimada:** 2-4 horas (automatizado).
-- **Responsável:** Script `metrics_collector.py`.
-- **Entrada:** `components_selected.csv`.
-- **Saída:** `metrics_raw.csv`.
+Passo 2.1 - Extração de Métricas Estruturais 
+- Duração estimada: 2-4 horas (automatizado).
+- Responsável: Script `metrics_collector.py`.
+- Entrada: `components_selected.csv`.
+- Saída: `metrics_raw.csv`.
 
-**Ações:**
+Ações:
 1. Para cada componente na lista:
    - Ler arquivo do componente.
    - Parsear código com Babel Parser (JS/JSX) ou TypeScript Compiler API (TS/TSX).
@@ -864,16 +933,16 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
    - Salvar métricas em `metrics_raw.csv`.
 2. Registrar log de execução (componentes processados com sucesso vs. erros).
 
-**Passo 2.2 - Análise de Violações ESLint**
-- **Duração estimada:** 1-2 horas (automatizado).
-- **Responsável:** Script `eslint_runner.sh`.
-- **Entrada:** `components_selected.csv`.
-- **Saída:** `eslint_violations.json`.
+Passo 2.2 - Análise de Violações ESLint
+- Duração estimada: 1-2 horas (automatizado).
+- Responsável: Script `eslint_runner.sh`.
+- Entrada: `components_selected.csv`.
+- Saída: `eslint_violations.json`.
 
-**Ações:**
+Ações:
 1. Executar ESLint em cada componente:
    ```bash
-   eslint --format json --output-file eslint_violations.json src/**/*.{js,jsx,ts,tsx}
+   eslint --format json --output-file eslint_violations.json src//*.{js,jsx,ts,tsx}
    ```
 2. Filtrar apenas violações de regras React:
    - `react-hooks/rules-of-hooks` (M1).
@@ -881,13 +950,13 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
 3. Contar violações por componente.
 4. Agregar resultados em `metrics_raw.csv`.
 
-**Passo 2.3 - Análise de Histórico Git**
-- **Duração estimada:** 4-6 horas (automatizado).
-- **Responsável:** Script `git_history_analyzer.py`.
-- **Entrada:** `components_selected.csv`.
-- **Saída:** `git_history.csv`.
+Passo 2.3 - Análise de Histórico Git
+- Duração estimada: 4-6 horas (automatizado).
+- Responsável: Script `git_history_analyzer.py`.
+- Entrada: `components_selected.csv`.
+- Saída: `git_history.csv`.
 
-**Ações:**
+Ações:
 1. Para cada componente:
    - Extrair histórico de commits:
      ```bash
@@ -903,30 +972,30 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
    - Usar `git log --grep="fix\|bug"` para encontrar commits de correção.
 3. Salvar dados em `git_history.csv`.
 
-#### **FASE 3: CONSOLIDAÇÃO DOS DADOS**
+#### FASE 3: CONSOLIDAÇÃO DOS DADOS
 
-**Passo 3.1 - Agregação de Dados**
+Passo 3.1 - Agregação de Dados
 - Executar `data_aggregator.py`.
 - Mesclar `metrics_raw.csv`, `eslint_violations.json`, `git_history.csv`.
 - Gerar dataset consolidado: `final_dataset.csv`.
 - Importar para SQLite: `experiment.db`.
 
-**Passo 3.2 - Limpeza e Validação**
+Passo 3.2 - Limpeza e Validação
 - Verificar dados faltantes (missing values).
 - Identificar outliers extremos (valores impossíveis).
 - Verificar consistência (ex.: LOC > 0, violações ≥ 0).
 - Documentar anomalias em `data_quality_report.md`.
 
-**Passo 3.3 - Classificação em Grupos Experimentais**
+Passo 3.3 - Classificação em Grupos Experimentais
 - Aplicar critérios de estratificação (seção 8.4).
 - Adicionar coluna `grupo_tamanho` (Pequeno/Médio/Grande).
 - Adicionar coluna `grupo_complexidade` (Baixa/Média/Alta).
 - Adicionar coluna `grupo_acoplamento` (Baixo/Médio/Alto).
 - Adicionar coluna `grupo_saude` (Saudável/Problemático).
 
-#### **FASE 4: ANÁLISE ESTATÍSTICA**
+#### FASE 4: ANÁLISE ESTATÍSTICA
 
-**Passo 4.1 - Análise Exploratória de Dados (EDA)**
+Passo 4.1 - Análise Exploratória de Dados (EDA)
 - Carregar `final_dataset.csv` em Python/R.
 - Gerar estatísticas descritivas (média, mediana, desvio padrão, min, max).
 - Criar visualizações:
@@ -936,37 +1005,37 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
   - Gráficos de dispersão (LOC vs. Complexidade, etc.).
 - Salvar visualizações em `/outputs/figures/`.
 
-**Passo 4.2 - Testes de Hipóteses**
-- **Hipótese 1 (Tamanho vs. Complexidade):**
+Passo 4.2 - Testes de Hipóteses
+- Hipótese 1 (Tamanho vs. Complexidade):
   - Calcular correlação de Pearson (ou Spearman se não-normal).
   - Teste: `cor.test(LOC, Complexidade_Ciclomatica)`.
-- **Hipótese 2 (Acoplamento vs. Violações):**
+- Hipótese 2 (Acoplamento vs. Violações):
   - Comparar grupos (Baixo/Médio/Alto acoplamento) usando ANOVA ou Kruskal-Wallis.
   - Teste: `kruskal.test(Violacoes ~ Grupo_Acoplamento)`.
-- **Hipótese 3 (Modularização vs. Qualidade):**
+- Hipótese 3 (Modularização vs. Qualidade):
   - Teste t independente (ou Mann-Whitney) comparando modularizados vs. monolíticos.
   - Teste: `wilcox.test(Complexidade ~ Grupo_Modularizacao)`.
-- **Hipótese 5 (Métricas vs. Defeitos):**
+- Hipótese 5 (Métricas vs. Defeitos):
   - Regressão linear: `lm(Defeitos ~ LOC + Complexidade + Acoplamento)`.
 
-**Passo 4.3 - Análise Multivariada**
+Passo 4.3 - Análise Multivariada
 - PCA (Análise de Componentes Principais) para identificar padrões.
 - Análise de cluster para agrupar componentes similares.
 - Regressão múltipla para identificar preditores mais fortes de code smells.
 
-**Passo 4.4 - Geração de Relatório Estatístico**
+Passo 4.4 - Geração de Relatório Estatístico
 - Executar `analysis_report_template.Rmd` para gerar relatório HTML/PDF.
 - Incluir tabelas de resultados, gráficos e interpretações.
 - Documentar todos os testes realizados e decisões metodológicas.
 
-#### **FASE 5: DOCUMENTAÇÃO E VALIDAÇÃO**
+#### FASE 5: DOCUMENTAÇÃO E VALIDAÇÃO
 
-**Passo 5.1 - Validação de Validade**
+Passo 5.1 - Validação de Validade
 - Revisar ameaças à validade (seção 13).
 - Verificar se premissas estatísticas foram atendidas.
 - Documentar limitações observadas.
 
-**Passo 5.2 - Empacotamento para Replicação**
+Passo 5.2 - Empacotamento para Replicação
 - Organizar todos os scripts, dados e documentação em estrutura padronizada.
 - Gerar arquivo `REPRODUCIBILITY_PACKAGE.zip` contendo:
   - Todos os scripts.
@@ -974,14 +1043,14 @@ Os seguintes materiais serão preparados para documentar e padronizar o experime
   - Documentação completa.
   - Instruções de execução.
 
-**Passo 5.3 - Relatório Final**
+Passo 5.3 - Relatório Final
 - Elaborar relatório final do experimento.
 - Responder às questões de pesquisa (seção 3.3).
 - Avaliar critérios de sucesso (seção 6.2).
 
 ### 11.4 Plano de piloto
 
-#### **Objetivo do Piloto:**
+#### Objetivo do Piloto:
 
 Executar uma versão reduzida do experimento para:
 - Validar a viabilidade técnica dos scripts de coleta.
@@ -990,16 +1059,16 @@ Executar uma versão reduzida do experimento para:
 - Ajustar thresholds de classificação de grupos.
 - Verificar qualidade dos dados coletados.
 
-#### **Escopo do Piloto:**
+#### Escopo do Piloto:
 
-- **1 repositório** (médio porte, ~100 componentes).
-- **20 componentes** selecionados aleatoriamente.
+- 1 repositório (médio porte, ~100 componentes).
+- 20 componentes selecionados aleatoriamente.
 - Executar apenas Fase 1, Fase 2 (Sessões 1 e 2) e Passo 3.1.
-- **Duração:** 2-3 dias.
+- Duração: 2-3 dias.
 
-#### **Critérios de Sucesso do Piloto:**
+#### Critérios de Sucesso do Piloto:
 
-| **Critério**                              | **Meta**                                      |
+| Critério                              | Meta                                      |
 | ----------------------------------------- | --------------------------------------------- |
 | Taxa de parsing bem-sucedido              | ≥ 90% dos componentes                         |
 | Métricas coletadas sem erros              | ≥ 85% das métricas por componente             |
@@ -1007,55 +1076,55 @@ Executar uma versão reduzida do experimento para:
 | Dados históricos recuperáveis             | ≥ 80% dos componentes com histórico completo  |
 | Violações ESLint detectadas               | Pelo menos 1 violação em ≥ 30% dos componentes|
 
-#### **Ajustes Previstos Após Piloto:**
+#### Ajustes Previstos Após Piloto:
 
-- **Se taxa de parsing < 90%:** Revisar configurações do Babel/TypeScript ou adicionar tratamento de erros.
-- **Se tempo > 2h para 20 componentes:** Otimizar scripts (paralelização, cache).
-- **Se dados históricos < 80%:** Ajustar critérios de seleção de repositórios (exigir mais commits).
-- **Se poucas violações detectadas:** Revisar configuração ESLint ou adicionar mais regras.
-- **Se muitos componentes triviais:** Aumentar threshold mínimo de LOC (de 20 para 30 linhas).
+- Se taxa de parsing < 90%: Revisar configurações do Babel/TypeScript ou adicionar tratamento de erros.
+- Se tempo > 2h para 20 componentes: Otimizar scripts (paralelização, cache).
+- Se dados históricos < 80%: Ajustar critérios de seleção de repositórios (exigir mais commits).
+- Se poucas violações detectadas: Revisar configuração ESLint ou adicionar mais regras.
+- Se muitos componentes triviais: Aumentar threshold mínimo de LOC (de 20 para 30 linhas).
 
 ## 12. Plano de análise de dados (pré-execução)
 ### 12.1 Estratégia geral de análise
 
 A análise dos dados seguirá uma abordagem estruturada alinhada às questões de pesquisa definidas na seção 3.3:
 
-#### **Estratégia por Objetivo:**
+#### Estratégia por Objetivo:
 
-| **Objetivo**                                  | **Questões de Pesquisa**      | **Estratégia de Análise**                                               | **Métricas Utilizadas**     |
+| Objetivo                                  | Questões de Pesquisa      | Estratégia de Análise                                               | Métricas Utilizadas     |
 | --------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------- | --------------------------- |
-| **O1: Identificar más práticas**              | Q1.1, Q1.2, Q1.3              | Estatística descritiva + análise de frequência de violações            | M1, M2, M3, M4, M5, M6      |
-| **O2: Definir métricas estruturais**          | Q2.1, Q2.2, Q2.3              | Análise de cobertura + validação de constructo                         | M7, M8, M10, M11            |
-| **O3: Aplicar métricas em componentes reais** | Q3.1, Q3.2, Q3.3              | Análise de variação + identificação de outliers                        | M3, M9, M12, M13, M15       |
-| **O4: Analisar resultados estruturais**       | Q4.1, Q4.2, Q4.3              | Testes de correlação + comparação entre grupos                         | M3, M9, M12, M13, M14, M15  |
-| **O5: Avaliar validade das métricas**         | Q5.1, Q5.2, Q5.3              | Análise de consistência + correlação com defeitos                      | M1-M18                      |
+| O1: Identificar más práticas              | Q1.1, Q1.2, Q1.3              | Estatística descritiva + análise de frequência de violações            | M1, M2, M3, M4, M5, M6      |
+| O2: Definir métricas estruturais          | Q2.1, Q2.2, Q2.3              | Análise de cobertura + validação de constructo                         | M7, M8, M10, M11            |
+| O3: Aplicar métricas em componentes reais | Q3.1, Q3.2, Q3.3              | Análise de variação + identificação de outliers                        | M3, M9, M12, M13, M15       |
+| O4: Analisar resultados estruturais       | Q4.1, Q4.2, Q4.3              | Testes de correlação + comparação entre grupos                         | M3, M9, M12, M13, M14, M15  |
+| O5: Avaliar validade das métricas         | Q5.1, Q5.2, Q5.3              | Análise de consistência + correlação com defeitos                      | M1-M18                      |
 
-#### **Pipeline de Análise:**
+#### Pipeline de Análise:
 - Execução dos 5 passos da metodologia.
 
-#### **Mapeamento Questão → Análise → Métrica:**
+#### Mapeamento Questão → Análise → Métrica:
 
-**Q1.1: Quais más práticas aparecem com maior frequência?**
+Q1.1: Quais más práticas aparecem com maior frequência?
 - Análise: Estatística descritiva de M1 (violações de hooks) e M2 (erros de dependências).
 - Técnica: Contagem de frequências, gráficos de barras.
 - Resultado esperado: Ranking de más práticas mais comuns.
 
-**Q1.2: Quais antipadrões estão associados a componentes maiores?**
+Q1.2: Quais antipadrões estão associados a componentes maiores?
 - Análise: Correlação entre M3 (LOC) e M1, M2, M4 (violações).
 - Técnica: Correlação de Spearman + regressão linear.
 - Resultado esperado: Coeficiente de correlação (r) e valor-p.
 
-**Q3.1: Métricas variam entre componentes simples e complexos?**
+Q3.1: Métricas variam entre componentes simples e complexos?
 - Análise: Comparação de grupos (Pequeno vs. Médio vs. Grande).
 - Técnica: ANOVA ou Kruskal-Wallis + testes post-hoc (Dunn).
 - Resultado esperado: Diferenças significativas entre grupos.
 
-**Q4.1: Quais métricas diferenciam componentes saudáveis de problemáticos?**
+Q4.1: Quais métricas diferenciam componentes saudáveis de problemáticos?
 - Análise: Teste t independente (Saudáveis vs. Problemáticos).
 - Técnica: Mann-Whitney U test + cálculo de tamanho de efeito (d de Cohen).
 - Resultado esperado: Métricas com diferenças significativas (p < 0,05).
 
-**Q5.1: Métricas representam corretamente más práticas?**
+Q5.1: Métricas representam corretamente más práticas?
 - Análise: Validação de constructo — correlação entre métricas automáticas e presença confirmada de code smells.
 - Técnica: Análise de casos extremos + inspeção manual de amostra.
 - Resultado esperado: Concordância entre métricas e observação manual.
@@ -1064,44 +1133,44 @@ A análise dos dados seguirá uma abordagem estruturada alinhada às questões d
 
 Os seguintes testes e técnicas serão aplicados:
 
-#### **12.2.1 Estatística Descritiva**
+#### 12.2.1 Estatística Descritiva
 
-| **Métrica/Grupo**       | **Estatísticas Calculadas**                           |
+| Métrica/Grupo       | Estatísticas Calculadas                           |
 | ----------------------- | ----------------------------------------------------- |
 | Todas as métricas       | Média, mediana, desvio padrão, mínimo, máximo, IQR    |
 | Variáveis categóricas   | Frequências absolutas e relativas, tabelas de contingência |
 | Por grupo experimental  | Estatísticas descritivas estratificadas               |
 
-#### **12.2.2 Testes de Normalidade**
+#### 12.2.2 Testes de Normalidade
 
-- **Teste de Shapiro-Wilk:** Para amostras < 50 em cada grupo.
-- **Teste de Kolmogorov-Smirnov:** Para amostras maiores.
-- **Critério:** p > 0,05 indica normalidade.
-- **Alternativa:** Se não-normal, usar testes não paramétricos.
+- Teste de Shapiro-Wilk: Para amostras < 50 em cada grupo.
+- Teste de Kolmogorov-Smirnov: Para amostras maiores.
+- Critério: p > 0,05 indica normalidade.
+- Alternativa: Se não-normal, usar testes não paramétricos.
 
-#### **12.2.3 Testes de Correlação**
+#### 12.2.3 Testes de Correlação
 
-| **Objetivo**                          | **Teste**                     | **Quando Usar**               | **Hipóteses Relacionadas** |
+| Objetivo                          | Teste                     | Quando Usar               | Hipóteses Relacionadas |
 | ------------------------------------- | ----------------------------- | ----------------------------- | -------------------------- |
 | Correlação entre métricas contínuas   | Correlação de Pearson         | Dados normais                 | H1, H5                     |
 | Correlação entre métricas não-normais | Correlação de Spearman        | Dados não-normais             | H1, H5                     |
 | Associação entre variáveis categóricas| Qui-quadrado (χ²)             | Variáveis categóricas         | H2                         |
 
-**Exemplo:**
+Exemplo:
 ```r
 # Hipótese 1: Tamanho vs. Complexidade
 cor.test(data$LOC, data$Complexidade_Ciclomatica, method="spearman")
 ```
 
-#### **12.2.4 Testes de Comparação entre Grupos**
+#### 12.2.4 Testes de Comparação entre Grupos
 
-| **Comparação**                      | **Teste Paramétrico**     | **Teste Não Paramétrico**  | **Post-hoc**        |
+| Comparação                      | Teste Paramétrico     | Teste Não Paramétrico  | Post-hoc        |
 | ----------------------------------- | ------------------------- | -------------------------- | ------------------- |
 | 2 grupos independentes              | Teste t independente      | Mann-Whitney U test        | —                   |
 | 3+ grupos independentes             | ANOVA (One-way)           | Kruskal-Wallis             | Dunn's test         |
 | 2 grupos pareados                   | Teste t pareado           | Wilcoxon signed-rank       | —                   |
 
-**Exemplos:**
+Exemplos:
 ```r
 # Hipótese 2: Acoplamento (Baixo vs. Médio vs. Alto) vs. Violações
 kruskal.test(Violacoes ~ Grupo_Acoplamento, data=data)
@@ -1111,34 +1180,34 @@ dunn.test(data$Violacoes, data$Grupo_Acoplamento, method="bonferroni")
 wilcox.test(Complexidade ~ Grupo_Modularizacao, data=data)
 ```
 
-#### **12.2.5 Regressão**
+#### 12.2.5 Regressão
 
-| **Tipo de Regressão**         | **Objetivo**                                           | **Variáveis**                         |
+| Tipo de Regressão         | Objetivo                                           | Variáveis                         |
 | ----------------------------- | ------------------------------------------------------ | ------------------------------------- |
 | Regressão Linear Simples      | Predizer Complexidade a partir de LOC                  | Y = Complexidade, X = LOC             |
 | Regressão Linear Múltipla     | Predizer Defeitos a partir de múltiplas métricas       | Y = Defeitos, X = LOC + CC + Imports  |
 | Regressão Logística           | Predizer presença de code smells (binário)             | Y = Problemático (0/1), X = métricas  |
 
-**Exemplo:**
+Exemplo:
 ```r
 # Hipótese 5: Métricas vs. Defeitos
 model <- lm(Defeitos ~ LOC + Complexidade_Ciclomatica + Acoplamento, data=data)
 summary(model)
 ```
 
-#### **12.2.6 Análise Multivariada**
+#### 12.2.6 Análise Multivariada
 
-| **Técnica**                       | **Objetivo**                                           | **Saída Esperada**                |
+| Técnica                       | Objetivo                                           | Saída Esperada                |
 | --------------------------------- | ------------------------------------------------------ | --------------------------------- |
 | PCA (Principal Component Analysis)| Reduzir dimensionalidade e identificar padrões         | Componentes principais, loadings  |
 | Análise de Clusters (K-means)     | Agrupar componentes similares                          | Clusters de componentes           |
 | Heatmap de Correlação             | Visualizar inter-relações entre métricas               | Matriz de correlação visual       |
 
-#### **12.2.7 Tamanho de Efeito**
+#### 12.2.7 Tamanho de Efeito
 
 Além de p-valores, calcular tamanhos de efeito:
 
-| **Teste**               | **Medida de Tamanho de Efeito**  | **Interpretação (Cohen)**         |
+| Teste               | Medida de Tamanho de Efeito  | Interpretação (Cohen)         |
 | ----------------------- | -------------------------------- | --------------------------------- |
 | Teste t / Mann-Whitney  | d de Cohen / r                   | Pequeno: 0.2, Médio: 0.5, Grande: 0.8 |
 | ANOVA / Kruskal-Wallis  | η² (eta quadrado) / ε² (epsilon) | Pequeno: 0.01, Médio: 0.06, Grande: 0.14 |
@@ -1146,72 +1215,72 @@ Além de p-valores, calcular tamanhos de efeito:
 
 ### 12.3 Tratamento de dados faltantes e outliers
 
-#### **12.3.1 Dados Faltantes (Missing Values)**
+#### 12.3.1 Dados Faltantes (Missing Values)
 
-**Identificação:**
+Identificação:
 - Verificar percentual de dados faltantes por variável.
 - Criar matriz de padrões de missingness.
 
-**Critérios de Tratamento:**
+Critérios de Tratamento:
 
-| **% Missing**  | **Ação**                                                      |
+| % Missing  | Ação                                                      |
 | -------------- | ------------------------------------------------------------- |
 | < 5%           | Excluir casos com dados faltantes (listwise deletion)         |
 | 5% - 20%       | Imputação pela mediana (variáveis contínuas) ou moda (categóricas) |
 | > 20%          | Considerar exclusão da variável ou análise de sensibilidade   |
 
-**Métodos de Imputação:**
-- **Mediana:** Para métricas com distribuição assimétrica (LOC, Complexidade).
-- **Média:** Para métricas com distribuição normal.
-- **Moda:** Para variáveis categóricas (Linguagem, Grupo).
-- **Imputação múltipla (MICE):** Se > 10% de missingness e dados MCAR (Missing Completely At Random).
+Métodos de Imputação:
+- Mediana: Para métricas com distribuição assimétrica (LOC, Complexidade).
+- Média: Para métricas com distribuição normal.
+- Moda: Para variáveis categóricas (Linguagem, Grupo).
+- Imputação múltipla (MICE): Se > 10% de missingness e dados MCAR (Missing Completely At Random).
 
-**Documentação:**
+Documentação:
 - Registrar todos os casos de imputação em `missing_data_report.csv`.
 - Justificar decisões no relatório final.
 
-#### **12.3.2 Outliers**
+#### 12.3.2 Outliers
 
-**Detecção:**
+Detecção:
 
-| **Método**                  | **Critério**                                    | **Quando Usar**           |
+| Método                  | Critério                                    | Quando Usar           |
 | --------------------------- | ----------------------------------------------- | ------------------------- |
 | IQR (Interquartile Range)   | Valor < Q1 - 1.5×IQR ou > Q3 + 1.5×IQR         | Primeira triagem          |
 | Z-score                     | \|Z\| > 3                                        | Dados normais             |
 | Grubbs' test                | Teste estatístico formal                        | Confirmar outlier extremo |
 | Inspeção visual             | Boxplots, scatter plots                         | Validação visual          |
 
-**Tratamento:**
+Tratamento:
 
-| **Tipo de Outlier**         | **Ação**                                                      |
+| Tipo de Outlier         | Ação                                                      |
 | --------------------------- | ------------------------------------------------------------- |
-| **Erro de coleta**          | Corrigir ou excluir                                           |
-| **Outlier válido extremo**  | Manter, mas reportar; realizar análise com e sem outlier      |
-| **Outlier moderado**        | Manter; considerar transformação (log, sqrt)                  |
+| Erro de coleta          | Corrigir ou excluir                                           |
+| Outlier válido extremo  | Manter, mas reportar; realizar análise com e sem outlier      |
+| Outlier moderado        | Manter; considerar transformação (log, sqrt)                  |
 
-**Regras Específicas:**
+Regras Específicas:
 
-- **LOC outliers (ex.: componente com 5000+ linhas):**
+- LOC outliers (ex.: componente com 5000+ linhas):
   - Manter se for componente legítimo (não gerado automaticamente).
   - Flagear como caso especial.
   - Realizar análise de sensibilidade excluindo outliers extremos.
 
-- **Complexidade Ciclomática > 100:**
+- Complexidade Ciclomática > 100:
   - Investigar manualmente.
   - Se legítimo, manter e reportar.
 
-- **Violações > 50:**
+- Violações > 50:
   - Verificar se não há erro de configuração ESLint.
   - Manter se for real.
 
-**Transformações:**
+Transformações:
 
-- **Log-transformação:** Para métricas com distribuição muito assimétrica (LOC, Imports).
+- Log-transformação: Para métricas com distribuição muito assimétrica (LOC, Imports).
   - `LOC_log <- log10(LOC + 1)`
-- **Winsorização:** Substituir outliers pelo valor do percentil 95 ou 99.
+- Winsorização: Substituir outliers pelo valor do percentil 95 ou 99.
   - `LOC_winsorized <- Winsorize(LOC, probs=c(0.01, 0.99))`
 
-**Documentação:**
+Documentação:
 - Listar todos os outliers detectados em `outliers_report.csv`.
 - Justificar cada decisão de manutenção/exclusão.
 - Reportar resultados com e sem outliers extremos.
@@ -1220,134 +1289,134 @@ Além de p-valores, calcular tamanhos de efeito:
 
 Antes de aplicar testes paramétricos, verificar:
 
-#### **12.4.1 Normalidade**
+#### 12.4.1 Normalidade
 
-- **Teste:** Shapiro-Wilk (n < 50) ou Kolmogorov-Smirnov (n ≥ 50).
-- **Visual:** Q-Q plots.
-- **Decisão:** Se p < 0,05, usar testes não paramétricos.
+- Teste: Shapiro-Wilk (n < 50) ou Kolmogorov-Smirnov (n ≥ 50).
+- Visual: Q-Q plots.
+- Decisão: Se p < 0,05, usar testes não paramétricos.
 
-#### **12.4.2 Homocedasticidade (Homogeneidade de Variâncias)**
+#### 12.4.2 Homocedasticidade (Homogeneidade de Variâncias)
 
-- **Teste:** Levene's test (para ANOVA).
-- **Decisão:** Se p < 0,05, usar Welch's ANOVA ou Kruskal-Wallis.
+- Teste: Levene's test (para ANOVA).
+- Decisão: Se p < 0,05, usar Welch's ANOVA ou Kruskal-Wallis.
 
-#### **12.4.3 Independência**
+#### 12.4.3 Independência
 
-- **Verificação:** Confirmar que componentes são independentes (não há componentes duplicados ou altamente relacionados).
-- **Teste:** Durbin-Watson (se houver suspeita de autocorrelação temporal).
+- Verificação: Confirmar que componentes são independentes (não há componentes duplicados ou altamente relacionados).
+- Teste: Durbin-Watson (se houver suspeita de autocorrelação temporal).
 
-#### **12.4.4 Linearidade (para Regressão)**
+#### 12.4.4 Linearidade (para Regressão)
 
-- **Visual:** Scatter plots de Y vs. X.
-- **Teste:** Análise de resíduos (resíduos vs. fitted values).
+- Visual: Scatter plots de Y vs. X.
+- Teste: Análise de resíduos (resíduos vs. fitted values).
 
 ### 12.5 Plano de Visualizações
 
 As seguintes visualizações serão geradas:
 
-#### **Visualizações Descritivas:**
+#### Visualizações Descritivas:
 
-| **Gráfico**                  | **Objetivo**                                      | **Variáveis**                 |
+| Gráfico                  | Objetivo                                      | Variáveis                 |
 | ---------------------------- | ------------------------------------------------- | ----------------------------- |
 | Histogramas                  | Distribuição de cada métrica                      | M1-M18                        |
 | Boxplots por grupo           | Comparar distribuições entre grupos               | Métricas × Grupos experimentais |
 | Barras de frequência         | Contagem de violações por tipo                    | M1, M2                        |
 | Gráfico de pizza             | Proporção de componentes saudáveis vs. problemáticos | Grupo Saúde                 |
 
-#### **Visualizações de Relações:**
+#### Visualizações de Relações:
 
-| **Gráfico**                  | **Objetivo**                                      | **Variáveis**                 |
+| Gráfico                  | Objetivo                                      | Variáveis                 |
 | ---------------------------- | ------------------------------------------------- | ----------------------------- |
 | Scatter plots                | Relação entre duas métricas contínuas             | LOC × Complexidade            |
 | Matriz de correlação (heatmap)| Inter-relações entre todas as métricas           | M1-M18                        |
 | Pairplots                    | Múltiplas relações bivariadas                     | LOC, CC, Imports, Violações   |
 | Gráfico de regressão         | Linha de tendência + intervalos de confiança      | Y = Defeitos, X = LOC         |
 
-#### **Visualizações Multivariadas:**
+#### Visualizações Multivariadas:
 
-| **Gráfico**                  | **Objetivo**                                      | **Variáveis**                 |
+| Gráfico                  | Objetivo                                      | Variáveis                 |
 | ---------------------------- | ------------------------------------------------- | ----------------------------- |
 | Biplot (PCA)                 | Visualizar componentes principais                 | PCs 1-2                       |
 | Dendrograma                  | Hierarquia de clusters                            | Todas as métricas             |
 | Heatmap de clusters          | Padrões em grupos de componentes similares        | Componentes × Métricas        |
-Perfeito. Vou produzir **todos os tópicos (13 a 20)** agora, de forma **completa, técnica, coerente** e **compatível com o restante do seu plano de experimento** sobre métricas para medir a saúde estrutural de componentes React.
+Perfeito. Vou produzir todos os tópicos (13 a 20) agora, de forma completa, técnica, coerente e compatível com o restante do seu plano de experimento sobre métricas para medir a saúde estrutural de componentes React.
 O texto abaixo já está no formato ideal para ser copiado direto para o seu documento.
 
 ---
 
-# **13. Avaliação de validade (ameaças e mitigação)**
+# 13. Avaliação de validade (ameaças e mitigação)
 
-## **13.1 Validade de conclusão**
+## 13.1 Validade de conclusão
 
-**Ameaças:**
+Ameaças:
 
-* **Baixo poder estatístico** devido a tamanho reduzido de amostra ou variabilidade alta entre repositórios.
-* **Violação de suposições estatísticas** (normalidade, homogeneidade de variâncias) ao aplicar testes paramétricos.
-* **Erros de medida** gerados por parsing incorreto, heurísticas imprecisas ou falhas do detector de métricas.
-* **Correlação não genuína** causada por múltiplas comparações estatísticas sem correção adequada.
+* Baixo poder estatístico devido a tamanho reduzido de amostra ou variabilidade alta entre repositórios.
+* Violação de suposições estatísticas (normalidade, homogeneidade de variâncias) ao aplicar testes paramétricos.
+* Erros de medida gerados por parsing incorreto, heurísticas imprecisas ou falhas do detector de métricas.
+* Correlação não genuína causada por múltiplas comparações estatísticas sem correção adequada.
 
-**Mitigação:**
+Mitigação:
 
-* Garantir **n ≥ 100 componentes** na amostra final e avaliação prévia de variabilidade durante o piloto.
-* Usar **testes não paramétricos** automaticamente quando suposições forem violadas (KS, Mann-Whitney, Kendall τ).
-* Validar métricas com **amostra manual** e cálculo de precisão/recall para reduzir erros sistemáticos.
-* Aplicar **correção de múltiplas comparações** (Bonferroni ou FDR) quando necessário.
+* Garantir n ≥ 100 componentes na amostra final e avaliação prévia de variabilidade durante o piloto.
+* Usar testes não paramétricos automaticamente quando suposições forem violadas (KS, Mann-Whitney, Kendall τ).
+* Validar métricas com amostra manual e cálculo de precisão/recall para reduzir erros sistemáticos.
+* Aplicar correção de múltiplas comparações (Bonferroni ou FDR) quando necessário.
 * Usar análise de sensibilidade: repetir com subconjuntos estratificados por tamanho, tipo e repo.
 
 ---
 
-## **13.2 Validade interna**
+## 13.2 Validade interna
 
-**Ameaças:**
+Ameaças:
 
-* **Selection bias:** repositórios selecionados podem não representar a população real de projetos React.
-* **History/maturation:** alterações recentes nos repositórios podem impactar métricas temporais (p.ex. churn).
-* **Confounders não controlados:** uso de UI libraries, padrões arquiteturais específicos, monorepos, codegen.
-* **Instrumentação diferencial:** alguns projetos podem ser analisados com menos precisão que outros devido a complexidade sintática.
+* Selection bias: repositórios selecionados podem não representar a população real de projetos React.
+* History/maturation: alterações recentes nos repositórios podem impactar métricas temporais (p.ex. churn).
+* Confounders não controlados: uso de UI libraries, padrões arquiteturais específicos, monorepos, codegen.
+* Instrumentação diferencial: alguns projetos podem ser analisados com menos precisão que outros devido a complexidade sintática.
 
-**Mitigação:**
+Mitigação:
 
-* Seleção estratificada de repositórios por **stars, atividade, tipo e tamanho**.
-* Utilizar apenas commits dentro de uma **janela temporal consistente** (ex.: últimos 12 meses).
+* Seleção estratificada de repositórios por stars, atividade, tipo e tamanho.
+* Utilizar apenas commits dentro de uma janela temporal consistente (ex.: últimos 12 meses).
 * Registrar e controlar variáveis de confusão via estratificação (com/sem UI libs, monorepo vs standalone).
 * Uniformizar instrumentação: fallback para Babel e logs de parsing para todos os arquivos.
 
 ---
 
-## **13.3 Validade de constructo**
+## 13.3 Validade de constructo
 
-**Ameaças:**
+Ameaças:
 
-* Métricas podem **não representar adequadamente** o conceito de “saúde estrutural”.
-* Ambiguidade nas métricas abstratas (ex.: **SRP Violations**, **Responsabilidade por estado**, **Complexidade estrutural**).
+* Métricas podem não representar adequadamente o conceito de “saúde estrutural”.
+* Ambiguidade nas métricas abstratas (ex.: SRP Violations, Responsabilidade por estado, Complexidade estrutural).
 * Interpretações distintas entre avaliadores humanos.
 
-**Mitigação:**
+Mitigação:
 
-* Definir **operacionalmente cada métrica** com regras, thresholds e exemplos concretos.
-* Validar construtos com **especialistas React** (3–5 devs seniors) usando amostra de componentes rotulados manualmente.
-* Calcular **coeficiente Kappa** para verificar consistência das avaliações manuais.
+* Definir operacionalmente cada métrica com regras, thresholds e exemplos concretos.
+* Validar construtos com especialistas React (3–5 devs seniors) usando amostra de componentes rotulados manualmente.
+* Calcular coeficiente Kappa para verificar consistência das avaliações manuais.
 * Documentar claramente a ligação entre cada métrica → pergunta GQM → objetivo estratégico.
 
 ---
 
-## **13.4 Validade externa**
+## 13.4 Validade externa
 
-**Ameaças:**
+Ameaças:
 
-* Resultados podem generalizar apenas para projetos **open-source**, não para sistemas privados corporativos.
+* Resultados podem generalizar apenas para projetos open-source, não para sistemas privados corporativos.
 * Variações de stack (Next.js, Remix, Expo) podem gerar métricas distintas.
-* Projetos com uso pesado de **UI libraries**, **code generation** ou **meta-frameworks** podem não ser comparáveis.
+* Projetos com uso pesado de UI libraries, code generation ou meta-frameworks podem não ser comparáveis.
 
-**Mitigação:**
+Mitigação:
 
-* Deixar explícito que a generalização é válida principalmente para **React OSS com componentes manuais**.
+* Deixar explícito que a generalização é válida principalmente para React OSS com componentes manuais.
 * Testar sensibilidade em subsets (Next.js, CRA, monorepo, design systems).
 * Documentar limitações de uso em projetos corporativos que diferem fortemente do ecossistema OSS.
 
 ---
 
-## **13.5 Resumo das principais ameaças e mitigação**
+## 13.5 Resumo das principais ameaças e mitigação
 
 | Ameaça                                  | Tipo       | Ação de Mitigação                                            |
 | --------------------------------------- | ---------- | ------------------------------------------------------------ |
@@ -1360,33 +1429,33 @@ O texto abaixo já está no formato ideal para ser copiado direto para o seu doc
 
 ---
 
-# **14. Ética, privacidade e conformidade**
+# 14. Ética, privacidade e conformidade
 
-## **14.1 Questões éticas**
+## 14.1 Questões éticas
 
-* Risco de **pressão** sobre especialistas convidados para avaliação manual.
-* Possível **exposição indevida** de trechos de código OSS em relatórios.
-* Uso de **voluntários estudantes** ou colegas com relação hierárquica.
+* Risco de pressão sobre especialistas convidados para avaliação manual.
+* Possível exposição indevida de trechos de código OSS em relatórios.
+* Uso de voluntários estudantes ou colegas com relação hierárquica.
 
-**Mitigação:**
+Mitigação:
 
-* Garantir participação **voluntária**, sem incentivos coercitivos.
+* Garantir participação voluntária, sem incentivos coercitivos.
 * Garantir que nenhum dado sensível ou identificação pessoal seja divulgado.
 * Exigir que especialistas assinem aceite de participação sem vínculo obrigatório.
 
 ---
 
-## **14.2 Consentimento informado**
+## 14.2 Consentimento informado
 
 Para especialistas participantes:
 
 * Enviar documento prévio com: objetivos, procedimentos, riscos mínimos e confidencialidade.
 * Coletar consentimento via formulário eletrônico (Google Forms, Typeform ou assinado digitalmente).
-* Permitir que o participante **retire-se a qualquer momento** sem justificativa.
+* Permitir que o participante retire-se a qualquer momento sem justificativa.
 
 ---
 
-## **14.3 Privacidade e proteção de dados**
+## 14.3 Privacidade e proteção de dados
 
 * Dados coletados: trechos de código OSS (não pessoais), e eventualmente nome/e-mail dos especialistas.
 * Medidas:
@@ -1398,26 +1467,26 @@ Para especialistas participantes:
 
 ---
 
-## **14.4 Aprovações necessárias**
+## 14.4 Aprovações necessárias
 
-* **Comitê de Ética da instituição**, caso obrigatório para estudos com participação humana.
-* **Jurídico / DPO**, caso haja coleta de dados pessoais dos especialistas.
-* Status: **aguardando submissão** após finalização da versão 1.0 do plano.
-
----
-
-# **15. Recursos, infraestrutura e orçamento**
-
-## **15.1 Recursos humanos e papéis**
-
-* **Pesquisador principal**: coordenação geral, análise estatística, redação final.
-* **Desenvolvedor de instrumentação**: criação dos scripts de coleta e análises AST.
-* **Avaliadores especialistas**: revisão manual para validação das métricas.
-* **Apoio metodológico**: suporte em estatística e design experimental.
+* Comitê de Ética da instituição, caso obrigatório para estudos com participação humana.
+* Jurídico / DPO, caso haja coleta de dados pessoais dos especialistas.
+* Status: aguardando submissão após finalização da versão 1.0 do plano.
 
 ---
 
-## **15.2 Infraestrutura técnica**
+# 15. Recursos, infraestrutura e orçamento
+
+## 15.1 Recursos humanos e papéis
+
+* Pesquisador principal: coordenação geral, análise estatística, redação final.
+* Desenvolvedor de instrumentação: criação dos scripts de coleta e análises AST.
+* Avaliadores especialistas: revisão manual para validação das métricas.
+* Apoio metodológico: suporte em estatística e design experimental.
+
+---
+
+## 15.2 Infraestrutura técnica
 
 * Repositório Git privado (GitHub ou GitLab).
 * Servidor ou máquina local para executar coleta automática.
@@ -1426,7 +1495,7 @@ Para especialistas participantes:
 
 ---
 
-## **15.3 Materiais e insumos**
+## 15.3 Materiais e insumos
 
 * Computadores pessoais da equipe.
 * Licenças (se necessário) para ferramentas adicionais.
@@ -1435,18 +1504,18 @@ Para especialistas participantes:
 
 ---
 
-## **15.4 Orçamento e custos estimados**
+## 15.4 Orçamento e custos estimados
 
-* Horas de desenvolvimento: **60–100h**.
-* Horas de análise estatística: **20–30h**.
+* Horas de desenvolvimento: 60–100h.
+* Horas de análise estatística: 20–30h.
 * Participação de especialistas: voluntária (ou R$ 50–100 por participação, se houver incentivo).
 * Infraestrutura: custo zero se usar GitHub gratuito + máquina pessoal.
 
 ---
 
-# **16. Cronograma, marcos e riscos operacionais**
+# 16. Cronograma, marcos e riscos operacionais
 
-## **16.1 Macrocronograma**
+## 16.1 Macrocronograma
 
 | Período  | Marco                                            |
 | -------- | ------------------------------------------------ |
@@ -1459,34 +1528,34 @@ Para especialistas participantes:
 
 ---
 
-## **16.2 Dependências**
+## 16.2 Dependências
 
-* A coleta só inicia após **piloto validado**.
-* Avaliação manual só começa após **aprovação ética**.
-* Análise estatística depende da **base consolidada e validada**.
-
----
-
-## **16.3 Riscos operacionais**
-
-* Falhas de parsing em repositórios grandes → **Contingência:** fallback para Babel e logs específicos.
-* Indisponibilidade de especialistas → **Contingência:** recrutamento alternativo ou reduzir escopo.
-* Cronograma estourado → **Contingência:** priorizar subconjunto menor para análise final.
+* A coleta só inicia após piloto validado.
+* Avaliação manual só começa após aprovação ética.
+* Análise estatística depende da base consolidada e validada.
 
 ---
 
-# **17. Governança do experimento**
+## 16.3 Riscos operacionais
 
-## **17.1 Papéis e responsabilidades**
-
-* **Decisor final**: pesquisador principal.
-* **Executor técnico**: responsável pelos scripts.
-* **Revisores**: especialistas externos.
-* **Apoiadores**: docentes.
+* Falhas de parsing em repositórios grandes → Contingência: fallback para Babel e logs específicos.
+* Indisponibilidade de especialistas → Contingência: recrutamento alternativo ou reduzir escopo.
+* Cronograma estourado → Contingência: priorizar subconjunto menor para análise final.
 
 ---
 
-## **17.2 Ritos de acompanhamento pré-execução**
+# 17. Governança do experimento
+
+## 17.1 Papéis e responsabilidades
+
+* Decisor final: pesquisador principal.
+* Executor técnico: responsável pelos scripts.
+* Revisores: especialistas externos.
+* Apoiadores: docentes.
+
+---
+
+## 17.2 Ritos de acompanhamento pré-execução
 
 * Reunião semanal de status (30 min).
 * Checkpoint após piloto para aprovar instrumentação.
@@ -1494,7 +1563,7 @@ Para especialistas participantes:
 
 ---
 
-## **17.3 Controle de mudanças**
+## 17.3 Controle de mudanças
 
 * Toda alteração deve:
 
@@ -1505,9 +1574,9 @@ Para especialistas participantes:
 
 ---
 
-# **18. Plano de documentação e reprodutibilidade**
+# 18. Plano de documentação e reprodutibilidade
 
-## **18.1 Repositórios e convenções**
+## 18.1 Repositórios e convenções
 
 * Repositório `react-metrics-experiment/`.
 * Pastas:
@@ -1519,7 +1588,7 @@ Para especialistas participantes:
 
 ---
 
-## **18.2 Templates e artefatos**
+## 18.2 Templates e artefatos
 
 * Checklist de coleta.
 * Template de consentimento.
@@ -1528,7 +1597,7 @@ Para especialistas participantes:
 
 ---
 
-## **18.3 Empacotamento para replicação**
+## 18.3 Empacotamento para replicação
 
 * Fornecer:
 
@@ -1537,17 +1606,17 @@ Para especialistas participantes:
 
 ---
 
-# **19. Plano de comunicação**
+# 19. Plano de comunicação
 
-## **19.1 Públicos e mensagens**
+## 19.1 Públicos e mensagens
 
-* **Orientador**: alinhamento científico e metodológico.
-* **Especialistas**: convite, escopo e expectativas.
-* **Equipe técnica**: detalhes da instrumentação.
+* Orientador: alinhamento científico e metodológico.
+* Especialistas: convite, escopo e expectativas.
+* Equipe técnica: detalhes da instrumentação.
 
 ---
 
-## **19.2 Canais e frequência**
+## 19.2 Canais e frequência
 
 * Slack para comunicação contínua.
 * E-mail formal para aprovações.
@@ -1555,7 +1624,7 @@ Para especialistas participantes:
 
 ---
 
-## **19.3 Pontos obrigatórios**
+## 19.3 Pontos obrigatórios
 
 * Comunicação de aprovação do plano.
 * Comunicação do resultado do piloto.
@@ -1564,9 +1633,9 @@ Para especialistas participantes:
 
 ---
 
-# **20. Critérios de prontidão para execução (Definition of Ready)**
+# 20. Critérios de prontidão para execução (Definition of Ready)
 
-## **20.1 Checklist de prontidão**
+## 20.1 Checklist de prontidão
 
 * Plano aprovado.
 * Scripts 100% funcionando e testados no piloto.
@@ -1576,7 +1645,7 @@ Para especialistas participantes:
 
 ---
 
-## **20.2 Aprovações finais**
+## 20.2 Aprovações finais
 
 * Pesquisador principal.
 * Orientador.
