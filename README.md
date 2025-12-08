@@ -74,73 +74,79 @@ Propor, testar e validar um conjunto inicial de métricas estruturais específic
 - O5. Avaliar a validade, utilidade e consistência das métricas propostas por meio de análises empíricas e interpretações estruturais.
 
 ### 3.3 Questões de pesquisa / de negócio
-- O1. Identificar más práticas estruturais em React:
-  - Q1.1: Quais más práticas estruturais são recorrentes em componentes React?
-  - Q1.2: Quais padrões do React são frequentemente violados?
-  - Q1.3: Como essas más práticas se distribuem em componentes reais?
+- O1. Identificar más práticas estruturais presentes em componentes React:
+  - Q1.1: Quais más práticas aparecem com maior frequência nos componentes?
+  - Q1.2: Quais antipadrões são mais comuns em componentes grandes ou complexos? 
+  - Q1.3: Que sinais estruturais indicam degradação ao longo da evolução do componente?
 
-- O2. Definir métricas estruturais para quantificar más práticas e atributos de qualidade.
-  - Q2.1: Quais métricas estruturais conseguem representar adequadamente complexidade, acoplamento e modularidade?
-  - Q2.2: As métricas propostas capturam diferenças reais entre componentes saudáveis e degradados?
-  - Q2.3: As métricas cobrem todos as más práticas identificadas no O1?
+- O2. Definir e validar métricas estruturais adequadas para medir qualidade e más práticas em React.
+  - Q2.1: Cada má prática pode ser quantificada por uma métrica objetiva e automática? 
+  - Q2.2: As métricas capturam corretamente aspectos de complexidade reconhecidos pela literatura? 
+  - Q2.3: As métricas são estáveis ao serem executadas diferentes vezes ou em diferentes máquinas?  
+  - Q2.4: As métricas são reproduzíveis entre diferentes executores/ferramentas?
 
-- O3. Aplicar as métricas a componentes reais.
-  - Q3.1: Como as métricas se comportam em componentes de sistemas grandes?
-  - Q3.2: Há componentes que se destacam como outliers?
-  - Q3.3: Quais antipadrões aparecem com maior frequência nos sistemas analisados?
+- O3. Aplicar as métricas a componentes reais de projetos React.
+  - Q3.1: As métricas diferenciam componentes simples de componentes complexos?
+  - Q3.2: O acoplamento interno e externo varia conforme o tamanho do componente?  
+  - Q3.3: Há correlação entre antipadrões e aumento de tamanho/complexidade?
 
-- O4. Analisar resultados segundo critérios estruturais.
-  - Q4.1 Componentes maiores são mais complexos?
-  - Q4.2 Componentes com alto acoplamento apresentam mais antipadrões?
-  - Q4.3 Modularização adequada está associada a menos violações das regras do React?
+- O4. Analisar resultados segundo complexidade, acoplamento, modularidade e presença de antipadrões.
+  - Q4.1 Quais métricas são mais eficazes para separar componentes saudáveis de problemáticos?  
+  - Q4.2 O acoplamento é um bom indicador de baixa qualidade estrutural? 
+  - Q4.3 A modularização melhora os indicadores de saúde estrutural? 
 
-- O5. Avaliar validade e utilidade das métricas.
-  - Q5.1 As métricas diferenciam componentes saudáveis vs. problemáticos?
-  - Q5.2 As métricas são consistentes entre diferentes projetos?
-  - Q5.3 As métricas capturam casos reais de antipadrões documentados?
+- O5. Avaliar a utilidade e validade das métricas propostas.
+  - Q5.1 As métricas representam corretamente as más práticas documentadas e reconhecidas por profissionais?
+  - Q5.2 Especialistas consideram as métricas adequadas para avaliar qualidade em React?  
+  - Q5.3 As métricas são consistentes ao analisar componentes de naturezas diferentes? 
 
 ### 3.4 Tabela GQM
-| **Objetivo (O)**                                                                           | **Perguntas (Q)**                                                                     | **Métricas (M)**                                                                                           |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| **O1. Identificar más práticas estruturais em componentes React.**                         | Q1.1 Quais más práticas aparecem com maior frequência nos componentes?                | M1 – Contagem de violações das Rules of Hooks<br>M2 – Número de dependências ausentes/erradas em useEffect |
-|                                                                                            | Q1.2 Quais antipadrões estruturais estão associados a componentes maiores?            | M3 – Tamanho do componente (LOC)<br>M4 – Número de responsáveis (SRP Violations)                           |
-|                                                                                            | Q1.3 Quais padrões de código indicam degradação estrutural ao longo do tempo?         | M5 – Crescimento histórico de LOC<br>M6 – Crescimento de branches condicionais                             |
-| **O2. Definir métricas estruturais para medir más práticas e atributos de qualidade.**     | Q2.1 Cada má prática pode ser quantificada por uma métrica objetiva?                  | M7 – Métricas definidas por antipadrão<br>M8 – Mapeamento métrica ↔ má prática                             |
-|                                                                                            | Q2.2 As métricas capturam aspectos de complexidade documentados pela literatura?      | M1 – Violações de hooks<br>M9 – Complexidade ciclomatica (CC)                                              |
-|                                                                                            | Q2.3 As métricas são estáveis o suficiente para serem replicáveis?                    | M10 – Variabilidade da métrica por executor<br>M11 – Precisão da métrica por análise estática              |
-| **O3. Aplicar as métricas em componentes reais.**                                          | Q3.1 Os valores das métricas variam entre componentes simples e complexos?            | M3 – LOC<br>M9 – Complexidade ciclomatica                                                                  |
-|                                                                                            | Q3.2 O acoplamento interno e externo varia conforme o tamanho do componente?          | M12 – Número de imports<br>M13 – Número de hooks customizados usados                                       |
-|                                                                                            | Q3.3 Há correlação entre antipadrões e tamanho/complexidade?                          | M4 – SRP Violations<br>M9 – Complexidade ciclomatica                                                       |
-| **O4. Analisar resultados segundo complexidade, acoplamento, modularidade e antipadrões.** | Q4.1 Quais métricas mais diferenciam componentes saudáveis de problemáticos?          | M3 – LOC<br>M12 – Imports                                                                                  |
-|                                                                                            | Q4.2 O acoplamento é um indicador forte de baixa saúde estrutural?                    | M12 – Imports<br>M14 – Fan-in / Fan-out                                                                    |
-|                                                                                            | Q4.3 A modularização via subcomponentes melhora as métricas?                          | M15 – Número de subcomponentes<br>M13 – Hooks customizados                                                 |
-| **O5. Avaliar utilidade e validade das métricas propostas.** | Q5.1 As métricas representam corretamente as más práticas documentadas?   | M1 – Violações de Hooks<br>M2 – Dependências incorretas<br>M7 – Métricas por antipadrão |
-|                                                              | Q5.2 Especialistas consideram as métricas úteis para avaliar componentes? | M16 – Avaliação por especialistas<br>M17 – Concordância entre avaliadores               |
-|                                                              | Q5.3 As métricas são consistentes ao analisar componentes diferentes?     | M10 – Variabilidade<br>M11 – Precisão da análise estática                               |
+| **Objetivo (O)**                                                                                       | **Perguntas (Q)**                                                                                            | **Métricas (M)**                                                                                                            |
+| ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| **O1. Identificar más práticas estruturais presentes em componentes React.**                           | **Q1.1** Quais más práticas aparecem com maior frequência nos componentes?                                   | **M1 – Violações das regras de hooks**<br>**M2 – Erros no array de dependências**                                           |
+|                                                                                                        | **Q1.2** Quais antipadrões são mais comuns em componentes grandes ou complexos?                              | **M3 – Densidade de JSX**<br>**M22 – Número de responsabilidades declaradas**                                               |
+|                                                                                                        | **Q1.3** Que sinais estruturais indicam degradação ao longo da evolução do componente?                       | **M19 – Crescimento histórico de linhas**<br>**M20 – Mudanças na estrutura de estado**                                      |
+| **O2. Definir e validar métricas estruturais adequadas para medir qualidade e más práticas em React.** | **Q2.1** Cada má prática pode ser quantificada por uma métrica objetiva e automática?                        | **M7 – Profundidade de passagem de propriedades (prop drilling)**<br>**M10 – Risco de re-renderização**                     |
+|                                                                                                        | **Q2.2** As métricas capturam corretamente aspectos de complexidade reconhecidos pela literatura?            | **M14 – Complexidade ciclomatática**<br>**M8 – Profundidade de aninhamento JSX**                                            |
+|                                                                                                        | **Q2.3** As métricas são estáveis ao serem executadas diferentes vezes ou em diferentes máquinas?            | **M10 – Risco de re-renderização** (verifica variação por ambiente)<br>**M21 – Estados não derivados**                      |
+|                                                                                                        | **Q2.4** As métricas são reproduzíveis entre diferentes executores/ferramentas?                              | **M11 – Pressão de uso de contextos**<br>**M4 – Coesão entre hooks**                                                        |
+| **O3. Aplicar as métricas a componentes reais de projetos React.**                                     | **Q3.1** As métricas diferenciam componentes simples de componentes complexos?                               | **M13 – Linhas de código (LOC)**<br>**M14 – Complexidade ciclomatática**                                                    |
+|                                                                                                        | **Q3.2** O acoplamento interno e externo varia conforme o tamanho do componente?                             | **M15 – Número de importações**<br>**M17 – Acoplamento reativo (entrada/saída)**                                            |
+|                                                                                                        | **Q3.3** Há correlação entre antipadrões e aumento de tamanho/complexidade?                                  | **M5 – Uso excessivo de efeitos**<br>**M12 – Profundidade de encadeamento de funções**                                      |
+| **O4. Analisar resultados segundo complexidade, acoplamento, modularidade e presença de antipadrões.** | **Q4.1** Quais métricas são mais eficazes para separar componentes saudáveis de problemáticos?               | **M8 – Aninhamento JSX**<br>**M10 – Risco de re-renderização**                                                              |
+|                                                                                                        | **Q4.2** O acoplamento é um bom indicador de baixa qualidade estrutural?                                     | **M15 – Número de importações**<br>**M17 – Acoplamento reativo**                                                            |
+|                                                                                                        | **Q4.3** A modularização melhora os indicadores de saúde estrutural?                                         | **M18 – Subcomponentes declarados internamente**<br>**M16 – Hooks personalizados utilizados**                               |
+| **O5. Avaliar a utilidade e validade das métricas propostas.**                                         | **Q5.1** As métricas representam corretamente as más práticas documentadas e reconhecidas por profissionais? | **M1 – Violações de hooks**<br>**M2 – Erros no array de dependências**<br>**M7 – Profundidade de passagem de propriedades** |
+|                                                                                                        | **Q5.2** Especialistas consideram as métricas adequadas para avaliar qualidade em React?                     | **M16 – Avaliação por especialistas** (nota qualitativa)<br>**M17 – Concordância entre avaliadores**                        |
+|                                                                                                        | **Q5.3** As métricas são consistentes ao analisar componentes de naturezas diferentes?                       | **M13 – Linhas de código** (componente pequeno vs. grande)<br>**M14 – Complexidade ciclomatática**                          |
+
 
 
  ### 3.5 Métricas associadas (GQM)
 | **Métrica**                                 | **Descrição**                                                              | **Unidade**   |
 | ------------------------------------------- | -------------------------------------------------------------------------- | ------------- |
-| **M1 – Violações das Rules of Hooks**       | Número de violações detectadas (hooks dentro de condições, loops, etc.)    | contagem      |
-| **M2 – Erros de dependências do useEffect** | Dependências ausentes ou incorretas no array do effect                     | contagem      |
-| **M3 – Lines of Code (LOC)**                | Tamanho total do componente em linhas de código                            | linhas        |
-| **M4 – SRP Violations**                     | Quantidade de responsabilidades distintas detectadas no componente         | contagem      |
-| **M5 – Crescimento histórico de LOC**       | Aumento do tamanho do componente ao longo de commits                       | linhas/commit |
-| **M6 – Branch Complexity**                  | Número de condicionais e ramificações internas                             | contagem      |
-| **M7 – Métricas por antipadrão**            | Métrica específica que quantifica um bad smell (ex.: “deep prop drilling”) | contagem      |
-| **M8 – Mapeamento métrica ↔ má prática**    | Quantidade de más práticas cobertas por métricas                           | percentual    |
-| **M9 – Complexidade Ciclomática**           | Total de caminhos independentes                                            | grau          |
-| **M10 – Variabilidade por executor**        | Diferença de resultados entre execuções distintas                          | percentual    |
-| **M11 – Precisão da análise estática**      | Percentual de acertos da ferramenta de análise                             | percentual    |
-| **M12 – Número de imports**                 | Dependências externas do componente                                        | contagem      |
-| **M13 – Hooks customizados usados**         | Quantidade de hooks customizados consumidos                                | contagem      |
-| **M14 – Fan-in / Fan-out**                  | Acoplamento estrutural interno e externo                                   | grau          |
-| **M15 – Número de subcomponentes**          | Quantidade de componentes filhos diretos                                   | contagem      |
-| **M16 – Avaliação por especialistas**       | Nota qualitativa dada por engenheiros                                      | escala (0–5)  |
-| **M17 – Concordância entre avaliadores**    | Medida de consenso (ex.: Kappa)                                            | percentual    |
-| **M18 – Histórico de defeitos**             | Quantidade de bugs associados ao componente                                | contagem      |
-
+| **M1 – Violações das Regras de Hooks**            | Quantidade de violações das regras oficiais dos hooks (usar dentro de loops, condicionais, funções internas etc.).   | contagem      |
+| **M2 – Erros no Array de Dependências**           | Número de efeitos (`useEffect`) com dependências faltando, redundantes ou incorretas.                                | contagem      |
+| **M3 – Densidade de JSX**                         | Relação entre linhas de JSX e linhas de lógica JavaScript dentro do componente.                                      | razão         |
+| **M4 – Coesão entre Hooks**                       | Mede quanto os hooks estão relacionados entre si (compartilhamento de estados, variáveis ou lógica).                 | grau          |
+| **M5 – Uso Excessivo de Efeitos**                 | Proporção de `useEffect` em relação ao tamanho do componente ou quantidade de estados.                               | razão         |
+| **M6 – Complexidade da Estrutura de Estado**      | Mede a complexidade dos estados usados: dependências entre estados, estados derivados e profundidade de objetos.     | grau          |
+| **M7 – Profundidade de Passagem de Propriedades** | Número de níveis em que uma propriedade é repassada até chegar ao componente que realmente a utiliza.                | profundidade  |
+| **M8 – Profundidade de Aninhamento JSX**          | Profundidade máxima da árvore JSX (níveis de nós filhos).                                                            | profundidade  |
+| **M9 – Condicionais no JSX**                      | Quantidade de expressões condicionais ou ternários inseridos diretamente na marcação do JSX.                         | contagem      |
+| **M10 – Risco de Re-renderização**                | Número de elementos criados de forma inline (funções, objetos, arrays) que podem gerar renderizações desnecessárias. | contagem      |
+| **M11 – Pressão de Uso de Contextos**             | Quantidade de contextos consumidos pelo componente e o tamanho das informações que ele lê de cada contexto.          | índice        |
+| **M12 – Profundidade de Encadeamento de Funções** | Profundidade de funções aninhadas, closures e chamadas internas, especialmente dentro de hooks.                      | profundidade  |
+| **M13 – Linhas de Código (LOC)**                  | Total de linhas de código do componente, desconsiderando comentários e linhas vazias.                                | linhas        |
+| **M14 – Complexidade Ciclomática**                | Número de caminhos independentes no fluxo do componente.                                                             | grau          |
+| **M15 – Número de Importações**                   | Total de importações externas realizadas pelo componente.                                                            | contagem      |
+| **M16 – Hooks Personalizados Utilizados**         | Quantidade de hooks personalizados (`useX`) usados pelo componente.                                                  | contagem      |
+| **M17 – Acoplamento Reativo (Entrada e Saída)**   | Número de componentes que dependem deste componente e número de componentes dos quais este depende.                  | grau          |
+| **M18 – Subcomponentes Declarados Internamente**  | Número de componentes criados dentro de outro componente (possível acúmulo de responsabilidades).                    | contagem      |
+| **M19 – Crescimento Histórico de Linhas**         | Evolução do tamanho do componente ao longo de commits (indica expansão contínua).                                    | linhas/commit |
+| **M20 – Mudanças na Estrutura de Estado**         | Número de modificações nos hooks de estado ao longo da evolução do componente.                                       | contagem      |
+| **M21 – Estados Não Derivados**                   | Total de estados que poderiam ser calculados a partir de outros valores, mas são armazenados manualmente.            | contagem      |
+| **M22 – Número de Responsabilidades Declaradas**  | Contagem de papéis distintos realizados no componente (UI, estado, dados externos, efeitos, regras de negócio).      | contagem      |
 
 
 ## 4. Escopo e contexto do experimento
