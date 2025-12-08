@@ -44,7 +44,9 @@ O experimento será conduzido em um ambiente simulado baseado em:
 - CK Metrics (Chidamber & Kemerer, 1994): conjunto clássico de métricas para classes OO (WMC, CBO, RFC, LCOM, DIT, NOC). São estruturais e inspiram a abordagem deste experimento.
 - Trabalhos sobre medição de manutenção e debilidade de componentes em frameworks frontend (Angular, Vue), mas sem padronização para React.
 - Experimentos em literatura de engenharia de software investigando correlação entre métricas estáticas e defeitos.
-
+- Fabio Ferreira e Marco Tulio Valente: Detecting code smells in React-based Web apps.
+- Fábio da Silva Ferreira: Assisting JavaScript Front-End Developers in Maintaining and Evolving React-Based Applications: Code Smells and Refactoring Operations.
+  
 Não há um conjunto consolidado de métricas estruturais específicas para componentes React, reforçando a relevância do estudo.
 
 ### 2.4 Referencial teórico e empírico essencial
