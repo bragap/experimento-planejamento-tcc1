@@ -440,53 +440,70 @@ O experimento envolverá dois tipos de participantes:
 
 #### 8.2.2 Participantes Indiretos: Desenvolvedores dos Projetos Open-Source
 - Os componentes analisados foram escritos por desenvolvedores reais, mas estes não participarão ativamente do experimento.
-- Seus commits e histórico de defeitos (issues, pull requests) serão usados como dados secundários.
-
+- 
 ### 8.3 Variáveis independentes (fatores) e seus níveis
 
 As variáveis independentes são características estruturais observadas nos componentes, categorizadas em níveis para análise comparativa.
 
 #### Tabela de Variáveis Independentes
+| Variável Independente                         | Descrição                                                           | Níveis                                          | Como será medida                                                |
+| ------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------- |
+| Complexidade da Estrutura de Estado (M6)      | Grau de dependências, derivação, profundidade e redundância no estado.  | Baixa (0–2), Média (3–5), Alta (>5)                 | Análise via AST das estruturas de estado e dependências entre hooks |
+| Estados Não Derivados (M21)                   | Quantidade de estados que poderiam ser calculados, mas são armazenados. | Nenhum (0), Poucos (1–2), Muitos (>2)               | Comparação de estados vs. expressões deriváveis                     |
+| Mudanças na Estrutura de Estado (M20)         | Evolução da quantidade e forma dos estados ao longo dos commits.        | Estável, Moderada, Alta                             | Histórico Git (diff + análise AST)                                  |
+| Densidade de JSX (M3)                         | Proporção entre JSX e lógica.                                           | Baixa (<0,4), Média (0,4–0,7), Alta (>0,7)          | Contagem de nós JSX vs. nós lógicos no AST                          |
+| Profundidade de Aninhamento JSX (M8)          | Profundidade máxima da árvore de renderização.                          | Baixa (≤4), Média (5–8), Alta (>8)                  | Caminho máximo na árvore JSX                                        |
+| Condicionais no JSX (M9)                      | Total de condicionais renderizadas.                                     | Baixa (0–2), Média (3–5), Alta (>5)                 | Identificação de condicionais no JSX via AST                        |
+| Risco de Re-renderização (M10)                | Criação de funções/objetos inline que causam re-render.                 | Baixo (0–1), Médio (2–3), Alto (>3)                 | AST: análise de closures e valores inline                           |
+| Violações das Regras de Hooks (M1)            | Uso incorreto de hooks (em loops, condicionais etc.)                    | Sem violações (0), Com violações (≥1)               | ESLint (`rules-of-hooks`)                                           |
+| Erros no Array de Dependências (M2)           | Dependências faltantes ou redundantes.                                  | Sem erros (0), Com erros (≥1)                       | ESLint (`exhaustive-deps`)                                          |
+| Coesão entre Hooks (M4)                       | Grau de relação/coerência entre hooks internos.                         | Alta (0–0,3), Média (0,31–0,6), Baixa (>0,6)        | Grafo de dependências internas do componente                        |
+| Uso Excessivo de Efeitos (M5)                 | Média de efeitos por estado, ou efeitos redundantes.                    | Baixo (≤1), Moderado (2–3), Alto (>3)               | Contagem e análise de efeitos no AST                                |
+| Profundidade de Passagem de Propriedades (M7) | Quantidade de níveis antes da prop ser usada.                           | Baixa (0–1), Média (2–3), Alta (>3)                 | Propagação via cadeia de JSX                                        |
+| Pressão de Uso de Contextos (M11)             | Tamanho e quantidade de dados lidos de contextos.                       | Baixa (1 contexto), Média (2), Alta (≥3)            | Análise de `useContext` e estrutura do valor                        |
+| Acoplamento Reativo (M17)                     | Fan-in/fan-out reativo entre componentes.                               | Baixo (≤3), Médio (4–8), Alto (>8)                  | Dependências entre componentes via AST                              |
+| Número de Importações (M15)                   | Dependências internas e externas.                                       | Baixo (≤5), Médio (6–15), Alto (>15)                | Contagem de imports no AST                                          |
+| Subcomponentes Declarados Internamente (M18)  | Componentes criados dentro de outro componente.                         | Nenhum (0), Poucos (1–2), Muitos (>2)               | AST: busca por funções JSX internas                                 |
+| Hooks Personalizados Usados (M16)             | Hooks específicos (`useX`) utilizados.                                  | Nenhum (0), Poucos (1–3), Muitos (>3)               | Padrão nominal (`use*`) no AST                                      |
+| Linhas de Código (M13)                        | Tamanho bruto do componente.                                            | Pequeno (<100), Médio (100–300), Grande (>300)      | Contagem de LOC                                                     |
+| Crescimento Histórico de Linhas (M19)         | Taxa de expansão ao longo do tempo.                                     | Estável (<10%), Moderado (10–50%), Acelerado (>50%) | Histórico Git                                                       |
 
-| Variável Independente              | Descrição                                                      | Níveis                          | Como será medida                     |
-| -------------------------------------- | ------------------------------------------------------------------ | ----------------------------------- | ---------------------------------------- |
-| Tamanho do Componente              | Quantidade de linhas de código do componente                       | Pequeno (<100 LOC), Médio (100-300 LOC), Grande (>300 LOC) | Análise estática via AST                 |
-| Complexidade Ciclomática           | Número de caminhos independentes no código                         | Baixa (≤5), Média (6-15), Alta (>15) | Ferramenta de análise estática           |
-| Acoplamento Externo                | Número de imports e dependências externas                          | Baixo (≤5), Médio (6-15), Alto (>15) | Contagem de imports via AST              |
-| Uso de Hooks Customizados         | Quantidade de hooks customizados utilizados                        | Nenhum (0), Poucos (1-3), Muitos (>3) | Análise de padrão de nomenclatura (use*) |
-| Número de Subcomponentes          | Quantidade de componentes filhos diretos                           | Nenhum (0), Poucos (1-2), Muitos (>2) | Análise de declarações JSX internas      |
-| Violações das Rules of Hooks       | Presença de violações das regras oficiais do React                 | Sem violações (0), Com violações (≥1) | ESLint rules (exhaustive-deps, rules-of-hooks) |
-| Dependências Incorretas em Effects | Erros no array de dependências do useEffect                        | Sem erros (0), Com erros (≥1)       | ESLint rule: exhaustive-deps             |
-| Histórico de Crescimento           | Taxa de crescimento do componente (LOC ao longo do tempo)          | Estável (<10%), Moderado (10-50%), Acelerado (>50%) | Análise de histórico Git                 |
 
 ### 8.4 Tratamentos (condições experimentais)
 
-Este experimento é observacional (não há manipulação ativa de tratamentos). No entanto, os componentes serão estratificados em grupos para análise comparativa:
+Este experimento é observacional (não há manipulação ativa de tratamentos). Para permitir análises comparativas, os componentes serão estratificados em grupos baseados nos pilares estruturais do React:
+
+- Estado
+
+- Renderização e JSX
+
+- Hooks e Efeitos
+
+- Acoplamento e Modularidade
 
 #### Tabela de Fatores e Tratamentos
+| **Conteito estrutural**                                | **Fator**                    | **Tratamentos / Condições**        | **Critério de Classificação**                                     |
+| ---------------------------------------- | ---------------------------- | ---------------------------------- | ----------------------------------------------------------------- |
+| Hooks e Efeitos**      | Qualidade dos Hooks          | **Saudável**: M1 = 0 e M2 = 0      | Nenhuma violação das Rules of Hooks e nenhum erro de dependências |
+|                                          |                              | **Problemático**: M1 ≥ 1 ou M2 ≥ 1 | Pelo menos uma violação                                           |
+| Renderização e JSX**         | Complexidade da Renderização | **Baixa**                          | M8 (aninhamento JSX) ≤ 3 e M9 ≤ 2                                 |
+|                                          |                              | **Média**                          | Valores intermediários                                            |
+|                                          |                              | **Alta**                           | M8 > 5 ou M9 ≥ 5                                                  |
+| Estado**    | Complexidade do Estado       | **Simples**                        | M6 baixa e M21 = 0                                                |
+|                                          |                              | **Complexa**                       | M6 alta ou M21 ≥ 1                                                |
+| Modularidade e Acoplamento** | Nível de Acoplamento         | **Baixo**                          | M15 ≤ 5                                                           |
+|                                          |                              | **Médio**                          | 6 ≤ M15 ≤ 15                                                      |
+|                                          |                              | **Alto**                           | M15 > 15                                                          |
+|                                          | Modularização                | **Modularizado**                   | M16 > 0 ou M18 > 0                                                |
+|                                          |                              | **Monolítico**                     | M16 = 0 e M18 = 0                                                 |
 
-| Fator                    | Tratamento / Condição         | Descrição                                                                 | Critério de Classificação                  |
-| ---------------------------- | --------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------------- |
-| Categoria de Tamanho     | Grupo 1: Componentes Pequenos | Componentes com menos de 100 linhas                                           | LOC < 100                                      |
-|                              | Grupo 2: Componentes Médios   | Componentes entre 100 e 300 linhas                                            | 100 ≤ LOC ≤ 300                                |
-|                              | Grupo 3: Componentes Grandes  | Componentes com mais de 300 linhas                                            | LOC > 300                                      |
-| Categoria de Complexidade| Grupo A: Baixa Complexidade   | Complexidade ciclomática ≤ 5                                                  | CC ≤ 5                                         |
-|                              | Grupo B: Média Complexidade   | Complexidade ciclomática entre 6 e 15                                         | 6 ≤ CC ≤ 15                                    |
-|                              | Grupo C: Alta Complexidade    | Complexidade ciclomática > 15                                                 | CC > 15                                        |
-| Categoria de Acoplamento | Grupo X: Baixo Acoplamento    | Componentes com até 5 imports                                                 | Imports ≤ 5                                    |
-|                              | Grupo Y: Médio Acoplamento    | Componentes com 6 a 15 imports                                                | 6 ≤ Imports ≤ 15                               |
-|                              | Grupo Z: Alto Acoplamento     | Componentes com mais de 15 imports                                            | Imports > 15                                   |
-| Presença de Antipadrões  | Grupo Saudável                | Componentes sem violações de hooks e sem erros de dependências                | Violações = 0 e Erros de deps = 0              |
-|                              | Grupo Problemático            | Componentes com pelo menos uma violação de hooks ou erro de dependências      | Violações ≥ 1 ou Erros de deps ≥ 1             |
-| Uso de Modularização     | Grupo Modularizado            | Componentes que usam subcomponentes ou hooks customizados                     | Subcomponentes > 0 ou Hooks customizados > 0   |
-|                              | Grupo Monolítico              | Componentes sem subcomponentes nem hooks customizados                         | Subcomponentes = 0 e Hooks customizados = 0    |
 
-#### Combinações de Tratamentos
+#### Combinações relevantes
 
 Serão analisadas combinações de fatores para investigar interações. Por exemplo:
-- Componentes Grandes + Alta Complexidade + Alto Acoplamento (suspeita de múltiplos code smells).
-- Componentes Pequenos + Baixa Complexidade + Modularizados (referência de boa prática).
-- Componentes Médios + Problemáticos (candidatos a refatoração prioritária).
+- Problemático em Hooks + Complexidade Alta de JSX + Alto Acoplamento → forte candidato a code smells.
+- Baixa complexidade + modulário → perfil de componente saudável.
+- Estado complexo + renderização pesada → risco de regressões e bugs.
 
 ### 8.5 Variáveis dependentes (respostas)
 
@@ -494,20 +511,28 @@ As variáveis dependentes são as métricas estruturais que serão coletadas e a
 
 #### Tabela de Variáveis Dependentes
 
-| Variável Dependente                | Descrição                                              | Unidade de Medida | Método de Coleta             |
-| -------------------------------------- | ---------------------------------------------------------- | --------------------- | -------------------------------- |
-| M1 – Violações das Rules of Hooks  | Quantidade de violações detectadas                         | Contagem              | ESLint (rules-of-hooks)          |
-| M2 – Erros de dependências         | Dependências ausentes ou incorretas no useEffect           | Contagem              | ESLint (exhaustive-deps)         |
-| M3 – Lines of Code (LOC)           | Tamanho total do componente                                | Linhas                | AST (Babel/TypeScript)           |
-| M4 – SRP Violations                | Responsabilidades distintas detectadas                     | Contagem              | Heurística baseada em estados/effects |
-| M5 – Crescimento histórico de LOC  | Taxa de crescimento do componente                          | Percentual (%)        | Git log + análise de diffs       |
-| M6 – Branch Complexity             | Número de condicionais e ramificações                      | Contagem              | AST (contagem de if/switch/ternários) |
-| M9 – Complexidade Ciclomática      | Total de caminhos independentes                            | Grau                  | Ferramenta de análise estática   |
-| M12 – Número de imports            | Dependências externas do componente                        | Contagem              | AST (import statements)          |
-| M13 – Hooks customizados usados    | Quantidade de hooks customizados consumidos                | Contagem              | AST (padrão use*)                |
-| M14 – Fan-in / Fan-out             | Acoplamento estrutural interno e externo                   | Grau                  | Análise de dependências          |
-| M15 – Número de subcomponentes     | Quantidade de componentes filhos diretos                   | Contagem              | AST (componentes internos)       |
-| M16 – Histórico de defeitos        | Quantidade de bugs associados ao componente                | Contagem              | GitHub Issues + Git blame        |
+| **Conceito estrutural**                                | **Métrica** | **Descrição**                           |
+| ---------------------------------------- | ----------- | --------------------------------------- |
+| Hooks e Ciclo de Vida**      | M1          | Violações dos hooks                     |
+|                                          | M2          | Erros no array de dependências          |
+|                                          | M5          | Uso excessivo de efeitos                |
+|                                          | M11         | Pressão de contextos                    |
+| **Renderização e JSX**         | M3          | Densidade de JSX                        |
+|                                          | M8          | Aninhamento JSX                         |
+|                                          | M9          | Condicionais no JSX                     |
+|                                          | M10         | Risco de renderizações desnecessárias   |
+| **Estado**    | M4          | Coesão entre hooks                      |
+|                                          | M6          | Complexidade da estrutura de estado     |
+|                                          | M12         | Profundidade de encadeamento de funções |
+|                                          | M21         | Estados não derivados                   |
+|                                          | M22         | Responsabilidades declaradas            |
+| **Modularidade e Acoplamento** | M7          | Profundidade de prop drilling           |
+|                                          | M13         | LOC                                     |
+|                                          | M14         | Complexidade ciclomatática              |
+|                                          | M15         | Número de importações                   |
+|                                          | M16         | Hooks customizados                      |
+|                                          | M17         | Acoplamento reativo                     |
+|                                          | M18         | Subcomponentes internos                 |
 
 ### 8.6 Variáveis de controle / bloqueio
 
