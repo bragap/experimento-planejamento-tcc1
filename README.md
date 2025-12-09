@@ -151,71 +151,79 @@ Propor, testar e validar um conjunto inicial de métricas estruturais específic
 
 ### 3.6 Fundamentos conceituais
 
-A definição das métricas propostas neste estudo parte de um modelo conceitual que representa a estrutura fundamental de um componente React moderno. Embora o React não seja uma linguagem orientada a objetos, sua arquitetura se organiza em torno de quatro conceitos essenciais que determinam a qualidade estrutural de um componente:
+A definição das métricas propostas neste estudo parte de um modelo conceitual que representa a estrutura fundamental de um componente React funcional moderno. Embora o React não seja uma linguagem orientada a objetos, sua arquitetura se organiza em torno de quatro conceitos estruturais fundamentais que determinam a qualidade estrutural de um componente:
 
 ---
 
-#### (1) Estado
+#### Conceito Estrutural 1: Hooks e Ciclo de Vida
 
-Refere-se a como o componente armazena, deriva, manipula e propaga estado.
+Refere-se à aplicação correta das APIs de hooks do React e ao gerenciamento do ciclo de vida reativo do componente.  
 Problemas comuns incluem:
 
-* estados redundantes
-* estados derivados manualmente
-* dependências entre estados mal definidas
-* uso excessivo de `useState` em vez de composição via hooks
+* Violação das regras de hooks (uso em condicionais, loops ou funções aninhadas)
+* Dependências incorretas ou ausentes em arrays de dependências de `useEffect`
+* Uso excessivo de efeitos colaterais que poderiam ser evitados
+* Baixa coesão entre hooks utilizados no componente
+* Consumo excessivo de contextos que aumenta pressão de re-renderização
 
-Smells associados: má modelagem de estado, estado inflado, estado inconsistente.
+Más práticas associadas: violação das regras de hooks, abuso de `useEffect`, lógica dispersa entre hooks, inconsistência reativa.
 
 ---
 
-#### (2) Renderização (JSX)
+#### Conceito Estrutural 2: Renderização e JSX
 
-Relaciona-se à estrutura da árvore JSX e à forma como o componente produz sua interface declarativa.
-
+Relaciona-se à qualidade da estrutura declarativa da interface e à forma como o componente produz sua marcação visual.  
 Fatores críticos:
 
-* profundidade da árvore JSX
-* quantidade de condicionais no JSX
-* densidade entre lógica e apresentação
+* Profundidade da árvore JSX (aninhamento excessivo)
+* Quantidade de condicionais e expressões ternárias no JSX
+* Densidade entre marcação JSX e lógica JavaScript
+* Risco de re-renderizações desnecessárias devido a valores criados inline
+* Declaração de subcomponentes dentro do escopo do componente principal
 
-Smells associados: componente inflado, JSX profundamente aninhado, renderização difícil de compreender.
-
----
-
-#### (3) Hooks e Efeitos
-
-Abrange toda a lógica executável do componente, incluindo:
-
-* regras de uso dos hooks
-* efeitos com dependências incorretas
-* funções internas e closures
-* interação entre hooks que impacta coesão
-
-Smells associados: violação das regras de hooks, abuso de `useEffect`, lógica dispersa entre hooks.
+Más práticas associadas: componente inflado, JSX profundamente aninhado, renderização difícil de compreender, lógica misturada com apresentação.
 
 ---
 
-#### (4) Acoplamento e Modularidade
+#### Conceito Estrutural 3: Estado e Lógica Interna
 
-Avalia como o componente se relaciona com seu entorno:
+Abrange a modelagem, derivação, manipulação e complexidade lógica interna do componente.  
+Problemas comuns:
 
-* importações
-* fan-in / fan-out
-* consumo de contextos
-* subcomponentes internos
-* profundidade de passagem de propriedades (prop drilling)
+* Estados redundantes que poderiam ser derivados
+* Estados derivados manualmente em vez de calculados via `useMemo`
+* Dependências complexas entre múltiplos estados
+* Profundidade excessiva de encadeamento de funções e closures
+* Múltiplas responsabilidades concentradas em um único componente
+* Complexidade estrutural elevada (múltiplas ramificações lógicas)
 
-Smells associados: acoplamento excessivo, dependência global, baixa modularização, God component.
+Más práticas associadas: má modelagem de estado, estado inflado, estado inconsistente, baixa coesão funcional, God component.
+
+---
+
+#### Conceito Estrutural 4: Modularidade e Acoplamento
+
+Avalia como o componente se conecta com o ecossistema externo e promove separação de responsabilidades.  
+Fatores analisados:
+
+* Número de importações externas (bibliotecas, componentes, utilitários)
+* Acoplamento reativo (quantos componentes dependem deste e vice-versa)
+* Profundidade de passagem de propriedades (prop drilling)
+* Pressão de consumo de contextos
+* Uso de hooks personalizados para encapsular lógica reutilizável
+* Declaração de subcomponentes auxiliares dentro do componente principal
+* Número de responsabilidades declaradas no componente
+
+Más práticas associadas: acoplamento excessivo, dependência global, baixa modularização, componente monolítico, falta de reuso lógico.
 
 ### 3.7 Relação entre conceitos estruturais do React e métricas associadas
 
-|Conceito Estrutural do React                |Descrição do Conceito                                                                                                                      |Métricas Associadas                                                                                                                                                                                                                                                                                                                                                                |
-| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|1. Estado                                | Avalia como o componente armazena, deriva, combina e manipula estado interno. Engloba coesão lógica, dependências e redundâncias no estado. | -M4 – Coesão entre Hooks (parte relacionada a estados)<br>-M5 – Uso excessivo de efeitos (efeitos que atualizam estados desnecessariamente)<br>-M6 – Complexidade da estrutura de estado<br>-M12 – Profundidade de encadeamento de funções (se usado em manipulação de estado)<br>-M20 – Mudanças na estrutura de estado<br>-M21 – Estados não derivados |
-|2. Renderização (JSX)                    | Examina a qualidade da camada de apresentação, incluindo clareza, profundidade estrutural e presença de lógica dispersa na interface.       | -M3 – Densidade de JSX<br>-M8 – Profundidade de aninhamento JSX<br>-M9 – Condicionais no JSX<br>-M10 – Risco de re-renderização (funções/objetos inline influenciam renderização)<br>-M18 – Subcomponentes declarados internamente (impacta clareza e modularização)                                                                                          |
-|3. Hooks e Efeitos                       | Foca na aplicação correta das APIs do React, como regras de hooks, consistência de efeitos, dependências e lógica distribuída.              | -M1 – Violações das regras de hooks<br>-M2 – Erros no array de dependências<br>-M4 – Coesão entre hooks<br>-M5 – Uso excessivo de efeitos<br>-M10 – Risco de re-renderização<br>-M12 – Profundidade de encadeamento de funções                                                                                                                           |
-|4. Acoplamento e Modularidade            | Observa como o componente se conecta com outros módulos, contextos e props; mede dependências e separação de responsabilidades.             | -M7 – Profundidade de passagem de propriedades<br>-M11 – Pressão de uso de contextos<br>-M15 – Número de importações<br>-M16 – Hooks personalizados utilizados<br>-M17 – Acoplamento reativo (entrada/saída)<br>-M18 – Subcomponentes declarados internamente<br>-M22 – Número de responsabilidades declaradas                                      |
+| Conceito Estrutural do React | Descrição do Conceito | Métricas Associadas |
+| -------------------------------------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1. Hooks e Ciclo de Vida | Avalia a aplicação correta das APIs de hooks do React, consistência de dependências em efeitos, coesão entre hooks e distribuição lógica reativa dentro do componente. | M1 – Violações das regras de hooks<br>M2 – Erros no array de dependências<br>M4 – Coesão entre hooks (parte relacionada a hooks)<br>M5 – Uso excessivo de efeitos<br>M11 – Pressão de uso de contextos |
+| 2. Renderização e JSX | Examina a qualidade da camada de apresentação declarativa, incluindo clareza, profundidade estrutural da árvore JSX e presença de lógica dispersa ou condicional na interface. | M3 – Densidade de JSX<br>M8 – Profundidade de aninhamento JSX<br>M9 – Condicionais no JSX<br>M10 – Risco de re-renderização<br>M18 – Subcomponentes declarados internamente |
+| 3. Estado e Lógica Interna | Abrange a modelagem, derivação, manipulação e complexidade lógica interna do componente, incluindo coesão funcional, encadeamento de funções e separação de responsabilidades. | M4 – Coesão entre hooks (parte relacionada a estados)<br>M6 – Complexidade da estrutura de estado<br>M12 – Profundidade de encadeamento de funções<br>M14 – Complexidade ciclomática<br>M20 – Mudanças na estrutura de estado<br>M21 – Estados não derivados<br>M22 – Número de responsabilidades declaradas |
+| 4. Modularidade e Acoplamento | Observa como o componente se conecta com o ecossistema externo (importações, contextos, propriedades), promove separação de responsabilidades e facilita reuso e encapsulamento. | M7 – Profundidade de passagem de propriedades<br>M11 – Pressão de uso de contextos<br>M13 – Linhas de código (LOC)<br>M15 – Número de importações<br>M16 – Hooks personalizados utilizados<br>M17 – Acoplamento reativo (entrada/saída)<br>M18 – Subcomponentes declarados internamente<br>M22 – Número de responsabilidades declaradas |
 
 
 ## 4. Escopo e contexto do experimento
@@ -318,29 +326,39 @@ O experimento será suspenso antes de iniciar caso:
 
 ## 7. Modelo conceitual e hipóteses
 
-### 7.1 Modelo conceitual do experimento 
+### 7.1 Modelo conceitual do experimento
 
-O modelo conceitual adotado neste experimento parte da premissa de que a saúde estrutural de um componente React pode ser explicada por quatro pilares fundamentais, que representam dimensões arquiteturais inerentes ao modelo declarativo do framework:
+O modelo conceitual adotado neste experimento parte da premissa de que a saúde estrutural de um componente React funcional pode ser compreendida por meio de quatro conceitos estruturais fundamentais, que representam dimensões arquiteturais inerentes ao modelo declarativo do framework:
 
-1. Estado: qualidade da modelagem e derivação do estado.
-2. Renderização (JSX): clareza e simplicidade da estrutura declarativa.
-3. Hooks e Efeitos: coerência na aplicação das APIs de hooks.
-4. Acoplamento e Modularidade: grau de dependência interna e externa.
+1. Hooks e Ciclo de Vida  
+Refere-se à aplicação correta das APIs de hooks do React, incluindo regras de uso, consistência de dependências em efeitos, coesão entre hooks e distribuição lógica dentro do componente.
 
-A partir desses pilares, o modelo assume que:
+2. Renderização e JSX  
+Diz respeito à qualidade da camada de apresentação declarativa, envolvendo clareza, profundidade estrutural da árvore JSX, densidade visual e presença de lógica dispersa ou condicional na interface.
 
-* Problemas na modelagem do estado (ex.: estados redundantes, estados derivados manualmente, múltiplas dependências) refletem-se em métricas elevadas de complexidade de estado.
-* Problemas de renderização (JSX profundo, muitas condicionais, alta densidade visual) indicam componentes inflados e pouco modulados.
-* Violação da lógica de hooks (regras, dependências incorretas, efeitos redundantes) manifesta-se em métricas associadas à coerência da lógica interna.
-* Alto acoplamento estrutural (imports, contextos, prop drilling, subcomponentes internos) reduz modularidade e dificulta reutilização.
+3. Estado e Lógica Interna  
+Abrange a modelagem, derivação, manipulação e encadeamento de estado interno, bem como a complexidade funcional, coesão lógica e separação de responsabilidades dentro do componente.
 
-Essas quatro dimensões são variáveis independentes, observadas por meio das métricas M1–M22, que influenciam a qualidade estrutural percebida do componente, a qual será confirmada por:
+4. Modularidade e Acoplamento  
+Avalia como o componente se conecta ao ecossistema externo (importações, contextos, propriedades) e como promove reuso, separação de responsabilidades e encapsulamento.
 
-* especialistas,
-* métricas históricas,
-* e presença de antipadrões estruturais.
+---
 
-Assim como o modelo CK para classes Java, este modelo propõe que smells de código em React são capturáveis por métricas estruturais consistentes.
+A partir desses quatro conceitos estruturais fundamentais, o modelo assume que:
+
+* Violações na aplicação de hooks (uso condicional, dependências incorretas, efeitos redundantes) manifestam-se em métricas associadas à coerência do ciclo de vida e consistência da lógica reativa.
+* Problemas na renderização (JSX profundamente aninhado, múltiplas condicionais, alta densidade de marcação) indicam componentes inflados, pouco legíveis e com baixa separação entre apresentação e lógica.
+* Má modelagem do estado interno (estados redundantes, estados derivados manualmente, dependências complexas entre estados) reflete-se em métricas elevadas de complexidade estrutural, coesão reduzida e dificuldade de manutenção.
+* Alto acoplamento externo (excesso de importações, múltiplos contextos consumidos, profundidade de passagem de propriedades) reduz modularidade, dificulta reutilização e aumenta a fragilidade do componente diante de mudanças arquiteturais.
+
+Essas quatro dimensões estruturais são observadas por meio das métricas M1 a M22 (conforme definido na Seção 3.5), as quais quantificam objetivamente características estruturais que influenciam a qualidade percebida do componente. Essa qualidade será validada por:
+
+* Análise estática automatizada via ferramentas AST e linters;
+* Avaliação qualitativa de especialistas em React;
+* Análise histórica de evolução e defeitos;
+* Presença objetiva de antipadrões estruturais documentados na literatura.
+
+Ao contrário do modelo CK Metrics (orientado a classes em programação orientada a objetos), este modelo é específico para componentes React funcionais e baseia-se exclusivamente em características declarativas, reativas e modulares do ecossistema moderno do React.
 
 ---
 
@@ -440,7 +458,7 @@ O experimento envolverá dois tipos de participantes:
 
 #### 8.2.2 Participantes Indiretos: Desenvolvedores dos Projetos Open-Source
 - Os componentes analisados foram escritos por desenvolvedores reais, mas estes não participarão ativamente do experimento.
-- 
+
 ### 8.3 Variáveis independentes (fatores) e seus níveis
 
 As variáveis independentes são características estruturais observadas nos componentes, categorizadas em níveis para análise comparativa.
@@ -471,68 +489,70 @@ As variáveis independentes são características estruturais observadas nos com
 
 ### 8.4 Tratamentos (condições experimentais)
 
-Este experimento é observacional (não há manipulação ativa de tratamentos). Para permitir análises comparativas, os componentes serão estratificados em grupos baseados nos pilares estruturais do React:
+Este experimento é observacional (não há manipulação ativa de tratamentos). Para permitir análises comparativas, os componentes serão estratificados em grupos baseados nos quatro conceitos estruturais fundamentais do React:
 
-- Estado
-
-- Renderização e JSX
-
-- Hooks e Efeitos
-
-- Acoplamento e Modularidade
+1. Hooks e Ciclo de Vida
+2. Renderização e JSX
+3. Estado e Lógica Interna
+4. Modularidade e Acoplamento
 
 #### Tabela de Fatores e Tratamentos
-| **Conteito estrutural**                                | **Fator**                    | **Tratamentos / Condições**        | **Critério de Classificação**                                     |
-| ---------------------------------------- | ---------------------------- | ---------------------------------- | ----------------------------------------------------------------- |
-| Hooks e Efeitos**      | Qualidade dos Hooks          | **Saudável**: M1 = 0 e M2 = 0      | Nenhuma violação das Rules of Hooks e nenhum erro de dependências |
-|                                          |                              | **Problemático**: M1 ≥ 1 ou M2 ≥ 1 | Pelo menos uma violação                                           |
-| Renderização e JSX**         | Complexidade da Renderização | **Baixa**                          | M8 (aninhamento JSX) ≤ 3 e M9 ≤ 2                                 |
-|                                          |                              | **Média**                          | Valores intermediários                                            |
-|                                          |                              | **Alta**                           | M8 > 5 ou M9 ≥ 5                                                  |
-| Estado**    | Complexidade do Estado       | **Simples**                        | M6 baixa e M21 = 0                                                |
-|                                          |                              | **Complexa**                       | M6 alta ou M21 ≥ 1                                                |
-| Modularidade e Acoplamento** | Nível de Acoplamento         | **Baixo**                          | M15 ≤ 5                                                           |
-|                                          |                              | **Médio**                          | 6 ≤ M15 ≤ 15                                                      |
-|                                          |                              | **Alto**                           | M15 > 15                                                          |
-|                                          | Modularização                | **Modularizado**                   | M16 > 0 ou M18 > 0                                                |
-|                                          |                              | **Monolítico**                     | M16 = 0 e M18 = 0                                                 |
 
+| Conceito Estrutural | Fator | Tratamentos / Condições | Critério de Classificação |
+| ---------------------------------------- | ---------------------------- | ---------------------------------- | ----------------------------------------------------------------- |
+| Hooks e Ciclo de Vida | Qualidade dos Hooks | Saudável: M1 = 0 e M2 = 0 | Nenhuma violação das regras de hooks e nenhum erro de dependências |
+| | | Problemático: M1 ≥ 1 ou M2 ≥ 1 | Pelo menos uma violação detectada |
+| Renderização e JSX | Complexidade da Renderização | Baixa | M8 (aninhamento JSX) ≤ 3 e M9 ≤ 2 |
+| | | Média | 4 ≤ M8 ≤ 5 ou 3 ≤ M9 ≤ 4 |
+| | | Alta | M8 > 5 ou M9 ≥ 5 |
+| Estado e Lógica Interna | Complexidade do Estado | Simples | M6 ≤ 2 e M21 = 0 e M14 ≤ 5 |
+| | | Complexa | M6 > 3 ou M21 ≥ 1 ou M14 > 10 |
+| Modularidade e Acoplamento | Nível de Acoplamento | Baixo | M15 ≤ 5 e M17 ≤ 3 |
+| | | Médio | 6 ≤ M15 ≤ 15 ou 4 ≤ M17 ≤ 8 |
+| | | Alto | M15 > 15 ou M17 > 8 |
+| | Modularização | Modularizado | M16 > 0 ou M18 > 0 |
+| | | Monolítico | M16 = 0 e M18 = 0 |
 
 #### Combinações relevantes
 
 Serão analisadas combinações de fatores para investigar interações. Por exemplo:
-- Problemático em Hooks + Complexidade Alta de JSX + Alto Acoplamento → forte candidato a code smells.
-- Baixa complexidade + modulário → perfil de componente saudável.
-- Estado complexo + renderização pesada → risco de regressões e bugs.
+
+* Problemático em Hooks + Complexidade Alta de JSX + Alto Acoplamento → forte candidato a componente com múltiplos code smells.
+* Baixa complexidade de renderização + Estado simples + Modularizado → perfil de componente saudável e bem estruturado.
+* Estado complexo + Renderização pesada + Monolítico → risco elevado de regressões, bugs e dificuldade de manutenção.
+* Hooks saudáveis + Alto acoplamento → possível dependência excessiva do ecossistema externo apesar de lógica interna consistente.
 
 ### 8.5 Variáveis dependentes (respostas)
 
-As variáveis dependentes são as métricas estruturais que serão coletadas e analisadas:
+As variáveis dependentes são as métricas estruturais que serão coletadas e analisadas, organizadas segundo os quatro conceitos estruturais fundamentais do React:
 
 #### Tabela de Variáveis Dependentes
 
-| **Conceito estrutural**                                | **Métrica** | **Descrição**                           |
+| Conceito Estrutural | Métrica | Descrição |
 | ---------------------------------------- | ----------- | --------------------------------------- |
-| Hooks e Ciclo de Vida**      | M1          | Violações dos hooks                     |
+| Hooks e Ciclo de Vida | M1 | Violações das regras de hooks |
 |                                          | M2          | Erros no array de dependências          |
 |                                          | M5          | Uso excessivo de efeitos                |
 |                                          | M11         | Pressão de contextos                    |
-| **Renderização e JSX**         | M3          | Densidade de JSX                        |
+| Renderização e JSX         | M3          | Densidade de JSX                        |
 |                                          | M8          | Aninhamento JSX                         |
 |                                          | M9          | Condicionais no JSX                     |
 |                                          | M10         | Risco de renderizações desnecessárias   |
-| **Estado**    | M4          | Coesão entre hooks                      |
+| Estado e Lógica Interna    | M4          | Coesão entre hooks                      |
 |                                          | M6          | Complexidade da estrutura de estado     |
 |                                          | M12         | Profundidade de encadeamento de funções |
+|                                          | M14         | Complexidade ciclomática                |
+|                                          | M20         | Mudanças na estrutura de estado         |
 |                                          | M21         | Estados não derivados                   |
 |                                          | M22         | Responsabilidades declaradas            |
-| **Modularidade e Acoplamento** | M7          | Profundidade de prop drilling           |
+| Modularidade e Acoplamento | M7          | Profundidade de prop drilling           |
 |                                          | M13         | LOC                                     |
-|                                          | M14         | Complexidade ciclomatática              |
 |                                          | M15         | Número de importações                   |
 |                                          | M16         | Hooks customizados                      |
 |                                          | M17         | Acoplamento reativo                     |
 |                                          | M18         | Subcomponentes internos                 |
+
+Observação: Algumas métricas aparecem em múltiplos conceitos estruturais devido à natureza transversal de determinadas características. Por exemplo, M18 (subcomponentes internos) impacta tanto a renderização quanto a modularidade.
 
 ### 8.6 Variáveis de controle / bloqueio
 
@@ -597,24 +617,24 @@ O experimento adotará um desenho observacional estratificado com análise fator
 - Processo:
   1. Listar todos os componentes do repositório.
   2. Estratificar por tamanho (pequeno, médio, grande).
-  3. Sortear aleatoriamente componentes de cada estrato (usando `random.sample()` do Python ou similar).
+  3. Sortear aleatoriamente componentes de cada estrato.
   4. Garantir representatividade de cada estrato (mínimo de 10 componentes por estrato, se disponível).
 
-2. Ordem de Apresentação aos Especialistas:
+1. Ordem de Apresentação aos Especialistas:
 - Os componentes serão apresentados aos especialistas em ordem aleatória para evitar viés de ordem.
 - Processo:
   1. Gerar lista de componentes selecionados para avaliação qualitativa.
-  2. Embaralhar aleatoriamente a ordem (usando `shuffle()`).
+  2. Embaralhar aleatoriamente a ordem.
   3. Cada especialista receberá a mesma lista, mas em ordem diferente (randomização individual).
 
-3. Alocação de Especialistas a Componentes:
+1. Alocação de Especialistas a Componentes:
 - Cada componente será avaliado por pelo menos 2 especialistas diferentes (para calcular concordância interavaliadores).
 - Processo:
   1. Dividir o conjunto de componentes em blocos.
   2. Alocar aleatoriamente especialistas a blocos, garantindo que cada componente seja visto por 2+ avaliadores.
 
 #### Ferramentas e Procedimentos:
-- Linguagem: Python (bibliotecas `random`, `numpy.random`).
+- Linguagem: Python.
 - Seed de randomização: Será fixada e documentada para garantir reprodutibilidade.
 - Registro: Todas as listas randomizadas serão salvas em arquivos CSV com timestamp.
 
@@ -687,20 +707,6 @@ Total estimado: 150-250 componentes (dependendo da disponibilidade nos repositó
 - Análise estatística dedicada: Assegura rigor na interpretação dos resultados.
 
 ## 10. População, sujeitos e amostragem
-10.1 População-alvo
-Descreva qual é a população real que você deseja representar com o experimento (por exemplo, “desenvolvedores Java de times de produto web”).
-
-10.2 Critérios de inclusão de sujeitos
-Especifique os requisitos mínimos para um participante ser elegível (experiência, conhecimento, papel, disponibilidade, etc.).
-
-10.3 Critérios de exclusão de sujeitos
-Liste condições que impedem participação (conflitos de interesse, falta de skills essenciais, restrições legais ou éticas).
-
-10.4 Tamanho da amostra planejado (por grupo)
-Defina quantos participantes você pretende ter no total e em cada grupo, relacionando a decisão com poder, recursos e contexto.
-
-10.5 Método de seleção / recrutamento
-Explique como os participantes serão escolhidos (amostra de conveniência, sorteio, convite aberto, turma de disciplina, time específico).
 
 ### 10.1 População-alvo
 
@@ -798,12 +804,6 @@ Critérios de busca no GitHub:
 
 Ferramentas:
 - GitHub Search API ou GitHub Advanced Search.
-- Filtros: `language:TypeScript OR language:JavaScript topic:react stars:>500`.
-
-Pré-seleção manual:
-- Revisar README para confirmar que é um projeto React real (não biblioteca de componentes).
-- Verificar estrutura de pastas (presença de `/src`, `/components`, `/app`).
-- Confirmar presença de `package.json` com dependência `react`.
 
 #### Etapa 2: Extração de Componentes dos Repositórios
 
@@ -821,7 +821,6 @@ Processo automatizado:
 Estratificação por tamanho:
 1. Calcular LOC de cada componente extraído.
 2. Classificar em estratos: pequeno, médio, grande.
-3. Dentro de cada estrato, selecionar aleatoriamente componentes usando `random.sample()`.
 
 #### Etapa 4: Validação da Amostra
 
@@ -850,253 +849,138 @@ Após seleção, a amostra será caracterizada documentando:
 | Número de commits no componente  | `git log --oneline <file> \| wc -l`                |
 | Número de contribuidores únicos  | `git log --format='%an' <file> \| sort -u \| wc -l` |
 | Presença de testes               | Existência de arquivo `.test.` ou `.spec.`         |
-| Biblioteca de UI utilizada       | Análise de imports (MUI, Ant Design, etc.)         |
 
 ## 11. Instrumentação e protocolo operacional
+
 ### 11.1 Instrumentos de coleta
 
-Os seguintes instrumentos serão utilizados para coleta automatizada de dados:
+Os instrumentos de coleta de dados foram organizados segundo os quatro conceitos estruturais fundamentais do React, garantindo coerência metodológica e rastreabilidade completa entre métricas e ferramentas.
 
 #### 11.1.1 Ferramentas de Análise Estática
 
-| Ferramenta          | Função                                      | Métricas Coletadas                          |
-| ----------------------- | ----------------------------------------------- | ----------------------------------------------- |
-| Babel Parser        | Parsing de código JavaScript/JSX                | M3 (LOC), M12 (Imports), M15 (Subcomponentes)   |
-| TypeScript Compiler API | Parsing de código TypeScript/TSX            | M3 (LOC), M12 (Imports), M15 (Subcomponentes)   |
-| ESLint              | Análise de violações de regras React            | M1 (Rules of Hooks), M2 (exhaustive-deps)       |
-| Esprima / Acorn     | Análise de complexidade ciclomática             | M9 (Complexidade Ciclomática), M6 (Branch Complexity) |
-| jscpd               | Detecção de duplicação de código                | Percentual de código duplicado                  |
-| AST Walker Custom   | Análise customizada de estrutura                | M4 (SRP Violations), M13 (Hooks customizados), M14 (Fan-in/Fan-out) |
-| Dependency Analyzer | Análise de dependências e acoplamento           | M12 (Imports), M14 (Fan-in/Fan-out)             |
+As ferramentas de análise estática operam diretamente sobre a árvore sintática abstrata dos componentes, permitindo extração objetiva e automatizada das métricas estruturais.
 
-#### 11.1.2 Ferramentas de Análise de Histórico Git
+| Ferramenta                  |  Função Principal                                                     | Conceitos Estruturais Cobertos             |
+| ------------------------------- | ----------------- | ------------------------------------------------------------------------ |
+| Babel Parser                    |  Parsing de código JavaScript e JSX                                       | Renderização (JSX), Estado, Modularidade       |
+| TypeScript Compiler API         |  Parsing de código TypeScript e TSX                                       | Renderização (JSX), Estado, Modularidade       |
+| ESLint                          |  Detecção de violações das regras oficiais do React                      | Hooks e Ciclo de Vida                          |
+| eslint-plugin-react-hooks       | Plugin ESLint específico para regras de hooks                            | Hooks e Ciclo de Vida                          |
+| Esprima / Acorn                |  Análise de complexidade ciclomática e fluxo de controle                  | Estado e Lógica Interna                        |
 
-| Ferramenta          | Função                                      | Métricas Coletadas                          |
-| ----------------------- | ----------------------------------------------- | ----------------------------------------------- |
-| Git CLI             | Extração de histórico de commits                | M5 (Crescimento histórico de LOC), M18 (Defeitos) |
-| PyDriller           | Biblioteca Python para análise de repositórios  | M5 (Crescimento LOC), M6 (Crescimento de branches), número de commits, contribuidores, churns |
-| GitHub API          | Extração de issues e pull requests              | M18 (Histórico de defeitos associados)          |
-| git log + diff      | Análise de mudanças estruturais ao longo do tempo | M5 (Crescimento histórico), M6 (Evolução de complexidade) |
 
-#### 11.1.3 Scripts Customizados
+#### 11.1.2 Ferramentas de Análise de Histórico
 
-| Script                      | Linguagem | Função                                              | Métricas Geradas |
-| ------------------------------- | ------------- | ------------------------------------------------------- | -------------------- |
-| `component_extractor.py`        | Python        | Identifica e lista componentes React no repositório     | Lista de componentes |
-| `metrics_collector.py`          | Python        | Extrai métricas estruturais via AST                     | M3, M4, M6, M7, M9, M12, M13, M14, M15 |
-| `git_history_analyzer.py`       | Python        | Analisa histórico Git e calcula métricas temporais      | M5, M6 (temporal), M18 |
-| `eslint_runner.sh`              | Bash          | Executa ESLint em todos os componentes                  | M1, M2 |
-| `antipattern_detector.py`       | Python        | Detecta antipadrões específicos de React                | M7 (por antipadrão), M8 (cobertura) |
-| `data_aggregator.py`            | Python        | Agrega dados de múltiplas fontes em DataFrame           | Dataset consolidado com M1-M18 |
-| `statistical_analysis.R`        | R             | Realiza análises estatísticas e testes de hipóteses     | Correlações, testes, regressões |
+As ferramentas de análise histórica extraem métricas temporais a partir do controle de versão, permitindo observar a evolução estrutural dos componentes.
 
-#### 11.1.4 Planilhas e Bancos de Dados
-
-| Artefato                    | Formato | Conteúdo                                            |
-| ------------------------------- | ----------- | ------------------------------------------------------- |
-| `components_metadata.csv`       | CSV         | Lista de componentes com metadados (repo, path, LOC)    |
-| `metrics_raw.csv`               | CSV         | Métricas estruturais brutas por componente              |
-| `git_history.csv`               | CSV         | Dados históricos (commits, churns, defeitos)            |
-| `eslint_violations.json`        | JSON        | Relatório de violações ESLint por componente            |
-| `final_dataset.csv`             | CSV         | Dataset consolidado para análise estatística            |
-
-#### 11.1.5 Mapeamento Completo: Métricas → Instrumentos
-
-Esta tabela documenta todas as 18 métricas do GQM e os instrumentos responsáveis por sua coleta:
-
-| Métrica | Descrição | Ferramenta/Script Principal | Técnica de Coleta |
-| ----------- | ------------- | ------------------------------- | --------------------- |
-| M1 – Violações das Rules of Hooks | Hooks em condições, loops, etc. | ESLint + `eslint_runner.sh` | Regra `react-hooks/rules-of-hooks` |
-| M2 – Erros de dependências do useEffect | Dependências ausentes/incorretas | ESLint + `eslint_runner.sh` | Regra `react-hooks/exhaustive-deps` |
-| M3 – Lines of Code (LOC) | Tamanho total do componente | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de linhas de código (sem comentários/vazias) |
-| M4 – SRP Violations | Responsabilidades distintas | AST Walker Custom + `metrics_collector.py` | Análise semântica de funções/lógica no componente |
-| M5 – Crescimento histórico de LOC | Aumento de tamanho ao longo do tempo | PyDriller + `git_history_analyzer.py` | Comparação LOC (primeiro commit vs atual) |
-| M6 – Branch Complexity | Condicionais e ramificações | Esprima/Acorn + `metrics_collector.py` | Contagem de `if`, `switch`, ternários, `&&`, `\|\|` |
-| M7 – Métricas por antipadrão | Quantificação de bad smells específicos | `antipattern_detector.py` | Detecção de padrões: prop drilling, god component, etc. |
-| M8 – Mapeamento métrica ↔ má prática | Cobertura de más práticas | `antipattern_detector.py` | Percentual de antipadrões cobertos por métricas |
-| M9 – Complexidade Ciclomática | Caminhos independentes no código | Esprima/Acorn + `metrics_collector.py` | Algoritmo de McCabe (V(G) = E - N + 2P) |
-| M10 – Variabilidade por executor | Consistência entre execuções | Todos os scripts | Comparação de resultados em múltiplas execuções |
-| M11 – Precisão da análise estática | Acurácia das ferramentas AST | Validação manual + `metrics_collector.py` | Comparação amostra manual vs automatizada |
-| M12 – Número de imports | Dependências externas | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de declarações `import` |
-| M13 – Hooks customizados usados | Hooks consumidos (use*) | AST Walker Custom + `metrics_collector.py` | Contagem de chamadas a funções `use*` |
-| M14 – Fan-in / Fan-out | Acoplamento estrutural | Dependency Analyzer + `metrics_collector.py` | Fan-in: quantos importam este / Fan-out: quantos este importa |
-| M15 – Número de subcomponentes | Componentes filhos internos | Babel Parser / TS Compiler API + `metrics_collector.py` | Contagem de componentes declarados dentro do componente |
-| M16 – Histórico de defeitos | Bugs associados ao componente | GitHub API + Git CLI + `git_history_analyzer.py` | Issues mencionando componente + commits com "fix\|bug" |
-
+| Ferramenta          | Função Principal                                                     | Métricas Históricas Coletadas              |
+| ----------------------- | ------------------------------------------------------------------------ | ---------------------------------------------- |
+| Git CLI                 | Extração de histórico de commits e diffs                                 | M19 (Crescimento histórico de linhas)          |
+| PyDriller               |  Biblioteca Python para análise automatizada de repositórios Git          | M19, M20 (Mudanças na estrutura de estado)     |
+| GitHub API              | Extração de issues, pull requests e metadados de repositório             | Histórico de defeitos associados a componentes |
 
 
 ### 11.2 Materiais de suporte
 
-Os seguintes materiais serão preparados para documentar e padronizar o experimento:
+Os materiais de suporte foram organizados para garantir documentação completa, padronização metodológica e reprodutibilidade total do experimento.
+Ex: `README_EXPERIMENTO.md` e `SETUP_GUIDE.md`
 
-#### 11.2.1 Documentação Técnica
+### 11.3 Procedimento experimental
 
-| Documento                   | Conteúdo                                                    |
-| ------------------------------- | --------------------------------------------------------------- |
-| `README_EXPERIMENTO.md`         | Visão geral do experimento, objetivos e estrutura               |
-| `SETUP_GUIDE.md`                | Guia de instalação de ferramentas e dependências                |
-| `DATA_DICTIONARY.md`            | Dicionário de dados (todas as variáveis e métricas)             |
-| `SCRIPTS_DOCUMENTATION.md`      | Documentação dos scripts (parâmetros, saídas, exemplos)         |
-| `REPRODUCIBILITY_GUIDE.md`      | Instruções para replicar o experimento                          |
+O procedimento experimental foi estruturado em quatro fases sequenciais, garantindo coleta sistemática, consolidação rigorosa e análise estatística fundamentada.
 
-#### 11.2.2 Configurações Padronizadas
+#### FASE 1: PREPARAÇÃO DO AMBIENTE E SELEÇÃO DA AMOSTRA
 
-| Arquivo                     | Função                                                      |
-| ------------------------------- | --------------------------------------------------------------- |
-| `.eslintrc.json`                | Configuração ESLint com regras React oficiais                   |
-| `tsconfig.json`                 | Configuração TypeScript para parsing consistente                |
-| `babel.config.js`               | Configuração Babel para parsing de JSX                          |
-| `requirements.txt`              | Dependências Python necessárias                                 |
-| `package.json`                  | Dependências Node.js necessárias                                |
+##### Passo 1.1 – Configuração do Ambiente de Execução
 
-#### 11.2.3 Templates de Relatórios
+Duração estimada: 1-2 horas 
 
-| Template                    | Formato | Uso                                                 |
-| ------------------------------- | ----------- | ------------------------------------------------------- |
-| `analysis_report_template.Rmd`  | R Markdown  | Template para relatórios estatísticos automatizados     |
-| `visualization_notebook.ipynb`  | Jupyter     | Notebook para visualizações e análises exploratórias    |
+- Instalar softwares e dependências necessárias.
+- Testar ferramentas de parsing em componente de exemplo para validação.
 
-### 11.3 Procedimento experimental (protocolo passo a passo)
+##### Passo 1.2 – Seleção de Repositórios
 
-![Fluxograma do Experimento](metodologia.png)
+Duração estimada: 2-4 horas
 
-#### FASE 1: PREPARAÇÃO
+- Executar busca no GitHub usando critérios definidos na seção 10.5.
 
-Passo 1.1 - Configuração do Ambiente
-- Instalar Python 3.9+, Node.js 18+, R 4.0+, Git 2.30+.
-- Instalar dependências: `pip install -r requirements.txt`, `npm install`.
-- Configurar ESLint com plugin React: `npm install eslint eslint-plugin-react eslint-plugin-react-hooks`.
-- Testar ferramentas de parsing em componente de exemplo.
+##### Passo 1.3 – Extração e Seleção de Componentes
 
-Passo 1.2 - Seleção de Repositórios
-- Executar busca no GitHub com critérios definidos (seção 10.5).
-- Listar repositórios candidatos em `repositories_candidates.csv`.
-- Revisar manualmente os 10 primeiros candidatos.
-- Selecionar 3 a 5 repositórios que atendem aos critérios.
-- Clonar repositórios localmente: `git clone <repo_url>`.
+- Executar scripts necessários.
 
-Passo 1.3 - Extração de Componentes
-- Executar `component_extractor.py` em cada repositório.
-- Gerar lista de componentes candidatos em `components_candidates.csv`.
-- Aplicar critérios de inclusão/exclusão (seção 10.2 e 10.3).
-- Gerar lista final de componentes em `components_selected.csv`.
+#### FASE 2: COLETA AUTOMATIZADA DE MÉTRICAS ESTRUTURAIS
 
-#### FASE 2: COLETA AUTOMATIZADA DE MÉTRICAS
+##### Passo 2.1 – Extração de Métricas Estruturais via Análise AST.
 
-Passo 2.1 - Extração de Métricas Estruturais 
-- Duração estimada: 2-4 horas (automatizado).
-- Responsável: Script `metrics_collector.py`.
-- Entrada: `components_selected.csv`.
-- Saída: `metrics_raw.csv`.
+- Duração estimada: 2-4 horas (processamento automatizado).
+   - Ler arquivo fonte do componente. Parsear código.
+   - Extrair e registrar métricas.
 
-Ações:
-1. Para cada componente na lista:
-   - Ler arquivo do componente.
-   - Parsear código com Babel Parser (JS/JSX) ou TypeScript Compiler API (TS/TSX).
-   - Extrair métricas estruturais:
-     - M3 (LOC): contar linhas de código (excluindo comentários e linhas vazias).
-     - M12 (Imports): contar declarações `import`.
-     - M13 (Hooks customizados): contar chamadas a funções `use*`.
-     - M15 (Subcomponentes): contar componentes declarados internamente.
-     - M6 (Branch Complexity): contar `if`, `switch`, `? :`, `&&`, `||`.
-   - Calcular M9 (Complexidade Ciclomática) usando biblioteca `esprima` ou `escomplex`.
-   - Salvar métricas em `metrics_raw.csv`.
-2. Registrar log de execução (componentes processados com sucesso vs. erros).
+##### Passo 2.2 – Detecção de Violações de Regras de Hooks via ESLint
 
-Passo 2.2 - Análise de Violações ESLint
-- Duração estimada: 1-2 horas (automatizado).
-- Responsável: Script `eslint_runner.sh`.
-- Entrada: `components_selected.csv`.
-- Saída: `eslint_violations.json`.
+- Duração estimada: 1-2 horas (processamento automatizado).
+  - Executar ESLint em cada componente da lista.
+  - Contabilizar e documentar.
 
-Ações:
-1. Executar ESLint em cada componente:
-   ```bash
-   eslint --format json --output-file eslint_violations.json src//*.{js,jsx,ts,tsx}
-   ```
-2. Filtrar apenas violações de regras React:
-   - `react-hooks/rules-of-hooks` (M1).
-   - `react-hooks/exhaustive-deps` (M2).
-3. Contar violações por componente.
-4. Agregar resultados em `metrics_raw.csv`.
+##### Passo 2.3 – Análise Histórica de Evolução Estrutural via Git
 
-Passo 2.3 - Análise de Histórico Git
-- Duração estimada: 4-6 horas (automatizado).
-- Responsável: Script `git_history_analyzer.py`.
-- Entrada: `components_selected.csv`.
-- Saída: `git_history.csv`.
+- Duração estimada: 4-6 horas (processamento automatizado).
+   - Extrair histórico completo de commits e calcular M19 e M20.
+    
+#### FASE 3: CONSOLIDAÇÃO E PREPARAÇÃO DOS DADOS
 
-Ações:
-1. Para cada componente:
-   - Extrair histórico de commits:
-     ```bash
-     git log --follow --oneline -- <component_path>
-     ```
-   - Calcular M5 (Crescimento histórico de LOC):
-     - LOC inicial (primeiro commit).
-     - LOC atual.
-     - Taxa de crescimento: `(LOC_atual - LOC_inicial) / LOC_inicial * 100`.
-   - Extrair número de commits, contribuidores únicos, data de criação.
-2. Buscar defeitos associados (M18):
-   - Usar GitHub API para buscar issues que mencionam o componente.
-   - Usar `git log --grep="fix\|bug"` para encontrar commits de correção.
-3. Salvar dados em `git_history.csv`.
+##### Passo 3.1 – Agregação de Dados de Múltiplas Fontes
 
-#### FASE 3: CONSOLIDAÇÃO DOS DADOS
+- Executar scripts necessários e criar datasets.
 
-Passo 3.1 - Agregação de Dados
-- Executar `data_aggregator.py`.
-- Mesclar `metrics_raw.csv`, `eslint_violations.json`, `git_history.csv`.
-- Gerar dataset consolidado: `final_dataset.csv`.
-- Importar para SQLite: `experiment.db`.
+##### Passo 3.2 – Limpeza e Validação de Qualidade dos Dados
 
-Passo 3.2 - Limpeza e Validação
-- Verificar dados faltantes (missing values).
-- Identificar outliers extremos (valores impossíveis).
-- Verificar consistência (ex.: LOC > 0, violações ≥ 0).
-- Documentar anomalias em `data_quality_report.md`.
+- Verificar presença de dados faltantes e calcular percentual de completude por métrica.
+- Identificar outliers extremos usando critério IQR (seção 12.3.2).
 
-Passo 3.3 - Classificação em Grupos Experimentais
-- Aplicar critérios de estratificação (seção 8.4).
-- Adicionar coluna `grupo_tamanho` (Pequeno/Médio/Grande).
-- Adicionar coluna `grupo_complexidade` (Baixa/Média/Alta).
-- Adicionar coluna `grupo_acoplamento` (Baixo/Médio/Alto).
-- Adicionar coluna `grupo_saude` (Saudável/Problemático).
+##### Passo 3.3 – Classificação em Grupos Experimentais
 
-#### FASE 4: ANÁLISE ESTATÍSTICA
+- Aplicar critérios de estratificação definidos na seção 8.4.
 
-Passo 4.1 - Análise Exploratória de Dados (EDA)
-- Carregar `final_dataset.csv` em Python/R.
-- Gerar estatísticas descritivas (média, mediana, desvio padrão, min, max).
-- Criar visualizações:
-  - Histogramas das métricas principais.
-  - Boxplots por grupos.
-  - Matriz de correlação entre métricas.
-  - Gráficos de dispersão (LOC vs. Complexidade, etc.).
-- Salvar visualizações em `/outputs/figures/`.
+#### FASE 4: ANÁLISE ESTATÍSTICA E VALIDAÇÃO DE HIPÓTESES
 
-Passo 4.2 - Testes de Hipóteses
-- Hipótese 1 (Tamanho vs. Complexidade):
-  - Calcular correlação de Pearson (ou Spearman se não-normal).
-  - Teste: `cor.test(LOC, Complexidade_Ciclomatica)`.
-- Hipótese 2 (Acoplamento vs. Violações):
-  - Comparar grupos (Baixo/Médio/Alto acoplamento) usando ANOVA ou Kruskal-Wallis.
-  - Teste: `kruskal.test(Violacoes ~ Grupo_Acoplamento)`.
-- Hipótese 3 (Modularização vs. Qualidade):
-  - Teste t independente (ou Mann-Whitney) comparando modularizados vs. monolíticos.
-  - Teste: `wilcox.test(Complexidade ~ Grupo_Modularizacao)`.
-- Hipótese 5 (Métricas vs. Defeitos):
-  - Regressão linear: `lm(Defeitos ~ LOC + Complexidade + Acoplamento)`.
+##### Passo 4.1 – Análise Exploratória de Dados
 
-Passo 4.3 - Análise Multivariada
-- PCA (Análise de Componentes Principais) para identificar padrões.
-- Análise de cluster para agrupar componentes similares.
-- Regressão múltipla para identificar preditores mais fortes de code smells.
+- Gerar estatísticas descritivas para todas as 22 métricas.
+- Criar visualizações exploratórias.
 
-Passo 4.4 - Geração de Relatório Estatístico
-- Executar `analysis_report_template.Rmd` para gerar relatório HTML/PDF.
-- Incluir tabelas de resultados, gráficos e interpretações.
-- Documentar todos os testes realizados e decisões metodológicas.
+##### Passo 4.2 – Testes de Hipóteses Formais
+
+Executar testes estatísticos para validar as sete hipóteses definidas na seção 7.2.
+
+- Hipótese 1 (Estado e complexidade estrutural):
+  - Calcular correlação de Spearman entre M6 (Complexidade de estado) e M14 (Complexidade ciclomática).
+
+- Hipótese 2 (Renderização e qualidade estrutural):
+  - Comparar grupos (JSX Simples vs. JSX Profundo) usando teste Mann-Whitney.
+
+- Hipótese 3 (Hooks e antipadrões):
+  - Comparar grupos (Hooks Saudáveis vs. Hooks Problemáticos) em relação a M17 (Acoplamento).
+
+- Hipótese 4 (Acoplamento e modularidade):
+  - Testar correlação entre M15 (Importações) e presença de violações.
+
+- Hipótese 5 (Modularização):
+  - Comparar Modularizados vs. Monolíticos em relação a M14 (Complexidade).
+
+- Hipótese 6 e 7: Não aplicáveis (não haverá avaliação de especialistas nem análise de defeitos no escopo atual).
+
+##### Passo 4.3 – Análise Multivariada
+
+- Executar Análise de Componentes Principais (PCA) para identificar padrões estruturais latentes.
+- Realizar análise de clusters (K-means ou hierárquico) para agrupar componentes com perfis estruturais similares.
+- Ajustar modelo de regressão múltipla para identificar preditores mais fortes de degradação estrutural.
+
+##### Passo 4.4 – Geração de Relatório Estatístico Final
+
+- Executar template para gerar relatório HTML/PDF automatizado.
+- Incluir todas as tabelas de resultados, gráficos, interpretações e conclusões.
+- Documentar todas as decisões metodológicas, testes realizados e justificativas estatísticas.
 
 #### FASE 5: DOCUMENTAÇÃO E VALIDAÇÃO
 
@@ -1107,11 +991,6 @@ Passo 5.1 - Validação de Validade
 
 Passo 5.2 - Empacotamento para Replicação
 - Organizar todos os scripts, dados e documentação em estrutura padronizada.
-- Gerar arquivo `REPRODUCIBILITY_PACKAGE.zip` contendo:
-  - Todos os scripts.
-  - Dados anonimizados.
-  - Documentação completa.
-  - Instruções de execução.
 
 Passo 5.3 - Relatório Final
 - Elaborar relatório final do experimento.
