@@ -489,6 +489,8 @@ As variáveis dependentes são as 12 métricas estruturais criadas e propostas p
 | M10 | Prop Drilling | Profundidade de passagem de props | profundidade |
 | M11 | Responsabilidades Declaradas | Quantos papéis o componente exerce | contagem |
 | M12 | Risco de Re-renderização | Objetos/funções inline no JSX | contagem |
+| MV1 | Nota de Adequação dos Especialistas | Avaliação qualitativa da utilidade de cada métrica | Escala Likert (0-5) |
+| MV2 | Concordância Interavaliadores | Grau de concordância entre especialistas | índice (0-1) |
 
 ---
 
@@ -706,8 +708,8 @@ Total esperado: 150–250 componentes após filtragem.
 | Sessão | Atividade                               | Forma de Execução                               | Responsáveis |
 | ------ | --------------------------------------- | ----------------------------------------------- | ------------ |
 | S1     | Coleta automática das métricas (M1–M12) | Scripts de análise estática (AST + ESLint)      | Automação    |
-| S3     | Avaliação qualitativa                   | Formulário digital + especialistas              | Devs      |
-| S4     | Análise estatística                     | Python (correlações, ANOVA, modelos mistos) | Pesquisador  |
+| S2     | Análise estatística                     | Código Python  | Pesquisador  |
+| S3     | Avaliação qualitativa                   | Formulário digital            | Devs      |
 
 ---
 
