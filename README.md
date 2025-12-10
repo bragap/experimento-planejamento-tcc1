@@ -903,7 +903,8 @@ Os instrumentos de coleta consistem em ferramentas, scripts automatizados e docu
 ---
 
 ### 11.3 Procedimento Experimental (Protocolo)
-![Procedimento Experimental](./metodologia.png)
+<img width="739" height="740" alt="image" src="https://github.com/user-attachments/assets/488cdb6e-0312-4ad5-9131-db053b855507" />
+
 #### Fase 1 — Preparo
 1. Selecionar repositórios que atendem aos critérios de inclusão.  
 2. Preparar ambiente (ferramentas de análise estática e dependências gerais).  
