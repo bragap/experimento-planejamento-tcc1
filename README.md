@@ -129,7 +129,7 @@ Más práticas associadas: acoplamento excessivo, dependência global, baixa mod
 ## 3. Definição do GQM (Goal / Question / Metric)
 ### 3.1 Objetivo geral 
 
-Propor, testar e validar um conjunto inicial de métricas estruturais específicas para componentes React, com o propósito de avaliar sua saúde estrutural em sistemas de grande porte, a partir de más práticas documentadas e evidências empíricas extraídas de projetos reais.
+Propor, testar e validar um conjunto inicial de métricas estruturais específicas para componentes React, capazes de identificar code smells e avaliar a qualidade estrutural em sistemas de médio e grande porte, tomando como base antipadrões documentados, boas práticas oficiais e evidências empíricas extraídas de projetos reais.
 
 ### 3.2 Objetivos específicos
 
