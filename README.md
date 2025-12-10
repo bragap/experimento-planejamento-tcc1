@@ -59,6 +59,72 @@ Os principais conceitos que fundamentam o experimento são:
 - Análise estática de código: permite mensurar atributos do componente sem execução, essencial para replicabilidade.
 - Más práticas em React: tais como violações das Regras dos Hooks, dependências não declaradas, componentes excessivamente grandes, uso inadequado de efeitos, acoplamento entre UI e lógica de negócios e renderizações inconsistentes. 
 
+### 2.5 Fundamentos conceituais
+
+A definição das métricas propostas neste estudo parte de um modelo conceitual que representa a estrutura fundamental de um componente React funcional moderno. Embora o React não seja uma linguagem orientada a objetos, sua arquitetura se organiza em torno de quatro conceitos estruturais fundamentais que determinam a qualidade estrutural de um componente:
+
+---
+
+#### Conceito Estrutural 1: Hooks e Ciclo de Vida
+
+Refere-se à aplicação correta das APIs de hooks do React e ao gerenciamento do ciclo de vida reativo do componente.  
+Problemas comuns incluem:
+
+* Violação das regras de hooks (uso em condicionais, loops ou funções aninhadas)
+* Dependências incorretas ou ausentes em arrays de dependências de `useEffect`
+* Uso excessivo de efeitos colaterais que poderiam ser evitados
+* Baixa coesão entre hooks utilizados no componente
+* Consumo excessivo de contextos que aumenta pressão de re-renderização
+
+Más práticas associadas: violação das regras de hooks, abuso de `useEffect`, lógica dispersa entre hooks, inconsistência reativa.
+
+---
+
+#### Conceito Estrutural 2: Renderização e JSX
+
+Relaciona-se à qualidade da estrutura declarativa da interface e à forma como o componente produz sua marcação visual.  
+Fatores críticos:
+
+* Profundidade da árvore JSX (aninhamento excessivo)
+* Quantidade de condicionais e expressões ternárias no JSX
+* Densidade entre marcação JSX e lógica JavaScript
+* Risco de re-renderizações desnecessárias devido a valores criados inline
+* Declaração de subcomponentes dentro do escopo do componente principal
+
+Más práticas associadas: componente inflado, JSX profundamente aninhado, renderização difícil de compreender, lógica misturada com apresentação.
+
+---
+
+#### Conceito Estrutural 3: Estado e Lógica Interna
+
+Abrange a modelagem, derivação, manipulação e complexidade lógica interna do componente.  
+Problemas comuns:
+
+* Estados redundantes que poderiam ser derivados
+* Estados derivados manualmente em vez de calculados via `useMemo`
+* Dependências complexas entre múltiplos estados
+* Profundidade excessiva de encadeamento de funções e closures
+* Múltiplas responsabilidades concentradas em um único componente
+* Complexidade estrutural elevada (múltiplas ramificações lógicas)
+
+Más práticas associadas: má modelagem de estado, estado inflado, estado inconsistente, baixa coesão funcional, God component.
+
+---
+
+#### Conceito Estrutural 4: Modularidade e Acoplamento
+
+Avalia como o componente se conecta com o ecossistema externo e promove separação de responsabilidades.  
+Fatores analisados:
+
+* Número de importações externas (bibliotecas, componentes, utilitários)
+* Acoplamento reativo (quantos componentes dependem deste e vice-versa)
+* Profundidade de passagem de propriedades (prop drilling)
+* Pressão de consumo de contextos
+* Uso de hooks personalizados para encapsular lógica reutilizável
+* Declaração de subcomponentes auxiliares dentro do componente principal
+* Número de responsabilidades declaradas no componente
+
+Más práticas associadas: acoplamento excessivo, dependência global, baixa modularização, componente monolítico, falta de reuso lógico.
 
 ## 3. Definição do GQM (Goal / Question / Metric)
 ### 3.1 Objetivo geral 
@@ -149,72 +215,7 @@ Propor, testar e validar um conjunto inicial de métricas estruturais específic
 | M22 – Número de Responsabilidades Declaradas  | Contagem de papéis distintos realizados no componente (UI, estado, dados externos, efeitos, regras de negócio).      | contagem      |
 
 
-### 3.6 Fundamentos conceituais
 
-A definição das métricas propostas neste estudo parte de um modelo conceitual que representa a estrutura fundamental de um componente React funcional moderno. Embora o React não seja uma linguagem orientada a objetos, sua arquitetura se organiza em torno de quatro conceitos estruturais fundamentais que determinam a qualidade estrutural de um componente:
-
----
-
-#### Conceito Estrutural 1: Hooks e Ciclo de Vida
-
-Refere-se à aplicação correta das APIs de hooks do React e ao gerenciamento do ciclo de vida reativo do componente.  
-Problemas comuns incluem:
-
-* Violação das regras de hooks (uso em condicionais, loops ou funções aninhadas)
-* Dependências incorretas ou ausentes em arrays de dependências de `useEffect`
-* Uso excessivo de efeitos colaterais que poderiam ser evitados
-* Baixa coesão entre hooks utilizados no componente
-* Consumo excessivo de contextos que aumenta pressão de re-renderização
-
-Más práticas associadas: violação das regras de hooks, abuso de `useEffect`, lógica dispersa entre hooks, inconsistência reativa.
-
----
-
-#### Conceito Estrutural 2: Renderização e JSX
-
-Relaciona-se à qualidade da estrutura declarativa da interface e à forma como o componente produz sua marcação visual.  
-Fatores críticos:
-
-* Profundidade da árvore JSX (aninhamento excessivo)
-* Quantidade de condicionais e expressões ternárias no JSX
-* Densidade entre marcação JSX e lógica JavaScript
-* Risco de re-renderizações desnecessárias devido a valores criados inline
-* Declaração de subcomponentes dentro do escopo do componente principal
-
-Más práticas associadas: componente inflado, JSX profundamente aninhado, renderização difícil de compreender, lógica misturada com apresentação.
-
----
-
-#### Conceito Estrutural 3: Estado e Lógica Interna
-
-Abrange a modelagem, derivação, manipulação e complexidade lógica interna do componente.  
-Problemas comuns:
-
-* Estados redundantes que poderiam ser derivados
-* Estados derivados manualmente em vez de calculados via `useMemo`
-* Dependências complexas entre múltiplos estados
-* Profundidade excessiva de encadeamento de funções e closures
-* Múltiplas responsabilidades concentradas em um único componente
-* Complexidade estrutural elevada (múltiplas ramificações lógicas)
-
-Más práticas associadas: má modelagem de estado, estado inflado, estado inconsistente, baixa coesão funcional, God component.
-
----
-
-#### Conceito Estrutural 4: Modularidade e Acoplamento
-
-Avalia como o componente se conecta com o ecossistema externo e promove separação de responsabilidades.  
-Fatores analisados:
-
-* Número de importações externas (bibliotecas, componentes, utilitários)
-* Acoplamento reativo (quantos componentes dependem deste e vice-versa)
-* Profundidade de passagem de propriedades (prop drilling)
-* Pressão de consumo de contextos
-* Uso de hooks personalizados para encapsular lógica reutilizável
-* Declaração de subcomponentes auxiliares dentro do componente principal
-* Número de responsabilidades declaradas no componente
-
-Más práticas associadas: acoplamento excessivo, dependência global, baixa modularização, componente monolítico, falta de reuso lógico.
 
 ### 3.7 Relação entre conceitos estruturais do React e métricas associadas
 
