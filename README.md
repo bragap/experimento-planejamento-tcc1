@@ -448,87 +448,98 @@ O experimento envolverá dois tipos de participantes:
 #### 8.2.2 Participantes Indiretos: Desenvolvedores dos Projetos Open-Source
 - Os componentes analisados foram escritos por desenvolvedores reais, mas estes não participarão ativamente do experimento.
 
+
 ### 8.3 Variáveis do Experimento
 
-#### 8.3.1 Considerações gerais sobre variáveis
+#### 8.3.1 Variáveis Independentes (Fatores)
 
-Como este é um experimento observacional, não há manipulação ativa de tratamentos. Por isso, as métricas estruturais dos componentes React podem assumir dois papéis distintos:
+As variáveis independentes representam os code smells documentados na literatura ou reconhecidos pela comunidade de React.  
 
-- Variáveis independentes (fatores) → quando usadas para estratificar, comparar grupos ou definir condições (ex.: componentes com alta profundidade JSX vs baixa profundidade).
-- Variáveis dependentes (respostas) → quando analisadas como resultado das hipóteses (ex.: componentes problemáticos apresentam maior densidade de JSX?).
+As variáveis independentes são, portanto, a presença/ausência (ou intensidade) dos seguintes grupos de code smells:
 
-Assim, apresenta-se uma única tabela de métricas, classificadas pelos pilares estruturais do React, esclarecendo que sua função (independente/dependente) depende da hipótese analisada.
+| Código | Code Smell Independente (Fator) | Descrição resumida |
+|--------|----------------------------------|----------------------|
+| CS1 | Smells em Hooks | Violações de regras, dependências incorretas, uso inadequado de efeitos |
+| CS2 | Smells de Renderização | JSX excessivamente denso, profundo ou condicional |
+| CS3 | Smells de Estado | Estados redundantes, dependentes ou excessivamente complexos |
+| CS4 | Smells de Acoplamento | Prop drilling, excesso de importações, dependências implícitas |
+| CS5 | Smells de Modularidade | Componentes monolíticos, ausência de subcomponentes/hooks customizados |
 
-#### Tabela de Métricas Estruturais do Experimento
+Papel no experimento:  
+Estes fatores representam os *antipadrões estruturais* que as métricas propostas (variáveis dependentes) buscam detectar, caracterizar ou prever.
 
-| Código | Métrica                        | Papel no experimento      | Descrição                                     | Unidade      | Níveis típicos (para agrupamento) |
-| ------ | ------------------------------ | ------------------------- | --------------------------------------------- | ------------ | --------------------------------- |
-| M1     | Violações de Hooks             | independente / dependente | Hooks usados incorretamente                   | contagem     | 0 / 1–2 / ≥3                      |
-| M2     | Erros no Array de Dependências | independente / dependente | Dependências faltantes ou redundantes         | contagem     | 0 / 1–2 / ≥3                      |
-| M3     | Uso Excessivo de Efeitos       | independente / dependente | Efeitos por estado/LOC                        | razão        | baixo / médio / alto              |
-| M4     | Pressão de Contextos           | independente / dependente | Quantidade e tamanho dos contextos consumidos | índice       | baixa / média / alta              |
-| M5     | Densidade de JSX               | independente / dependente | Proporção JSX/lógica                          | razão        | baixa / média / alta              |
-| M6     | Profundidade JSX               | independente / dependente | Níveis de aninhamento                         | profundidade | baixa / média / alta              |
-| M7     | Complexidade do Estado         | independente / dependente | Relações, redundâncias e derivação            | índice       | baixa / média / alta              |
-| M8     | Complexidade Ciclomática       | independente / dependente | Caminhos independentes                        | grau         | ≤5 / 6–15 / >15                   |
-| M9     | Número de Importações          | independente / dependente | Imports internos e externos                   | contagem     | ≤5 / 6–15 / >15                   |
-| M10    | Prop Drilling                  | independente / dependente | Profundidade de passagem de props             | profundidade | baixo / médio / alto              |
-| M11    | Responsabilidades Declaradas   | independente / dependente | Número de papéis distintos do componente      | contagem     | baixo / médio / alto              |
-| M12    | Risco de Re-renderização       | independente / dependente | Criação inline de funções/objetos no JSX      | contagem     | 0–1 / 2–3 / ≥4                    |
+---
 
+## 8.3.2 Variáveis Dependentes (Respostas)
 
-### 8.4 Tratamentos (condições experimentais)
+As variáveis dependentes são as 12 métricas estruturais criadas e propostas por este trabalho.  
+É sobre elas que as hipóteses são formuladas: as métricas devem ser capazes de sinalizar, correlacionar ou distinguir a presença dos code smells (variáveis independentes).
 
-Este experimento é observacional (não há manipulação ativa de tratamentos). Para permitir análises comparativas, os componentes serão estratificados em grupos baseados nos quatro conceitos estruturais fundamentais do React:
+| Código | Métrica Dependente | O que mede | Unidade |
+|--------|---------------------|-------------|---------|
+| M1 | Violações de Hooks | Hooks usados incorretamente | contagem |
+| M2 | Erros no Array de Dependências | Dependências faltantes ou redundantes | contagem |
+| M3 | Uso Excessivo de Efeitos | Proporção de efeitos por estado/LOC | razão |
+| M4 | Pressão de Contextos | Quantidade/tamanho de contextos consumidos | índice |
+| M5 | Densidade de JSX | Razão JSX/lógica | razão |
+| M6 | Profundidade JSX | Níveis de aninhamento | profundidade |
+| M7 | Complexidade do Estado | Derivação/redundância/estrutura | índice |
+| M8 | Complexidade Ciclomática | Caminhos independentes | grau |
+| M9 | Número de Importações | Importações internas/externas | contagem |
+| M10 | Prop Drilling | Profundidade de passagem de props | profundidade |
+| M11 | Responsabilidades Declaradas | Quantos papéis o componente exerce | contagem |
+| M12 | Risco de Re-renderização | Objetos/funções inline no JSX | contagem |
 
-1. Hooks e Ciclo de Vida
-2. Renderização e JSX
-3. Estado e Lógica Interna
-4. Modularidade e Acoplamento
+---
 
-#### Tabela de Fatores e Tratamentos
+## 8.3 Tratamentos (Condições Observacionais)
 
-1. Hooks e Ciclo de Vida
-   
-| Fator               | Condições        | Critério             |
-| ------------------- | ---------------- | -------------------- |
-| Qualidade dos Hooks | Saudável     | M1 = 0 e M2 = 0  |
-|                     | Problemático | M1 ≥ 1 ou M2 ≥ 1 |
+Embora não haja manipulação ativa, os componentes são classificados em estratos com base nas métricas dependentes, permitindo comparações entre grupos.
 
-2. Renderização e JSX
+Os estratos refletem os quatro pilares estruturais do React.
 
-| Fator                        | Condições | Critério                       |
-| ---------------------------- | --------- | ------------------------------ |
-| Complexidade de Renderização | Baixa | M6 ≤ 3 e M12 ≤ 2               |
-|                              | Média | 4 ≤ M6 ≤ 5 ou 3–4 condicionais |
-|                              | Alta  | M6 > 5 ou M12 ≥ 5              |
+### 1. Hooks e Ciclo de Vida
 
-3. Estado e Lógica Interna
+| Fator | Condição | Critério |
+|-------|-----------|----------|
+| Qualidade dos Hooks | Saudável | M1 = 0 e M2 = 0 |
+| | Problemático | M1 ≥ 1 ou M2 ≥ 1 |
 
-| Fator                  | Condições    | Critério                     |
-| ---------------------- | ------------ | ---------------------------- |
-| Complexidade do Estado | Simples  | M7 baixo e M8 ≤ 5            |
-|                        | Complexo | M7 médio/alto ou M8 > 10 |
+### 2. Renderização e JSX
 
-4. Modularidade e Acoplamento
+| Fator | Condição | Critério |
+|-------|-----------|----------|
+| Complexidade de Renderização | Baixa | M6 ≤ 3 e M12 ≤ 2 |
+| | Média | 4–5 níveis ou 3–4 inlines |
+| | Alta | M6 > 5 ou M12 ≥ 5 |
 
-| Fator         | Condições        | Critério                               |
-| ------------- | ---------------- | -------------------------------------- |
-| Acoplamento   | Baixo        | M9 ≤ 5 e M10 ≤ 1                       |
-|               | Médio        | 6–15 imports ou 2–3 níveis de drilling |
-|               | Alto         | >15 imports ou drilling > 3            |
-| Modularização | Modularizado | M11 alto                               |
-|               | Monolítico   | M11 baixo                              |
+### 3. Estado e Lógica Interna
 
+| Fator | Condição | Critério |
+|-------|-----------|----------|
+| Complexidade do Estado | Simples | M7 baixo e M8 ≤ 5 |
+| | Complexo | M7 médio/alto ou M8 > 10 |
 
+### 4. Modularidade e Acoplamento
 
-#### Combinações relevantes
+| Fator | Condição | Critério |
+|-------|-----------|----------|
+| Acoplamento | Baixo | M9 ≤ 5 e M10 ≤ 1 |
+| | Médio | 6–15 imports ou drilling 2–3 |
+| | Alto | >15 imports ou drilling > 3 |
+| Modularização | Modularizado | M11 alto |
+| | Monolítico | M11 baixo |
 
-Serão analisadas combinações de fatores para investigar interações. Por exemplo:
+---
 
-* Hooks problemáticos + JSX profundo + alto acoplamento → alto risco de code smells.
-* Estado simples + modularização + baixa renderização → perfil saudável.
-* Estado complexo + monolítico + forte prop drilling → difícil manutenção e tendência à degradação estrutural.
+## 8.4 Combinações Relevantes
+
+O experimento analisará como diferentes fatores interagem entre si:
+
+- Hooks problemáticos + JSX profundo + alto acoplamento → forte indicativo de múltiplos smells.  
+- Estado simples + modularização + baixa complexidade de renderização → perfil de componente saudável.  
+- Estado complexo + componente monolítico + prop drilling → alto risco de degradação estrutural.  
+
 
 ### 8.5 Variáveis de controle / bloqueio
 
