@@ -864,193 +864,116 @@ Após seleção, a amostra será caracterizada documentando:
 | Linguagem do componente          | JavaScript ou TypeScript                           |
 | LOC do componente                | Contagem via AST                                   |
 | Número de hooks utilizados       | Contagem via padrão regex                          |
-| Data de criação do componente    | `git log --follow --diff-filter=A`                 |
-| Número de commits no componente  | `git log --oneline <file> \| wc -l`                |
-| Número de contribuidores únicos  | `git log --format='%an' <file> \| sort -u \| wc -l` |
+| Data de criação do componente    | Comando Git                                        |
+| Número de commits no componente  | Comando Git                                        |
+| Número de contribuidores únicos  | Comando Git                                        |
 | Presença de testes               | Existência de arquivo `.test.` ou `.spec.`         |
 
-## 11. Instrumentação e protocolo operacional
+## 11. Instrumentação e Protocolo Operacional
+
+### 11.1 Instrumentos de Coleta
+
+Os instrumentos de coleta consistem em ferramentas, scripts automatizados e documentos auxiliares necessários para extrair métricas estruturais, consolidar dados e registrar avaliações humanas. São descritos de forma generalizada, sem dependência de implementações específicas.
+
+| Instrumento / Tipo                         | Finalidade                                                                 |
+| ------------------------------------------- | --------------------------------------------------------------------------- |
+| Ferramentas de Análise Estática        | Medir automaticamente as métricas estruturais M1–M12.                      |
+| Scripts Automatizados de Extração      | Identificar componentes elegíveis, percorrer diretórios e gerar listagens. |
+| Scripts de Coleta de Métricas          | Executar a análise AST e registrar medidas estruturais em planilhas.       |
+| Planilhas de Consolidação              | Unificar métricas e metadados em um formato tabular (CSV/JSON/etc.).       |
+| Formulário de Avaliação para Especialistas | Coletar notas e julgamentos qualitativos de especialistas.             |
+| Roteiro de Avaliação                   | Explicar aos especialistas como conduzir a avaliação dos componentes.      |
+| Ferramentas Estatísticas               | Executar testes de hipótese, análises multivariadas e visualizações.       |
+
+---
+
+### 11.2 Materiais de Suporte
+
+#### Materiais para administradores do experimento
+- Guia de Configuração: instruções gerais sobre ambiente, versões mínimas de ferramentas e preparação inicial.  
+- Guia Operacional: explicação resumida das etapas de coleta e consolidação dos dados.  
+- Checklist de Execução: lista de verificação para garantir reprodutibilidade do processo.  
+- Guia de Auditoria: orientações para validar integridade de dados e detectar erros de análise.
+
+#### Materiais para especialistas avaliadores
+- Roteiro de Avaliação: documento claro com objetivos, instruções e critérios de análise.  
+- Exemplos Anotados: três componentes demonstrativos para calibrar o entendimento dos avaliadores.  
+- Formulário Eletrônico: interface padronizada para registrar notas e comentários.
+
+---
+
+### 11.3 Procedimento Experimental (Protocolo)
+
+#### Fase 1 — Preparação
+1. Selecionar repositórios que atendem aos critérios de inclusão.  
+2. Preparar ambiente (ferramentas de análise estática e dependências gerais).  
+3. Definir seed de randomização para garantir reprodutibilidade.  
+4. Testar rapidamente o pipeline com poucos arquivos para validar funcionamento.
+
+#### Fase 2 — Extração dos Componentes
+1. Executar ferramentas/scripts para localizar todos os componentes funcionais.  
+2. Filtrar componentes irrelevantes (stories, testes, mocks etc.).  
+3. Classificar componentes por tamanho ou tipologia (pequeno/médio/grande).  
+4. Selecionar amostras aleatórias estratificadas conforme o desenho experimental.
+
+#### Fase 3 — Coleta Automatizada de Métricas
+1. Executar análise estática para extrair métricas M1–M12.  
+2. Aplicar linter de hooks para registrar violações e erros de dependências.  
+3. Armazenar todas as medidas em planilhas tabulares.  
+4. Registrar e tratar eventuais erros de parsing.
+
+#### Fase 4 — Consolidação dos Dados
+1. Unificar todas as métricas e metadados em dataset único.  
+2. Validar informações, remover inconsistências e detectar valores faltantes.  
+3. Documentar decisões e eventuais exclusões justificadas.
+
+#### Fase 5 — Avaliação por Especialistas
+1. Selecionar subset estratificado para avaliação humana.  
+2. Fornecer roteiro de avaliação e exemplos calibratórios.  
+3. Coletar notas (Likert) e comentários de cada especialista.  
+4. Anonimizar e consolidar os resultados.
+
+#### Fase 6 — Análise Estatística
+1. Descrever distribuições e padrões iniciais das métricas.  
+2. Aplicar testes de hipóteses definidos anteriormente.  
+3. Executar análises multivariadas (correlação, regressão, PCA, agrupamento).  
+4. Relacionar métricas com avaliações especializadas.
+
+#### Fase 7 — Finalização
+1. Documentar o processo completo e registrar decisões metodológicas.  
+2. Criar pacote de reprodutibilidade com dataset, instruções e configurações.  
+3. Encerrar formalmente o experimento.
+
+---
+
+### 11.4 Plano de Piloto
+
+#### Objetivos do Piloto
+- Avaliar viabilidade do pipeline completo.  
+- Validar extração das métricas M1–M12.  
+- Ajustar thresholds, classificações ou estratos se necessário.  
+- Verificar clareza das instruções fornecidas a especialistas.  
+- Medir taxa de erros de parsing e identificar ajustes.
+
+#### Escopo
+- Um repositório de médio porte.  
+- 15–20 componentes estratificados.  
+- Breve rodada de avaliação humana.
+
+#### Critérios de Sucesso
+- ≥ 85% dos componentes analisados sem erros de parsing.  
+- Extração correta das métricas para a maioria dos componentes.  
+- Especialistas compreendem o roteiro sem dificuldades.  
+- Pipeline executado em tempo razoável.
+
+#### Possíveis Ajustes Após o Piloto
+- Refinar heurísticas da análise estática.  
+- Ajustar limites de estratos ou níveis de métricas.  
+- Revisar roteiro de avaliação para maior clareza.  
+- Melhorar filtragem dos componentes elegíveis.
 
-### 11.1 Instrumentos de coleta
+---
 
-Os instrumentos de coleta de dados foram organizados segundo os quatro conceitos estruturais fundamentais do React, garantindo coerência metodológica e rastreabilidade completa entre métricas e ferramentas.
-
-#### 11.1.1 Ferramentas de Análise Estática
-
-As ferramentas de análise estática operam diretamente sobre a árvore sintática abstrata dos componentes, permitindo extração objetiva e automatizada das métricas estruturais.
-
-| Ferramenta                  |  Função Principal                                                     | Conceitos Estruturais Cobertos             |
-| ------------------------------- | ----------------- | ------------------------------------------------------------------------ |
-| Babel Parser                    |  Parsing de código JavaScript e JSX                                       | Renderização (JSX), Estado, Modularidade       |
-| TypeScript Compiler API         |  Parsing de código TypeScript e TSX                                       | Renderização (JSX), Estado, Modularidade       |
-| ESLint                          |  Detecção de violações das regras oficiais do React                      | Hooks e Ciclo de Vida                          |
-| eslint-plugin-react-hooks       | Plugin ESLint específico para regras de hooks                            | Hooks e Ciclo de Vida                          |
-| Esprima / Acorn                |  Análise de complexidade ciclomática e fluxo de controle                  | Estado e Lógica Interna                        |
-
-
-#### 11.1.2 Ferramentas de Análise de Histórico
-
-As ferramentas de análise histórica extraem métricas temporais a partir do controle de versão, permitindo observar a evolução estrutural dos componentes.
-
-| Ferramenta          | Função Principal                                                     | Métricas Históricas Coletadas              |
-| ----------------------- | ------------------------------------------------------------------------ | ---------------------------------------------- |
-| Git CLI                 | Extração de histórico de commits e diffs                                 | M19 (Crescimento histórico de linhas)          |
-| PyDriller               |  Biblioteca Python para análise automatizada de repositórios Git          | M19, M20 (Mudanças na estrutura de estado)     |
-| GitHub API              | Extração de issues, pull requests e metadados de repositório             | Histórico de defeitos associados a componentes |
-
-
-### 11.2 Materiais de suporte
-
-Os materiais de suporte foram organizados para garantir documentação completa, padronização metodológica e reprodutibilidade total do experimento.
-Ex: `README_EXPERIMENTO.md` e `SETUP_GUIDE.md`
-
-### 11.3 Procedimento experimental
-
-O procedimento experimental foi estruturado em quatro fases sequenciais, garantindo coleta sistemática, consolidação rigorosa e análise estatística fundamentada.
-
-#### FASE 1: PREPARAÇÃO DO AMBIENTE E SELEÇÃO DA AMOSTRA
-
-##### Passo 1.1 – Configuração do Ambiente de Execução
-
-Duração estimada: 1-2 horas 
-
-- Instalar softwares e dependências necessárias.
-- Testar ferramentas de parsing em componente de exemplo para validação.
-
-##### Passo 1.2 – Seleção de Repositórios
-
-Duração estimada: 2-4 horas
-
-- Executar busca no GitHub usando critérios definidos na seção 10.5.
-
-##### Passo 1.3 – Extração e Seleção de Componentes
-
-- Executar scripts necessários.
-
-#### FASE 2: COLETA AUTOMATIZADA DE MÉTRICAS ESTRUTURAIS
-
-##### Passo 2.1 – Extração de Métricas Estruturais via Análise AST.
-
-- Duração estimada: 2-4 horas (processamento automatizado).
-   - Ler arquivo fonte do componente. Parsear código.
-   - Extrair e registrar métricas.
-
-##### Passo 2.2 – Detecção de Violações de Regras de Hooks via ESLint
-
-- Duração estimada: 1-2 horas (processamento automatizado).
-  - Executar ESLint em cada componente da lista.
-  - Contabilizar e documentar.
-
-##### Passo 2.3 – Análise Histórica de Evolução Estrutural via Git
-
-- Duração estimada: 4-6 horas (processamento automatizado).
-   - Extrair histórico completo de commits e calcular M19 e M20.
-    
-#### FASE 3: CONSOLIDAÇÃO E PREPARAÇÃO DOS DADOS
-
-##### Passo 3.1 – Agregação de Dados de Múltiplas Fontes
-
-- Executar scripts necessários e criar datasets.
-
-##### Passo 3.2 – Limpeza e Validação de Qualidade dos Dados
-
-- Verificar presença de dados faltantes e calcular percentual de completude por métrica.
-- Identificar outliers extremos usando critério IQR (seção 12.3.2).
-
-##### Passo 3.3 – Classificação em Grupos Experimentais
-
-- Aplicar critérios de estratificação definidos na seção 8.4.
-
-#### FASE 4: ANÁLISE ESTATÍSTICA E VALIDAÇÃO DE HIPÓTESES
-
-##### Passo 4.1 – Análise Exploratória de Dados
-
-- Gerar estatísticas descritivas para todas as 22 métricas.
-- Criar visualizações exploratórias.
-
-##### Passo 4.2 – Testes de Hipóteses Formais
-
-Executar testes estatísticos para validar as sete hipóteses definidas na seção 7.2.
-
-- Hipótese 1 (Estado e complexidade estrutural):
-  - Calcular correlação de Spearman entre M6 (Complexidade de estado) e M14 (Complexidade ciclomática).
-
-- Hipótese 2 (Renderização e qualidade estrutural):
-  - Comparar grupos (JSX Simples vs. JSX Profundo) usando teste Mann-Whitney.
-
-- Hipótese 3 (Hooks e antipadrões):
-  - Comparar grupos (Hooks Saudáveis vs. Hooks Problemáticos) em relação a M17 (Acoplamento).
-
-- Hipótese 4 (Acoplamento e modularidade):
-  - Testar correlação entre M15 (Importações) e presença de violações.
-
-- Hipótese 5 (Modularização):
-  - Comparar Modularizados vs. Monolíticos em relação a M14 (Complexidade).
-
-- Hipótese 6 e 7: Não aplicáveis (não haverá avaliação de especialistas nem análise de defeitos no escopo atual).
-
-##### Passo 4.3 – Análise Multivariada
-
-- Executar Análise de Componentes Principais (PCA) para identificar padrões estruturais latentes.
-- Realizar análise de clusters (K-means ou hierárquico) para agrupar componentes com perfis estruturais similares.
-- Ajustar modelo de regressão múltipla para identificar preditores mais fortes de degradação estrutural.
-
-##### Passo 4.4 – Geração de Relatório Estatístico Final
-
-- Executar template para gerar relatório HTML/PDF automatizado.
-- Incluir todas as tabelas de resultados, gráficos, interpretações e conclusões.
-- Documentar todas as decisões metodológicas, testes realizados e justificativas estatísticas.
-
-#### FASE 5: DOCUMENTAÇÃO E VALIDAÇÃO
-
-Passo 5.1 - Validação de Validade
-- Revisar ameaças à validade (seção 13).
-- Verificar se premissas estatísticas foram atendidas.
-- Documentar limitações observadas.
-
-Passo 5.2 - Empacotamento para Replicação
-- Organizar todos os scripts, dados e documentação em estrutura padronizada.
-
-Passo 5.3 - Relatório Final
-- Elaborar relatório final do experimento.
-- Responder às questões de pesquisa (seção 3.3).
-- Avaliar critérios de sucesso (seção 6.2).
-
-### 11.4 Plano de piloto
-
-#### Objetivo do Piloto:
-
-Executar uma versão reduzida do experimento para:
-- Validar a viabilidade técnica dos scripts de coleta.
-- Identificar problemas de parsing ou incompatibilidades.
-- Estimar tempo real de execução.
-- Ajustar thresholds de classificação de grupos.
-- Verificar qualidade dos dados coletados.
-
-#### Escopo do Piloto:
-
-- 1 repositório (médio porte, ~100 componentes).
-- 20 componentes selecionados aleatoriamente.
-- Executar apenas Fase 1, Fase 2 (Sessões 1 e 2) e Passo 3.1.
-- Duração: 2-3 dias.
-
-#### Critérios de Sucesso do Piloto:
-
-| Critério                              | Meta                                      |
-| ----------------------------------------- | --------------------------------------------- |
-| Taxa de parsing bem-sucedido              | ≥ 90% dos componentes                         |
-| Métricas coletadas sem erros              | ≥ 85% das métricas por componente             |
-| Tempo de execução                         | < 2 horas para 20 componentes                 |
-| Dados históricos recuperáveis             | ≥ 80% dos componentes com histórico completo  |
-| Violações ESLint detectadas               | Pelo menos 1 violação em ≥ 30% dos componentes|
-
-#### Ajustes Previstos Após Piloto:
-
-- Se taxa de parsing < 90%: Revisar configurações do Babel/TypeScript ou adicionar tratamento de erros.
-- Se tempo > 2h para 20 componentes: Otimizar scripts (paralelização, cache).
-- Se dados históricos < 80%: Ajustar critérios de seleção de repositórios (exigir mais commits).
-- Se poucas violações detectadas: Revisar configuração ESLint ou adicionar mais regras.
-- Se muitos componentes triviais: Aumentar threshold mínimo de LOC (de 20 para 30 linhas).
 
 ## 12. Plano de análise de dados (pré-execução)
 ### 12.1 Estratégia geral de análise
