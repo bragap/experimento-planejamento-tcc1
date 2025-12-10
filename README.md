@@ -986,270 +986,164 @@ Os instrumentos de coleta consistem em ferramentas, scripts automatizados e docu
 
 ---
 
+## 12. Plano de Análise de Dados (Pré-Execução)
 
-## 12. Plano de análise de dados (pré-execução)
-### 12.1 Estratégia geral de análise
+### 12.1 Estratégia Geral de Análise
 
-A análise dos dados seguirá uma abordagem estruturada alinhada às questões de pesquisa definidas na seção 3.3:
+A análise seguirá diretamente as questões do GQM e as hipóteses formuladas.  
+A estratégia geral envolve quatro etapas principais:
 
-#### Estratégia por Objetivo:
+#### 1) Relacionar code smells (variáveis independentes) com as métricas estruturais M1–M12 (variáveis dependentes)
 
-| Objetivo                                  | Questões de Pesquisa      | Estratégia de Análise                                               | Métricas Utilizadas     |
-| --------------------------------------------- | ----------------------------- | ----------------------------------------------------------------------- | --------------------------- |
-| O1: Identificar más práticas              | Q1.1, Q1.2, Q1.3              | Estatística descritiva + análise de frequência de violações            | M1, M2, M3, M4, M5, M6      |
-| O2: Definir métricas estruturais          | Q2.1, Q2.2, Q2.3              | Análise de cobertura + validação de constructo                         | M7, M8, M10, M11            |
-| O3: Aplicar métricas em componentes reais | Q3.1, Q3.2, Q3.3              | Análise de variação + identificação de outliers                        | M3, M9, M12, M13, M15       |
-| O4: Analisar resultados estruturais       | Q4.1, Q4.2, Q4.3              | Testes de correlação + comparação entre grupos                         | M3, M9, M12, M13, M14, M15  |
-| O5: Avaliar validade das métricas         | Q5.1, Q5.2, Q5.3              | Análise de consistência + correlação com defeitos                      | M1-M18                      |
+Cada questão do GQM será respondida verificando:
 
-#### Pipeline de Análise:
-- Execução dos 5 passos da metodologia.
+- se componentes **com** um determinado code smell documentado apresentam  
+  **valores significativamente diferentes** nas métricas estruturais;  
+- e se essas métricas conseguem discriminar componentes saudáveis vs. problemáticos.
 
-#### Mapeamento Questão → Análise → Métrica:
+Assim, para cada hipótese será analisado:
 
-Q1.1: Quais más práticas aparecem com maior frequência?
-- Análise: Estatística descritiva de M1 (violações de hooks) e M2 (erros de dependências).
-- Técnica: Contagem de frequências, gráficos de barras.
-- Resultado esperado: Ranking de más práticas mais comuns.
+- Q1.x → Associações entre *smells conhecidos* e *métricas propostas*  
+- Q2.x → Complexidade, acoplamento e sinais estruturais avaliados pelas métricas  
+- Q3.x → Discriminação entre componentes simples/comuns/problema  
+- Q4.x → Interações entre fatores estruturais  
+- Q5.x → Validação com especialistas
 
-Q1.2: Quais antipadrões estão associados a componentes maiores?
-- Análise: Correlação entre M3 (LOC) e M1, M2, M4 (violações).
-- Técnica: Correlação de Spearman + regressão linear.
-- Resultado esperado: Coeficiente de correlação (r) e valor-p.
+#### 2) Comparações sistemáticas entre grupos
 
-Q3.1: Métricas variam entre componentes simples e complexos?
-- Análise: Comparação de grupos (Pequeno vs. Médio vs. Grande).
-- Técnica: ANOVA ou Kruskal-Wallis + testes post-hoc (Dunn).
-- Resultado esperado: Diferenças significativas entre grupos.
+Os componentes serão comparados por meio de agrupamentos:
 
-Q4.1: Quais métricas diferenciam componentes saudáveis de problemáticos?
-- Análise: Teste t independente (Saudáveis vs. Problemáticos).
-- Técnica: Mann-Whitney U test + cálculo de tamanho de efeito (d de Cohen).
-- Resultado esperado: Métricas com diferenças significativas (p < 0,05).
+- **Com smell vs. sem smell**
+- **Baixa / média / alta complexidade**
+- **Modularizado vs. monolítico**
+- **Saudável vs. problemático**
 
-Q5.1: Métricas representam corretamente más práticas?
-- Análise: Validação de constructo — correlação entre métricas automáticas e presença confirmada de code smells.
-- Técnica: Análise de casos extremos + inspeção manual de amostra.
-- Resultado esperado: Concordância entre métricas e observação manual.
+#### 3) Modelagem estatística para força e direção das relações
 
-### 12.2 Métodos estatísticos planejados
+Testes de associação, correlação, modelos de regressão e análises multivariadas serão aplicados conforme o tipo de métrica e hipótese.
 
-Os seguintes testes e técnicas serão aplicados:
+#### 4) Integração quantitativa × qualitativa
 
-#### 12.2.1 Estatística Descritiva
+As avaliações dos especialistas serão integradas às métricas:
 
-| Métrica/Grupo       | Estatísticas Calculadas                           |
-| ----------------------- | ----------------------------------------------------- |
-| Todas as métricas       | Média, mediana, desvio padrão, mínimo, máximo, IQR    |
-| Variáveis categóricas   | Frequências absolutas e relativas, tabelas de contingência |
-| Por grupo experimental  | Estatísticas descritivas estratificadas               |
-
-#### 12.2.2 Testes de Normalidade
-
-- Teste de Shapiro-Wilk: Para amostras < 50 em cada grupo.
-- Teste de Kolmogorov-Smirnov: Para amostras maiores.
-- Critério: p > 0,05 indica normalidade.
-- Alternativa: Se não-normal, usar testes não paramétricos.
-
-#### 12.2.3 Testes de Correlação
-
-| Objetivo                          | Teste                     | Quando Usar               | Hipóteses Relacionadas |
-| ------------------------------------- | ----------------------------- | ----------------------------- | -------------------------- |
-| Correlação entre métricas contínuas   | Correlação de Pearson         | Dados normais                 | H1, H5                     |
-| Correlação entre métricas não-normais | Correlação de Spearman        | Dados não-normais             | H1, H5                     |
-| Associação entre variáveis categóricas| Qui-quadrado (χ²)             | Variáveis categóricas         | H2                         |
-
-Exemplo:
-```r
-# Hipótese 1: Tamanho vs. Complexidade
-cor.test(data$LOC, data$Complexidade_Ciclomatica, method="spearman")
-```
-
-#### 12.2.4 Testes de Comparação entre Grupos
-
-| Comparação                      | Teste Paramétrico     | Teste Não Paramétrico  | Post-hoc        |
-| ----------------------------------- | ------------------------- | -------------------------- | ------------------- |
-| 2 grupos independentes              | Teste t independente      | Mann-Whitney U test        | —                   |
-| 3+ grupos independentes             | ANOVA (One-way)           | Kruskal-Wallis             | Dunn's test         |
-| 2 grupos pareados                   | Teste t pareado           | Wilcoxon signed-rank       | —                   |
-
-Exemplos:
-```r
-# Hipótese 2: Acoplamento (Baixo vs. Médio vs. Alto) vs. Violações
-kruskal.test(Violacoes ~ Grupo_Acoplamento, data=data)
-dunn.test(data$Violacoes, data$Grupo_Acoplamento, method="bonferroni")
-
-# Hipótese 3: Modularizados vs. Monolíticos
-wilcox.test(Complexidade ~ Grupo_Modularizacao, data=data)
-```
-
-#### 12.2.5 Regressão
-
-| Tipo de Regressão         | Objetivo                                           | Variáveis                         |
-| ----------------------------- | ------------------------------------------------------ | ------------------------------------- |
-| Regressão Linear Simples      | Predizer Complexidade a partir de LOC                  | Y = Complexidade, X = LOC             |
-| Regressão Linear Múltipla     | Predizer Defeitos a partir de múltiplas métricas       | Y = Defeitos, X = LOC + CC + Imports  |
-| Regressão Logística           | Predizer presença de code smells (binário)             | Y = Problemático (0/1), X = métricas  |
-
-Exemplo:
-```r
-# Hipótese 5: Métricas vs. Defeitos
-model <- lm(Defeitos ~ LOC + Complexidade_Ciclomatica + Acoplamento, data=data)
-summary(model)
-```
-
-#### 12.2.6 Análise Multivariada
-
-| Técnica                       | Objetivo                                           | Saída Esperada                |
-| --------------------------------- | ------------------------------------------------------ | --------------------------------- |
-| PCA (Principal Component Analysis)| Reduzir dimensionalidade e identificar padrões         | Componentes principais, loadings  |
-| Análise de Clusters (K-means)     | Agrupar componentes similares                          | Clusters de componentes           |
-| Heatmap de Correlação             | Visualizar inter-relações entre métricas               | Matriz de correlação visual       |
-
-#### 12.2.7 Tamanho de Efeito
-
-Além de p-valores, calcular tamanhos de efeito:
-
-| Teste               | Medida de Tamanho de Efeito  | Interpretação (Cohen)         |
-| ----------------------- | -------------------------------- | --------------------------------- |
-| Teste t / Mann-Whitney  | d de Cohen / r                   | Pequeno: 0.2, Médio: 0.5, Grande: 0.8 |
-| ANOVA / Kruskal-Wallis  | η² (eta quadrado) / ε² (epsilon) | Pequeno: 0.01, Médio: 0.06, Grande: 0.14 |
-| Correlação              | r (coeficiente de correlação)    | Fraca: 0.1-0.3, Moderada: 0.3-0.5, Forte: >0.5 |
-
-### 12.3 Tratamento de dados faltantes e outliers
-
-#### 12.3.1 Dados Faltantes (Missing Values)
-
-Identificação:
-- Verificar percentual de dados faltantes por variável.
-- Criar matriz de padrões de missingness.
-
-Critérios de Tratamento:
-
-| % Missing  | Ação                                                      |
-| -------------- | ------------------------------------------------------------- |
-| < 5%           | Excluir casos com dados faltantes (listwise deletion)         |
-| 5% - 20%       | Imputação pela mediana (variáveis contínuas) ou moda (categóricas) |
-| > 20%          | Considerar exclusão da variável ou análise de sensibilidade   |
-
-Métodos de Imputação:
-- Mediana: Para métricas com distribuição assimétrica (LOC, Complexidade).
-- Média: Para métricas com distribuição normal.
-- Moda: Para variáveis categóricas (Linguagem, Grupo).
-- Imputação múltipla (MICE): Se > 10% de missingness e dados MCAR (Missing Completely At Random).
-
-Documentação:
-- Registrar todos os casos de imputação em `missing_data_report.csv`.
-- Justificar decisões no relatório final.
-
-#### 12.3.2 Outliers
-
-Detecção:
-
-| Método                  | Critério                                    | Quando Usar           |
-| --------------------------- | ----------------------------------------------- | ------------------------- |
-| IQR (Interquartile Range)   | Valor < Q1 - 1.5×IQR ou > Q3 + 1.5×IQR         | Primeira triagem          |
-| Z-score                     | \|Z\| > 3                                        | Dados normais             |
-| Grubbs' test                | Teste estatístico formal                        | Confirmar outlier extremo |
-| Inspeção visual             | Boxplots, scatter plots                         | Validação visual          |
-
-Tratamento:
-
-| Tipo de Outlier         | Ação                                                      |
-| --------------------------- | ------------------------------------------------------------- |
-| Erro de coleta          | Corrigir ou excluir                                           |
-| Outlier válido extremo  | Manter, mas reportar; realizar análise com e sem outlier      |
-| Outlier moderado        | Manter; considerar transformação (log, sqrt)                  |
-
-Regras Específicas:
-
-- LOC outliers (ex.: componente com 5000+ linhas):
-  - Manter se for componente legítimo (não gerado automaticamente).
-  - Flagear como caso especial.
-  - Realizar análise de sensibilidade excluindo outliers extremos.
-
-- Complexidade Ciclomática > 100:
-  - Investigar manualmente.
-  - Se legítimo, manter e reportar.
-
-- Violações > 50:
-  - Verificar se não há erro de configuração ESLint.
-  - Manter se for real.
-
-Transformações:
-
-- Log-transformação: Para métricas com distribuição muito assimétrica (LOC, Imports).
-  - `LOC_log <- log10(LOC + 1)`
-- Winsorização: Substituir outliers pelo valor do percentil 95 ou 99.
-  - `LOC_winsorized <- Winsorize(LOC, probs=c(0.01, 0.99))`
-
-Documentação:
-- Listar todos os outliers detectados em `outliers_report.csv`.
-- Justificar cada decisão de manutenção/exclusão.
-- Reportar resultados com e sem outliers extremos.
-
-### 12.4 Verificação de Premissas Estatísticas
-
-Antes de aplicar testes paramétricos, verificar:
-
-#### 12.4.1 Normalidade
-
-- Teste: Shapiro-Wilk (n < 50) ou Kolmogorov-Smirnov (n ≥ 50).
-- Visual: Q-Q plots.
-- Decisão: Se p < 0,05, usar testes não paramétricos.
-
-#### 12.4.2 Homocedasticidade (Homogeneidade de Variâncias)
-
-- Teste: Levene's test (para ANOVA).
-- Decisão: Se p < 0,05, usar Welch's ANOVA ou Kruskal-Wallis.
-
-#### 12.4.3 Independência
-
-- Verificação: Confirmar que componentes são independentes (não há componentes duplicados ou altamente relacionados).
-- Teste: Durbin-Watson (se houver suspeita de autocorrelação temporal).
-
-#### 12.4.4 Linearidade (para Regressão)
-
-- Visual: Scatter plots de Y vs. X.
-- Teste: Análise de resíduos (resíduos vs. fitted values).
-
-### 12.5 Plano de Visualizações
-
-As seguintes visualizações serão geradas:
-
-#### Visualizações Descritivas:
-
-| Gráfico                  | Objetivo                                      | Variáveis                 |
-| ---------------------------- | ------------------------------------------------- | ----------------------------- |
-| Histogramas                  | Distribuição de cada métrica                      | M1-M18                        |
-| Boxplots por grupo           | Comparar distribuições entre grupos               | Métricas × Grupos experimentais |
-| Barras de frequência         | Contagem de violações por tipo                    | M1, M2                        |
-| Gráfico de pizza             | Proporção de componentes saudáveis vs. problemáticos | Grupo Saúde                 |
-
-#### Visualizações de Relações:
-
-| Gráfico                  | Objetivo                                      | Variáveis                 |
-| ---------------------------- | ------------------------------------------------- | ----------------------------- |
-| Scatter plots                | Relação entre duas métricas contínuas             | LOC × Complexidade            |
-| Matriz de correlação (heatmap)| Inter-relações entre todas as métricas           | M1-M18                        |
-| Pairplots                    | Múltiplas relações bivariadas                     | LOC, CC, Imports, Violações   |
-| Gráfico de regressão         | Linha de tendência + intervalos de confiança      | Y = Defeitos, X = LOC         |
-
-#### Visualizações Multivariadas:
-
-| Gráfico                  | Objetivo                                      | Variáveis                 |
-| ---------------------------- | ------------------------------------------------- | ----------------------------- |
-| Biplot (PCA)                 | Visualizar componentes principais                 | PCs 1-2                       |
-| Dendrograma                  | Hierarquia de clusters                            | Todas as métricas             |
-| Heatmap de clusters          | Padrões em grupos de componentes similares        | Componentes × Métricas        |
-Perfeito. Vou produzir todos os tópicos (13 a 20) agora, de forma completa, técnica, coerente e compatível com o restante do seu plano de experimento sobre métricas para medir a saúde estrutural de componentes React.
-O texto abaixo já está no formato ideal para ser copiado direto para o seu documento.
+- comparação especialista × métrica  
+- concordância entre avaliadores  
+- discrepâncias indicando limitações das métricas  
 
 ---
 
-# 13. Avaliação de validade (ameaças e mitigação)
+### 12.2 Métodos Estatísticos Planejados
 
-## 13.1 Validade de conclusão
+Os métodos abaixo serão definidos *antes da execução* para evitar p-hacking ou decisões oportunistas.
+
+#### Testes de normalidade
+- Shapiro–Wilk  
+- Kolmogorov–Smirnov  
+
+#### Comparações entre grupos
+- **t-test** (paramétrico)  
+- **Mann–Whitney U** (não paramétrico)  
+
+#### Comparações de três ou mais grupos
+- **ANOVA**  
+- **Kruskal–Wallis**  
+
+#### Correlação entre smells e métricas
+- **Pearson** (linear, normal)  
+- **Spearman** (monotônica)  
+
+#### Regressões
+- Regressão linear múltipla  
+- Regressão logística (presença vs. ausência de smell)  
+- Modelos de efeitos mistos (controle por projeto/repos)  
+
+#### Análises multivariadas
+- PCA  
+- Clusterização (k-means / hierarchical)  
+
+### Validação com especialistas
+- ICC (Intraclass Correlation Coefficient)  
+- Fleiss’ Kappa  
+- Correlação especialista × métrica  
+
+### Correção de múltiplos testes
+- FDR (Benjamini–Hochberg)  
+- Bonferroni (quando necessário)  
+
+---
+
+### 12.3 Tratamento de Dados Faltantes e Outliers
+
+#### Dados faltantes
+
+1. **Falhas de parsing/AST**  
+   - Exclui-se apenas a métrica faltante daquele componente.  
+   - Excluir componente inteiro apenas se > 30% das métricas estiverem ausentes.
+
+2. **Ausências legítimas**  
+   - Métricas que naturalmente não se aplicam (ex.: componente sem efeitos) → valor = **0**.
+
+3. **Faltas em avaliações de especialistas**  
+   - Se 1 avaliador responde → mantém.  
+   - Se nenhum responde → componente excluído apenas da análise qualitativa.
+
+#### Outliers
+
+Detecção:
+
+- IQR  
+- Z-score > 3  
+
+Tratamento:
+
+- Se for comportamento real do componente → manter.  
+- Se for ruído ou erro de análise → corrigir ou excluir apenas a métrica.  
+- Se impedir testes paramétricos → aplicar log-transform ou usar testes não paramétricos.
+
+Regra geral:  
+**Nenhum outlier será removido sem justificativa documentada.**
+
+---
+
+### 12.4 Plano de Análise para Dados Qualitativos
+
+Os dados qualitativos virão de:
+
+- comentários dos especialistas  
+- justificativas de notas  
+- observações sobre smells e problemas estruturais  
+
+Será usada **Análise de Conteúdo Temática**, com três etapas:
+
+#### Etapa 1 — Codificação aberta
+Identificação de categorias emergentes, como:
+
+- “renderização complexa”
+- “efeitos difíceis de rastrear”
+- “estado confuso”
+
+#### Etapa 2 — Codificação axial
+Agrupamento em temas gerais:
+
+- Smells de JSX  
+- Smells de hooks  
+- Smells de estado  
+- Problemas de modularização  
+
+#### Etapa 3 — Integração com resultados quantitativos
+- Comparar temas qualitativos com métricas elevadas  
+- Verificar alinhamento entre avaliações humanas e métricas  
+- Identificar discrepâncias (indicando limitações das métricas)
+
+#### Produtos finais
+- Taxonomia de smells percebidos pelos especialistas  
+- Exemplos anotados  
+- Análise triangulada métrica × especialista × código real  
+
+
+## 13. Avaliação de validade (ameaças e mitigação)
+
+### 13.1 Validade de conclusão
 
 Ameaças:
 
@@ -1268,7 +1162,7 @@ Mitigação:
 
 ---
 
-## 13.2 Validade interna
+### 13.2 Validade interna
 
 Ameaças:
 
@@ -1286,12 +1180,12 @@ Mitigação:
 
 ---
 
-## 13.3 Validade de constructo
+### 13.3 Validade de constructo
 
 Ameaças:
 
-* Métricas podem não representar adequadamente o conceito de “saúde estrutural”.
-* Ambiguidade nas métricas abstratas (ex.: SRP Violations, Responsabilidade por estado, Complexidade estrutural).
+* Métricas podem não representar adequadamente o conceito de “qualidade estrutural”.
+* Ambiguidade nas métricas abstratas.
 * Interpretações distintas entre avaliadores humanos.
 
 Mitigação:
@@ -1303,7 +1197,7 @@ Mitigação:
 
 ---
 
-## 13.4 Validade externa
+### 13.4 Validade externa
 
 Ameaças:
 
@@ -1319,7 +1213,7 @@ Mitigação:
 
 ---
 
-## 13.5 Resumo das principais ameaças e mitigação
+### 13.5 Resumo das principais ameaças e mitigação
 
 | Ameaça                                  | Tipo       | Ação de Mitigação                                            |
 | --------------------------------------- | ---------- | ------------------------------------------------------------ |
@@ -1332,9 +1226,9 @@ Mitigação:
 
 ---
 
-# 14. Ética, privacidade e conformidade
+## 14. Ética, privacidade e conformidade
 
-## 14.1 Questões éticas
+### 14.1 Questões éticas
 
 * Risco de pressão sobre especialistas convidados para avaliação manual.
 * Possível exposição indevida de trechos de código OSS em relatórios.
@@ -1348,7 +1242,7 @@ Mitigação:
 
 ---
 
-## 14.2 Consentimento informado
+### 14.2 Consentimento informado
 
 Para especialistas participantes:
 
@@ -1358,7 +1252,7 @@ Para especialistas participantes:
 
 ---
 
-## 14.3 Privacidade e proteção de dados
+### 14.3 Privacidade e proteção de dados
 
 * Dados coletados: trechos de código OSS (não pessoais), e eventualmente nome/e-mail dos especialistas.
 * Medidas:
@@ -1370,7 +1264,7 @@ Para especialistas participantes:
 
 ---
 
-## 14.4 Aprovações necessárias
+### 14.4 Aprovações necessárias
 
 * Comitê de Ética da instituição, caso obrigatório para estudos com participação humana.
 * Jurídico / DPO, caso haja coleta de dados pessoais dos especialistas.
@@ -1378,9 +1272,9 @@ Para especialistas participantes:
 
 ---
 
-# 15. Recursos, infraestrutura e orçamento
+## 15. Recursos, infraestrutura e orçamento
 
-## 15.1 Recursos humanos e papéis
+### 15.1 Recursos humanos e papéis
 
 * Pesquisador principal: coordenação geral, análise estatística, redação final.
 * Desenvolvedor de instrumentação: criação dos scripts de coleta e análises AST.
@@ -1389,7 +1283,7 @@ Para especialistas participantes:
 
 ---
 
-## 15.2 Infraestrutura técnica
+### 15.2 Infraestrutura técnica
 
 * Repositório Git privado (GitHub ou GitLab).
 * Servidor ou máquina local para executar coleta automática.
@@ -1398,7 +1292,7 @@ Para especialistas participantes:
 
 ---
 
-## 15.3 Materiais e insumos
+### 15.3 Materiais e insumos
 
 * Computadores pessoais da equipe.
 * Licenças (se necessário) para ferramentas adicionais.
@@ -1407,7 +1301,7 @@ Para especialistas participantes:
 
 ---
 
-## 15.4 Orçamento e custos estimados
+### 15.4 Orçamento e custos estimados
 
 * Horas de desenvolvimento: 60–100h.
 * Horas de análise estatística: 20–30h.
@@ -1416,9 +1310,9 @@ Para especialistas participantes:
 
 ---
 
-# 16. Cronograma, marcos e riscos operacionais
+## 16. Cronograma, marcos e riscos operacionais
 
-## 16.1 Macrocronograma
+### 16.1 Macrocronograma
 
 | Período  | Marco                                            |
 | -------- | ------------------------------------------------ |
@@ -1431,7 +1325,7 @@ Para especialistas participantes:
 
 ---
 
-## 16.2 Dependências
+### 16.2 Dependências
 
 * A coleta só inicia após piloto validado.
 * Avaliação manual só começa após aprovação ética.
@@ -1439,7 +1333,7 @@ Para especialistas participantes:
 
 ---
 
-## 16.3 Riscos operacionais
+### 16.3 Riscos operacionais
 
 * Falhas de parsing em repositórios grandes → Contingência: fallback para Babel e logs específicos.
 * Indisponibilidade de especialistas → Contingência: recrutamento alternativo ou reduzir escopo.
@@ -1447,9 +1341,9 @@ Para especialistas participantes:
 
 ---
 
-# 17. Governança do experimento
+## 17. Governança do experimento
 
-## 17.1 Papéis e responsabilidades
+### 17.1 Papéis e responsabilidades
 
 * Decisor final: pesquisador principal.
 * Executor técnico: responsável pelos scripts.
@@ -1458,7 +1352,7 @@ Para especialistas participantes:
 
 ---
 
-## 17.2 Ritos de acompanhamento pré-execução
+### 17.2 Ritos de acompanhamento pré-execução
 
 * Reunião semanal de status (30 min).
 * Checkpoint após piloto para aprovar instrumentação.
@@ -1466,7 +1360,7 @@ Para especialistas participantes:
 
 ---
 
-## 17.3 Controle de mudanças
+### 17.3 Controle de mudanças
 
 * Toda alteração deve:
 
@@ -1477,9 +1371,9 @@ Para especialistas participantes:
 
 ---
 
-# 18. Plano de documentação e reprodutibilidade
+## 18. Plano de documentação e reprodutibilidade
 
-## 18.1 Repositórios e convenções
+### 18.1 Repositórios e convenções
 
 * Repositório `react-metrics-experiment/`.
 * Pastas:
@@ -1491,7 +1385,7 @@ Para especialistas participantes:
 
 ---
 
-## 18.2 Templates e artefatos
+### 18.2 Templates e artefatos
 
 * Checklist de coleta.
 * Template de consentimento.
@@ -1500,7 +1394,7 @@ Para especialistas participantes:
 
 ---
 
-## 18.3 Empacotamento para replicação
+### 18.3 Empacotamento para replicação
 
 * Fornecer:
 
@@ -1509,9 +1403,9 @@ Para especialistas participantes:
 
 ---
 
-# 19. Plano de comunicação
+## 19. Plano de comunicação
 
-## 19.1 Públicos e mensagens
+### 19.1 Públicos e mensagens
 
 * Orientador: alinhamento científico e metodológico.
 * Especialistas: convite, escopo e expectativas.
@@ -1519,7 +1413,7 @@ Para especialistas participantes:
 
 ---
 
-## 19.2 Canais e frequência
+### 19.2 Canais e frequência
 
 * Slack para comunicação contínua.
 * E-mail formal para aprovações.
@@ -1527,7 +1421,7 @@ Para especialistas participantes:
 
 ---
 
-## 19.3 Pontos obrigatórios
+### 19.3 Pontos obrigatórios
 
 * Comunicação de aprovação do plano.
 * Comunicação do resultado do piloto.
@@ -1536,9 +1430,9 @@ Para especialistas participantes:
 
 ---
 
-# 20. Critérios de prontidão para execução (Definition of Ready)
+## 20. Critérios de prontidão para execução (Definition of Ready)
 
-## 20.1 Checklist de prontidão
+### 20.1 Checklist de prontidão
 
 * Plano aprovado.
 * Scripts 100% funcionando e testados no piloto.
