@@ -219,10 +219,10 @@ Métricas de Validação:
 ## 4. Escopo e contexto do experimento
 
 ### Template:
-Analisar componentes React
-com o propósito de identificar e mensurar code smells estruturais
-com respeito a complexidade, acoplamento, modularidade e qualidade estrutural
-do ponto de vista de desenvolvedores e especialistas em Frontend
+Analisar componentes React <br>
+com o propósito de identificar e mensurar code smells estruturais <br>
+com respeito a complexidade, acoplamento, modularidade e qualidade estrutural <br>
+do ponto de vista de desenvolvedores e especialistas em Frontend <br>
 no contexto de sistemas React de grande porte provenientes de projetos reais.
 
 ### 4.1 Escopo funcional / de processo (incluído e excluído)
@@ -353,7 +353,6 @@ Essas quatro dimensões estruturais são observadas por meio das métricas M1 a 
 
 * Análise estática automatizada via ferramentas AST e linters;
 * Avaliação qualitativa de especialistas em React;
-* Análise histórica de evolução e defeitos;
 * Presença objetiva de antipadrões estruturais documentados na literatura.
 
 Ao contrário do modelo CK Metrics (orientado a classes em programação orientada a objetos), este modelo é específico para componentes React funcionais e baseia-se exclusivamente em características declarativas, reativas e modulares do ecossistema moderno do React.
@@ -362,53 +361,45 @@ Ao contrário do modelo CK Metrics (orientado a classes em programação orienta
 
 ##  7.2 Hipóteses formais
 
-### Hipótese 1 – Estado e complexidade estrutural
+### Hipótese 1 – Estado
 
-* H0₁: Não há relação significativa entre complexidade da estrutura de estado (M6, M21, M20) e a complexidade geral do componente.
-* H1₁: Componentes com maior complexidade de estado apresentam maior complexidade estrutural (ex.: complexidade ciclomática, profundidade de encadeamento).
+* H0₁: Não há relação significativa entre a complexidade do estado (M7) e a complexidade geral do componente (M8).
+* H1₁: Componentes com maior complexidade de estado (M7) apresentam maior complexidade estrutural (M8).
 
 ---
 
-### Hipótese 2 – Renderização (JSX) e má qualidade estrutural
+### Hipótese 2 – Renderização (JSX)
 
-* H0₂: Métricas da renderização (densidade de JSX, profundidade do JSX e condicionais) não diferenciam componentes saudáveis de problemáticos.
-* H1₂: Componentes considerados problemáticos apresentam valores mais elevados de profundidade de JSX, densidade de JSX e condicionais no JSX.
+* H0₂: Métricas da renderização (M5, M6) não diferenciam componentes saudáveis de problemáticos.
+* H1₂: Componentes considerados problemáticos apresentam valores mais elevados de profundidade de JSX (M6) e densidade de JSX (M5).
 
 ---
 
 ### Hipótese 3 – Hooks/Efeitos e antipadrões
 
-* H0₃: Violações das regras de hooks, dependências incorretas e uso excessivo de efeitos não estão associados a menor qualidade estrutural.
-* H1₃: Componentes com mais violações de hooks e erros de efeitos apresentam maior acoplamento, maior complexidade e maior risco de re-renderização.
+* H0₃: Violações de hooks (M1), erros de dependências (M2) e uso excessivo de efeitos (M3) não estão associados a maior degradação estrutural.
+* H1₃: Componentes com mais violações de hooks (M1), erros de dependências (M2) e uso excessivo de efeitos (M3) apresentam maior acoplamento (M9 ou M10) e maior complexidade interna (M7 ou M8).
 
 ---
 
-### Hipótese 4 – Acoplamento e modularidade
+### Hipótese 4 – Acoplamento
 
-* H0₄: Métricas de acoplamento (imports, prop drilling, pressão de contextos) não estão associadas à presença de code smells.
-* H1₄: Componentes com maior acoplamento apresentam significativamente mais antipadrões estruturais.
+* H0₄: Métricas de acoplamento (M9, M10, M4) não estão associadas à presença de code smells.
+* H1₄: Componentes com maior acoplamento — mais importações (M9), maior prop drilling (M10) e maior pressão de contextos (M4) — apresentam mais antipadrões estruturais.
 
 ---
 
-### Hipótese 5 – Modularização (subcomponentes e hooks customizados)
+### Hipótese 5 – Modularização
 
-* H0₅: Uso de subcomponentes internos ou hooks customizados não está associado à melhora das métricas.
-* H1₅: Componentes que utilizam subcomponentes e hooks customizados apresentam menor complexidade e menor densidade de JSX.
+* H0₅: O uso de modularização (hooks customizados e subcomponentes) não está associado à melhoria estrutural.
+* H1₅: Componentes que utilizam hooks customizados (M11) ou subcomponentes internos (M12) apresentam menor complexidade estrutural (M7, M8) e menor densidade de JSX (M5).
 
 ---
 
 ### Hipótese 6 – Métricas e avaliação de especialistas
 
 * H0₆: Especialistas não diferenciam componentes problemáticos e saudáveis com base nas métricas estruturais.
-* H1₆: Componentes considerados problemáticos por especialistas apresentam valores significativamente maiores em métricas dos quatro pilares.
-
----
-
-### Hipótese 7 – Histórico de defeitos
-
-* H0₇: Métricas elevadas não se correlacionam com histórico de defeitos.
-* H1₇: Componentes com histórico de defeitos apresentam maior risco de re-renderização, maior profundidade de JSX e maior acoplamento.
-
+* H1₆: Componentes considerados problemáticos pelos especialistas (MV1, MV2) apresentam valores significativamente maiores em métricas estruturais de todos os pilares (M1–M12).
 ---
 
 ## 7.3 Nível de significância e considerações de poder
@@ -457,32 +448,33 @@ O experimento envolverá dois tipos de participantes:
 #### 8.2.2 Participantes Indiretos: Desenvolvedores dos Projetos Open-Source
 - Os componentes analisados foram escritos por desenvolvedores reais, mas estes não participarão ativamente do experimento.
 
-### 8.3 Variáveis independentes (fatores) e seus níveis
+### 8.3 Variáveis do Experimento
 
-As variáveis independentes são características estruturais observadas nos componentes, categorizadas em níveis para análise comparativa.
+#### 8.3.1 Considerações gerais sobre variáveis
 
-#### Tabela de Variáveis Independentes
-| Variável Independente                         | Descrição                                                           | Níveis                                          | Como será medida                                                |
-| ------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------- |
-| Complexidade da Estrutura de Estado (M6)      | Grau de dependências, derivação, profundidade e redundância no estado.  | Baixa (0–2), Média (3–5), Alta (>5)                 | Análise via AST das estruturas de estado e dependências entre hooks |
-| Estados Não Derivados (M21)                   | Quantidade de estados que poderiam ser calculados, mas são armazenados. | Nenhum (0), Poucos (1–2), Muitos (>2)               | Comparação de estados vs. expressões deriváveis                     |
-| Mudanças na Estrutura de Estado (M20)         | Evolução da quantidade e forma dos estados ao longo dos commits.        | Estável, Moderada, Alta                             | Histórico Git (diff + análise AST)                                  |
-| Densidade de JSX (M3)                         | Proporção entre JSX e lógica.                                           | Baixa (<0,4), Média (0,4–0,7), Alta (>0,7)          | Contagem de nós JSX vs. nós lógicos no AST                          |
-| Profundidade de Aninhamento JSX (M8)          | Profundidade máxima da árvore de renderização.                          | Baixa (≤4), Média (5–8), Alta (>8)                  | Caminho máximo na árvore JSX                                        |
-| Condicionais no JSX (M9)                      | Total de condicionais renderizadas.                                     | Baixa (0–2), Média (3–5), Alta (>5)                 | Identificação de condicionais no JSX via AST                        |
-| Risco de Re-renderização (M10)                | Criação de funções/objetos inline que causam re-render.                 | Baixo (0–1), Médio (2–3), Alto (>3)                 | AST: análise de closures e valores inline                           |
-| Violações das Regras de Hooks (M1)            | Uso incorreto de hooks (em loops, condicionais etc.)                    | Sem violações (0), Com violações (≥1)               | ESLint (`rules-of-hooks`)                                           |
-| Erros no Array de Dependências (M2)           | Dependências faltantes ou redundantes.                                  | Sem erros (0), Com erros (≥1)                       | ESLint (`exhaustive-deps`)                                          |
-| Coesão entre Hooks (M4)                       | Grau de relação/coerência entre hooks internos.                         | Alta (0–0,3), Média (0,31–0,6), Baixa (>0,6)        | Grafo de dependências internas do componente                        |
-| Uso Excessivo de Efeitos (M5)                 | Média de efeitos por estado, ou efeitos redundantes.                    | Baixo (≤1), Moderado (2–3), Alto (>3)               | Contagem e análise de efeitos no AST                                |
-| Profundidade de Passagem de Propriedades (M7) | Quantidade de níveis antes da prop ser usada.                           | Baixa (0–1), Média (2–3), Alta (>3)                 | Propagação via cadeia de JSX                                        |
-| Pressão de Uso de Contextos (M11)             | Tamanho e quantidade de dados lidos de contextos.                       | Baixa (1 contexto), Média (2), Alta (≥3)            | Análise de `useContext` e estrutura do valor                        |
-| Acoplamento Reativo (M17)                     | Fan-in/fan-out reativo entre componentes.                               | Baixo (≤3), Médio (4–8), Alto (>8)                  | Dependências entre componentes via AST                              |
-| Número de Importações (M15)                   | Dependências internas e externas.                                       | Baixo (≤5), Médio (6–15), Alto (>15)                | Contagem de imports no AST                                          |
-| Subcomponentes Declarados Internamente (M18)  | Componentes criados dentro de outro componente.                         | Nenhum (0), Poucos (1–2), Muitos (>2)               | AST: busca por funções JSX internas                                 |
-| Hooks Personalizados Usados (M16)             | Hooks específicos (`useX`) utilizados.                                  | Nenhum (0), Poucos (1–3), Muitos (>3)               | Padrão nominal (`use*`) no AST                                      |
-| Linhas de Código (M13)                        | Tamanho bruto do componente.                                            | Pequeno (<100), Médio (100–300), Grande (>300)      | Contagem de LOC                                                     |
-| Crescimento Histórico de Linhas (M19)         | Taxa de expansão ao longo do tempo.                                     | Estável (<10%), Moderado (10–50%), Acelerado (>50%) | Histórico Git                                                       |
+Como este é um experimento observacional, não há manipulação ativa de tratamentos. Por isso, as métricas estruturais dos componentes React podem assumir dois papéis distintos:
+
+- Variáveis independentes (fatores) → quando usadas para estratificar, comparar grupos ou definir condições (ex.: componentes com alta profundidade JSX vs baixa profundidade).
+- Variáveis dependentes (respostas) → quando analisadas como resultado das hipóteses (ex.: componentes problemáticos apresentam maior densidade de JSX?).
+
+Assim, apresenta-se uma única tabela de métricas, classificadas pelos pilares estruturais do React, esclarecendo que sua função (independente/dependente) depende da hipótese analisada.
+
+#### Tabela de Métricas Estruturais do Experimento
+
+| Código | Métrica                        | Papel no experimento      | Descrição                                     | Unidade      | Níveis típicos (para agrupamento) |
+| ------ | ------------------------------ | ------------------------- | --------------------------------------------- | ------------ | --------------------------------- |
+| M1     | Violações de Hooks             | independente / dependente | Hooks usados incorretamente                   | contagem     | 0 / 1–2 / ≥3                      |
+| M2     | Erros no Array de Dependências | independente / dependente | Dependências faltantes ou redundantes         | contagem     | 0 / 1–2 / ≥3                      |
+| M3     | Uso Excessivo de Efeitos       | independente / dependente | Efeitos por estado/LOC                        | razão        | baixo / médio / alto              |
+| M4     | Pressão de Contextos           | independente / dependente | Quantidade e tamanho dos contextos consumidos | índice       | baixa / média / alta              |
+| M5     | Densidade de JSX               | independente / dependente | Proporção JSX/lógica                          | razão        | baixa / média / alta              |
+| M6     | Profundidade JSX               | independente / dependente | Níveis de aninhamento                         | profundidade | baixa / média / alta              |
+| M7     | Complexidade do Estado         | independente / dependente | Relações, redundâncias e derivação            | índice       | baixa / média / alta              |
+| M8     | Complexidade Ciclomática       | independente / dependente | Caminhos independentes                        | grau         | ≤5 / 6–15 / >15                   |
+| M9     | Número de Importações          | independente / dependente | Imports internos e externos                   | contagem     | ≤5 / 6–15 / >15                   |
+| M10    | Prop Drilling                  | independente / dependente | Profundidade de passagem de props             | profundidade | baixo / médio / alto              |
+| M11    | Responsabilidades Declaradas   | independente / dependente | Número de papéis distintos do componente      | contagem     | baixo / médio / alto              |
+| M12    | Risco de Re-renderização       | independente / dependente | Criação inline de funções/objetos no JSX      | contagem     | 0–1 / 2–3 / ≥4                    |
 
 
 ### 8.4 Tratamentos (condições experimentais)
@@ -496,213 +488,242 @@ Este experimento é observacional (não há manipulação ativa de tratamentos).
 
 #### Tabela de Fatores e Tratamentos
 
-| Conceito Estrutural | Fator | Tratamentos / Condições | Critério de Classificação |
-| ---------------------------------------- | ---------------------------- | ---------------------------------- | ----------------------------------------------------------------- |
-| Hooks e Ciclo de Vida | Qualidade dos Hooks | Saudável: M1 = 0 e M2 = 0 | Nenhuma violação das regras de hooks e nenhum erro de dependências |
-| | | Problemático: M1 ≥ 1 ou M2 ≥ 1 | Pelo menos uma violação detectada |
-| Renderização e JSX | Complexidade da Renderização | Baixa | M8 (aninhamento JSX) ≤ 3 e M9 ≤ 2 |
-| | | Média | 4 ≤ M8 ≤ 5 ou 3 ≤ M9 ≤ 4 |
-| | | Alta | M8 > 5 ou M9 ≥ 5 |
-| Estado e Lógica Interna | Complexidade do Estado | Simples | M6 ≤ 2 e M21 = 0 e M14 ≤ 5 |
-| | | Complexa | M6 > 3 ou M21 ≥ 1 ou M14 > 10 |
-| Modularidade e Acoplamento | Nível de Acoplamento | Baixo | M15 ≤ 5 e M17 ≤ 3 |
-| | | Médio | 6 ≤ M15 ≤ 15 ou 4 ≤ M17 ≤ 8 |
-| | | Alto | M15 > 15 ou M17 > 8 |
-| | Modularização | Modularizado | M16 > 0 ou M18 > 0 |
-| | | Monolítico | M16 = 0 e M18 = 0 |
+1. Hooks e Ciclo de Vida
+   
+| Fator               | Condições        | Critério             |
+| ------------------- | ---------------- | -------------------- |
+| Qualidade dos Hooks | Saudável     | M1 = 0 e M2 = 0  |
+|                     | Problemático | M1 ≥ 1 ou M2 ≥ 1 |
+
+2. Renderização e JSX
+
+| Fator                        | Condições | Critério                       |
+| ---------------------------- | --------- | ------------------------------ |
+| Complexidade de Renderização | Baixa | M6 ≤ 3 e M12 ≤ 2               |
+|                              | Média | 4 ≤ M6 ≤ 5 ou 3–4 condicionais |
+|                              | Alta  | M6 > 5 ou M12 ≥ 5              |
+
+3. Estado e Lógica Interna
+
+| Fator                  | Condições    | Critério                     |
+| ---------------------- | ------------ | ---------------------------- |
+| Complexidade do Estado | Simples  | M7 baixo e M8 ≤ 5            |
+|                        | Complexo | M7 médio/alto ou M8 > 10 |
+
+4. Modularidade e Acoplamento
+
+| Fator         | Condições        | Critério                               |
+| ------------- | ---------------- | -------------------------------------- |
+| Acoplamento   | Baixo        | M9 ≤ 5 e M10 ≤ 1                       |
+|               | Médio        | 6–15 imports ou 2–3 níveis de drilling |
+|               | Alto         | >15 imports ou drilling > 3            |
+| Modularização | Modularizado | M11 alto                               |
+|               | Monolítico   | M11 baixo                              |
+
+
 
 #### Combinações relevantes
 
 Serão analisadas combinações de fatores para investigar interações. Por exemplo:
 
-* Problemático em Hooks + Complexidade Alta de JSX + Alto Acoplamento → forte candidato a componente com múltiplos code smells.
-* Baixa complexidade de renderização + Estado simples + Modularizado → perfil de componente saudável e bem estruturado.
-* Estado complexo + Renderização pesada + Monolítico → risco elevado de regressões, bugs e dificuldade de manutenção.
-* Hooks saudáveis + Alto acoplamento → possível dependência excessiva do ecossistema externo apesar de lógica interna consistente.
+* Hooks problemáticos + JSX profundo + alto acoplamento → alto risco de code smells.
+* Estado simples + modularização + baixa renderização → perfil saudável.
+* Estado complexo + monolítico + forte prop drilling → difícil manutenção e tendência à degradação estrutural.
 
-### 8.5 Variáveis dependentes (respostas)
-
-As variáveis dependentes são as métricas estruturais que serão coletadas e analisadas, organizadas segundo os quatro conceitos estruturais fundamentais do React:
-
-#### Tabela de Variáveis Dependentes
-
-| Conceito Estrutural | Métrica | Descrição |
-| ---------------------------------------- | ----------- | --------------------------------------- |
-| Hooks e Ciclo de Vida | M1 | Violações das regras de hooks |
-|                                          | M2          | Erros no array de dependências          |
-|                                          | M5          | Uso excessivo de efeitos                |
-|                                          | M11         | Pressão de contextos                    |
-| Renderização e JSX         | M3          | Densidade de JSX                        |
-|                                          | M8          | Aninhamento JSX                         |
-|                                          | M9          | Condicionais no JSX                     |
-|                                          | M10         | Risco de renderizações desnecessárias   |
-| Estado e Lógica Interna    | M4          | Coesão entre hooks                      |
-|                                          | M6          | Complexidade da estrutura de estado     |
-|                                          | M12         | Profundidade de encadeamento de funções |
-|                                          | M14         | Complexidade ciclomática                |
-|                                          | M20         | Mudanças na estrutura de estado         |
-|                                          | M21         | Estados não derivados                   |
-|                                          | M22         | Responsabilidades declaradas            |
-| Modularidade e Acoplamento | M7          | Profundidade de prop drilling           |
-|                                          | M13         | LOC                                     |
-|                                          | M15         | Número de importações                   |
-|                                          | M16         | Hooks customizados                      |
-|                                          | M17         | Acoplamento reativo                     |
-|                                          | M18         | Subcomponentes internos                 |
-
-Observação: Algumas métricas aparecem em múltiplos conceitos estruturais devido à natureza transversal de determinadas características. Por exemplo, M18 (subcomponentes internos) impacta tanto a renderização quanto a modularidade.
-
-### 8.6 Variáveis de controle / bloqueio
+### 8.5 Variáveis de controle / bloqueio
 
 Variáveis que serão controladas para reduzir vieses:
 
-| Variável de Controle       | Estratégia de Controle                                                              |
-| ------------------------------ | --------------------------------------------------------------------------------------- |
-| Linguagem                  | Apenas componentes em JavaScript ou TypeScript (ECMAScript 2015+)                       |
-| Versão do React            | Apenas projetos usando React ≥ 16.8 (introdução de hooks)                              |
-| Tipo de Componente         | Apenas componentes funcionais (exclusão de class components)                            |
-| Tamanho do Projeto         | Apenas projetos com 50 a 500 componentes (evitar extremos)                             |
-| Maturidade do Projeto      | Apenas repositórios com ≥ 6 meses de histórico e múltiplos contribuidores               |
-| Configuração do ESLint     | Uso de configuração padrão + regras oficiais do React (eslint-plugin-react-hooks)       |
-| Framework Adicional        | Permitir Next.js, mas apenas analisar componentes React puros (não páginas ou rotas)   |
+| Variável              | Estratégia                                |
+| --------------------- | ----------------------------------------- |
+| Linguagem             | Apenas arquivos JS/TS modernos            |
+| Versão do React       | React 16.8+ (hooks introduzidos)          |
+| Tipo de componente    | Apenas componentes funcionais             |
+| Maturidade do projeto | ≥ 6 meses de histórico                    |
+| Configuração ESLint   | regras padrão + react-hooks               |
+| Framework             | Next.js permitido, mas apenas componentes |
+
 
 ### 8.7 Possíveis variáveis de confusão conhecidas
 
 Variáveis que podem distorcer os resultados e precisam ser monitoradas:
 
-| Variável de Confusão            | Descrição                                                                           | Como será tratada                                      |
-| ----------------------------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
-| Experiência dos desenvolvedores | Componentes escritos por devs inexperientes podem ter mais problemas estruturais        | Registrar número de contribuidores e tempo de experiência  |
-| Domínio da aplicação            | Componentes de domínios complexos (ex.: dashboards financeiros) podem ser naturalmente maiores | Categorizar componentes por tipo (UI puro, lógica de negócio, misto) |
-| Idade do código                 | Componentes antigos podem usar padrões desatualizados                                   | Registrar data do último commit e versão do React usada    |
-| Pressão de prazo                | Código escrito sob pressão pode ter mais code smells                                    | Não controlável, mas será registrado se houver indícios (commits grandes/rápidos) |
-| Presença de TypeScript          | Projetos TypeScript podem ter menos erros estruturais devido à tipagem                  | Estratificar análise por linguagem (JS vs TS)              |
-| Uso de bibliotecas de UI        | Componentes que usam MUI, Ant Design, etc. podem ter estrutura diferente                | Registrar bibliotecas de UI usadas no projeto               |
-| Contexto de teste               | Componentes bem testados podem ter estrutura mais modular                               | Registrar presença de testes unitários por componente       |
+| Variável                 | Mitigação                            |
+| ------------------------ | ------------------------------------ |
+| Experiência dos devs     | Registrar nº contribuidores          |
+| Domínio da aplicação     | Categorizar tipo de componente       |
+| Idade do código          | Registrar histórico                  |
+| Pressão de prazo         | Observar padrões anormais de commits |
+| Uso de bibliotecas de UI | Marcar presença de MUI, Chakra etc.  |
 
-## 9. Desenho experimental
-### 9.1 Tipo de desenho (completamente randomizado, blocos, fatorial, etc.)
+## 9. Desenho Experimental
 
-O experimento adotará um desenho observacional estratificado com análise fatorial.
+### 9.1 Tipo de Desenho Experimental
 
-#### Justificativa:
+O experimento adotará um desenho observacional estratificado com análise fatorial, complementado por uma etapa de validação qualitativa por especialistas.
 
-1. Desenho Observacional:
-- Não há manipulação ativa de variáveis independentes (não é possível "criar" componentes com diferentes níveis de complexidade de forma controlada).
-- Os componentes já existem em projetos reais, e suas características estruturais serão observadas e medidas.
-- Este tipo de desenho é adequado para estudos exploratórios e descritivos que buscam identificar padrões e correlações em contextos reais.
+#### Justificativa do desenho
 
-2. Estratificação:
-- Os componentes serão estratificados em grupos segundo características estruturais (tamanho, complexidade, acoplamento).
-- Isso permite comparações controladas entre estratos (ex.: "componentes pequenos vs. grandes").
-- A estratificação reduz a heterogeneidade dentro dos grupos, aumentando o poder estatístico.
+1. Desenho Observacional
 
-3. Análise Fatorial:
-- Serão investigadas interações entre fatores (ex.: "tamanho × complexidade", "acoplamento × presença de antipadrões").
-- Isso permite compreender se a combinação de fatores amplifica problemas estruturais.
-- Exemplo: componentes grandes E altamente acoplados podem apresentar mais code smells do que grandes OU altamente acoplados isoladamente.
+   * As características estruturais dos componentes React (complexidade, acoplamento, profundidade de JSX, violações de hooks etc.) não podem ser manipuladas artificialmente.
+   * Os componentes já existem em projetos reais, e o objetivo é observá-los tal como são, preservando fidelidade ao contexto original.
+   * Esse desenho é adequado para investigar correlações, padrões estruturais e indicadores de qualidade.
 
-4. Componente de Validação Qualitativa:
-- Um subconjunto de componentes (amostra estratificada) será avaliado por especialistas humanos.
-- Isso introduz um elemento de validação externa das métricas, essencial para verificar se elas refletem problemas reais percebidos por profissionais.
+2. Estratificação
 
-### 9.2 Randomização e alocação
+   * Para garantir comparações justas, os componentes serão agrupados (estratificados) segundo:
 
-#### O que será randomizado:
+     * Tamanho (LOC)
+     * Complexidade (M8)
+     * Acoplamento (M9, M10)
+     * Pilares estruturais (Hooks, JSX, Estado, Modularidade)
+   * A estratificação reduz heterogeneidade dentro dos grupos, aumenta poder estatístico e evita vieses como “componentes grandes dominando a amostra”.
 
-1. Seleção de Componentes para Análise Detalhada:
-- De cada repositório, será selecionada uma amostra aleatória estratificada de componentes.
-- Processo:
-  1. Listar todos os componentes do repositório.
-  2. Estratificar por tamanho (pequeno, médio, grande).
-  3. Sortear aleatoriamente componentes de cada estrato.
-  4. Garantir representatividade de cada estrato (mínimo de 10 componentes por estrato, se disponível).
+3. Análise Fatorial
 
-1. Ordem de Apresentação aos Especialistas:
-- Os componentes serão apresentados aos especialistas em ordem aleatória para evitar viés de ordem.
-- Processo:
-  1. Gerar lista de componentes selecionados para avaliação qualitativa.
-  2. Embaralhar aleatoriamente a ordem.
-  3. Cada especialista receberá a mesma lista, mas em ordem diferente (randomização individual).
+   * As hipóteses investigam interações entre fatores (ex.: complexidade × acoplamento, hooks × renderização).
+   * Portanto, serão utilizados modelos que explorem relações simultâneas entre múltiplas métricas.
+   * A análise fatorial permite identificar padrões latentes e combinações de características que emergem como potenciais code smells.
 
-1. Alocação de Especialistas a Componentes:
-- Cada componente será avaliado por pelo menos 2 especialistas diferentes (para calcular concordância interavaliadores).
-- Processo:
-  1. Dividir o conjunto de componentes em blocos.
-  2. Alocar aleatoriamente especialistas a blocos, garantindo que cada componente seja visto por 2+ avaliadores.
+4. Componente de Validação Qualitativa
 
-#### Ferramentas e Procedimentos:
-- Linguagem: Python.
-- Seed de randomização: Será fixada e documentada para garantir reprodutibilidade.
-- Registro: Todas as listas randomizadas serão salvas em arquivos CSV com timestamp.
+   * Um subconjunto estratificado será avaliado por especialistas.
+   * Isso permite verificar se as métricas representam problemas percebidos por profissionais — essencial para validade de construto e utilidade prática.
+   * Também permite calcular concordância interavaliadores (MV2).
 
-### 9.3 Balanceamento e contrabalanço
+---
 
-#### Balanceamento:
+### 9.2 Randomização e Alocação
 
-1. Balanceamento entre Estratos:
-- Garantir que cada estrato de tamanho (pequeno/médio/grande) tenha número comparável de componentes na amostra final.
-- Critério: Se um estrato tiver menos componentes disponíveis, ajustar proporcionalmente os outros estratos para manter representatividade.
+Embora o estudo seja observacional, etapas específicas envolvem randomização para reduzir vieses.
 
-2. Balanceamento por Projeto:
-- Evitar que um único repositório domine a amostra.
-- Critério: Limitar a contribuição de cada repositório a no máximo 40% da amostra total.
+#### 1) Randomização da seleção de componentes
 
-3. Balanceamento por Linguagem:
-- Incluir proporções balanceadas de componentes JavaScript e TypeScript.
-- Critério: Se possível, 50% JS e 50% TS; caso contrário, registrar a proporção real como variável de controle.
+* De cada repositório, será feita uma amostragem aleatória estratificada:
 
-#### Contrabalanço:
+  1. Estratificar por tamanho (pequeno, médio, grande).
+  2. Sortear componentes proporcionalmente dentro de cada estrato.
+  3. Fixar uma *seed* para garantir reprodutibilidade.
 
-1. Efeito de Fadiga dos Especialistas:
-- Avaliadores podem se cansar ao analisar muitos componentes sequencialmente.
-- Mitigação:
-  - Limitar a avaliação a no máximo 20 componentes por especialista por sessão.
-  - Permitir pausas entre avaliações.
-  - Randomizar ordem de apresentação (componentes simples e complexos intercalados).
+#### 2) Randomização da ordem para especialistas
 
-2. Efeito de Aprendizagem:
-- Especialistas podem refinar seus critérios de avaliação ao longo do tempo.
-- Mitigação:
-  - Realizar sessão de calibração prévia, onde todos avaliam os mesmos 5 componentes e discutem critérios.
-  - Registrar ordem de avaliação para análise posterior (verificar se as primeiras avaliações diferem das últimas).
+* Para evitar viés de ordem:
 
-3. Viés de Primazia/Recência:
-- Componentes vistos no início ou no final podem ser julgados de forma diferente.
-- Mitigação:
-  - Randomização da ordem de apresentação.
-  - Análise estatística para detectar padrões relacionados à posição na sequência.
+  * Cada especialista receberá os mesmos componentes, porém em ordens distintas e randomizadas.
+  * A lista randomizada será armazenada.
 
-### 9.4 Número de grupos e sessões
+#### 3) Alocação dos especialistas
 
-#### Grupos de Componentes:
+* Cada componente será avaliado por pelo menos dois especialistas independentes.
+* A alocação será:
 
-| Grupo                     | Critério de Inclusão               | Tamanho Estimado | Objetivo                                      |
-| ----------------------------- | -------------------------------------- | -------------------- | ------------------------------------------------- |
-| Grupo 1: Pequenos         | LOC < 100                              | 30-50 componentes    | Baseline de simplicidade                          |
-| Grupo 2: Médios           | 100 ≤ LOC ≤ 300                        | 40-60 componentes    | Faixa intermediária (mais comum)                  |
-| Grupo 3: Grandes          | LOC > 300                              | 20-40 componentes    | Suspeita de problemas estruturais                 |
-| Grupo 4: Saudáveis        | Sem violações de hooks nem erros deps | 30-50 componentes    | Referência de boas práticas                       |
-| Grupo 5: Problemáticos    | Com violações ou erros                 | 30-50 componentes    | Casos com code smells confirmados                 |
-| Grupo 6: Modularizados    | Subcomponentes > 0 ou Hooks > 0        | 30-50 componentes    | Análise de impacto da modularização               |
-| Grupo 7: Monolíticos      | Sem subcomponentes nem hooks           | 20-40 componentes    | Suspeita de baixa modularidade                    |
+  * Balanceada (todos especialistas avaliam componentes de todos os estratos)
+  * Randomizada (para evitar viés de preferências)
+  * Estruturada (para garantir que cada componente receba ≥2 avaliações)
 
-Total estimado: 150-250 componentes (dependendo da disponibilidade nos repositórios).
+#### 4) Reprodutibilidade
 
-#### Sessões de Coleta de Dados:
+* Todas as randomizações usarão:
 
-| Sessão                           | Atividade                                         | Duração Estimada | Participantes       |
-| ------------------------------------ | ----------------------------------------------------- | -------------------- | ----------------------- |
-| Sessão 1: Extração Automatizada  | Análise estática de todos os componentes (métricas)   | 2-4 horas (script)   | Nenhum (automatizado)   |
-| Sessão 2: Análise Histórica      | Extração de dados de Git (crescimento, defeitos)      | 4-6 horas (script)   | Nenhum (automatizado)   |
-| Sessão 3: Análise Estatística    | Processamento e análise dos dados coletados           | 8-12 horas           | Pesquisador             |
+  * Linguagem Python
+  * Registro de todas as etapas
 
-#### Justificativa:
+---
 
-- Múltiplos grupos: Permitem análises comparativas ricas (ex.: pequenos vs. grandes, saudáveis vs. problemáticos).
-- Sessões automatizadas: Garantem objetividade, replicabilidade e escalabilidade da coleta de métricas.
-- Foco em dados objetivos: Evita viés subjetivo de avaliadores humanos, mantendo rigor científico.
-- Análise estatística dedicada: Assegura rigor na interpretação dos resultados.
+### 9.3 Balanceamento e Contrabalanço
+
+#### Balanceamento
+
+1. Entre Estratos
+
+   * O objetivo é evitar que estratos com muitos componentes dominem a amostra.
+   * Caso um estratos seja escasso (ex.: poucos componentes grandes), os demais serão ajustados proporcionalmente.
+
+2. Entre Projetos
+
+   * Cada repositório poderá contribuir no máximo com 40% da amostra final.
+   * Isso reduz viés de projetos com estilos próprios.
+
+3. Entre Linguagens (JS vs TS)
+
+   * Quando possível, manter equilíbrio 50%/50%.
+
+#### Contrabalanço
+
+1. Efeito de Fadiga de Avaliadores
+
+   * No máximo 20 componentes por sessão por especialista.
+   * Pausas regulares recomendadas.
+   * Mistura intencional de componentes simples/complexos para evitar monotonia.
+
+2. Efeito de Aprendizagem
+
+   * Antes das avaliações, haverá:
+
+     * Sessão de calibração com 5 componentes modelo.
+     * Discussão coletiva dos critérios.
+   * As primeiras e últimas avaliações serão analisadas para verificar tendências.
+
+3. Viés de Primazia/Recência
+
+   * Mitigado pela ordem randomizada por especialista.
+   * Ordem será registrada para análise posterior.
+
+---
+
+### 9.4 Número de Grupos e Sessões
+
+#### Grupos de Componentes
+
+Os grupos estão alinhados aos quatro pilares estruturais:
+
+| Grupo                  | Critério                             | Objetivo no Experimento                 |
+| ---------------------- | ------------------------------------ | --------------------------------------- |
+| G1 – Pequenos      | LOC < 100                            | Baseline de simplicidade                |
+| G2 – Médios        | 100–300 LOC                          | Faixa intermediária mais comum          |
+| G3 – Grandes       | > 300 LOC                            | Suspeita de maior complexidade e smells |
+| G4 – Saudáveis     | M1 = 0 e M2 = 0 e M3, M4, M5, M6 <= limiar baixo                     | Referência de boas práticas             |
+| G5 – Problemáticos | M1 ≥ 1 ou M2 ≥ 1 ou M3, M4, M5, M6 >= limiar alto                    | Componentes com antipadrões claros      |
+| G6 – Modularizados | M11 ≥ 2 ou uso de hooks customizados | Verificar impacto da modularização      |
+| G7 – Monolíticos   | M11 = 0 e nenhum subcomponente       | Suspeita de design deficiente           |
+
+Total esperado: 150–250 componentes após filtragem.
+
+#### Sessões de coleta
+
+| Sessão | Atividade                               | Forma de Execução                               | Responsáveis |
+| ------ | --------------------------------------- | ----------------------------------------------- | ------------ |
+| S1     | Coleta automática das métricas (M1–M12) | Scripts de análise estática (AST + ESLint)      | Automação    |
+| S3     | Avaliação qualitativa                   | Formulário digital + especialistas              | Devs      |
+| S4     | Análise estatística                     | Python (correlações, ANOVA, modelos mistos) | Pesquisador  |
+
+---
+
+### 9.5 Plano Analítico e Testes Estatísticos
+
+Para cada hipótese, haverá um teste correspondente:
+
+| Hipótese                    | Método de Análise                      | Observações                                               |
+| --------------------------- | -------------------------------------- | --------------------------------------------------------- |
+| H1 (estado → complexidade)  | Correlação (Spearman/Pearson)          | Normalidade via Shapiro; log-transformações se necessário |
+| H2 (JSX → problemas)        | ANOVA / Kruskal-Wallis                 | Comparações entre grupos saudáveis × problemáticos        |
+| H3 (hooks/effects → smells) | Testes de diferença entre grupos       | t-test / Mann-Whitney                                     |
+| H4 (acoplamento → smells)   | Regressão                              | Controlando LOC e TS/JS                                   |
+| H5 (modularização)          | Comparação modularizados × monolíticos | Efeito prático (Cohen’s d) reportado                      |
+| H6 (especialistas)          | Kappa / ICC                            | Validade externa                                          |
+
+Modelos mistos serão empregados quando houver múltiplos repositórios (efeito aleatório por projeto).
+
+---
+
+### 9.6 Tratamento de Outliers, Falhas e Dados Faltantes
+
+* Parsing com falha → componente excluído apenas para a métrica afetada (listwise per metric).
+* Outliers → identificados por IQR; transformações log serão aplicadas quando apropriado.
+* Métricas altamente assimétricas → normalização por LOC quando fizer sentido.
+* Todos os dados brutos e logs serão armazenados (CSV + JSON).
+
 
 ## 10. População, sujeitos e amostragem
 
