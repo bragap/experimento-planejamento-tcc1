@@ -999,8 +999,8 @@ A estratégia geral envolve quatro etapas principais:
 
 Cada questão do GQM será respondida verificando:
 
-- se componentes **com** um determinado code smell documentado apresentam  
-  **valores significativamente diferentes** nas métricas estruturais;  
+- se componentes com um determinado code smell documentado apresentam  
+  valores significativamente diferentes nas métricas estruturais;  
 - e se essas métricas conseguem discriminar componentes saudáveis vs. problemáticos.
 
 Assim, para cada hipótese será analisado:
@@ -1015,10 +1015,10 @@ Assim, para cada hipótese será analisado:
 
 Os componentes serão comparados por meio de agrupamentos:
 
-- **Com smell vs. sem smell**
-- **Baixa / média / alta complexidade**
-- **Modularizado vs. monolítico**
-- **Saudável vs. problemático**
+- Com smell vs. sem smell
+- Baixa / média / alta complexidade
+- Modularizado vs. monolítico
+- Saudável vs. problemático
 
 #### 3) Modelagem estatística para força e direção das relações
 
@@ -1043,16 +1043,16 @@ Os métodos abaixo serão definidos *antes da execução* para evitar p-hacking 
 - Kolmogorov–Smirnov  
 
 #### Comparações entre grupos
-- **t-test** (paramétrico)  
-- **Mann–Whitney U** (não paramétrico)  
+- t-test (paramétrico)  
+- Mann–Whitney U (não paramétrico)  
 
 #### Comparações de três ou mais grupos
-- **ANOVA**  
-- **Kruskal–Wallis**  
+- ANOVA  
+- Kruskal–Wallis  
 
 #### Correlação entre smells e métricas
-- **Pearson** (linear, normal)  
-- **Spearman** (monotônica)  
+- Pearson (linear, normal)  
+- Spearman (monotônica)  
 
 #### Regressões
 - Regressão linear múltipla  
@@ -1078,14 +1078,14 @@ Os métodos abaixo serão definidos *antes da execução* para evitar p-hacking 
 
 #### Dados faltantes
 
-1. **Falhas de parsing/AST**  
+1. Falhas de parsing/AST  
    - Exclui-se apenas a métrica faltante daquele componente.  
    - Excluir componente inteiro apenas se > 30% das métricas estiverem ausentes.
 
-2. **Ausências legítimas**  
-   - Métricas que naturalmente não se aplicam (ex.: componente sem efeitos) → valor = **0**.
+2. Ausências legítimas  
+   - Métricas que naturalmente não se aplicam (ex.: componente sem efeitos) → valor = 0.
 
-3. **Faltas em avaliações de especialistas**  
+3. Faltas em avaliações de especialistas  
    - Se 1 avaliador responde → mantém.  
    - Se nenhum responde → componente excluído apenas da análise qualitativa.
 
@@ -1103,7 +1103,7 @@ Tratamento:
 - Se impedir testes paramétricos → aplicar log-transform ou usar testes não paramétricos.
 
 Regra geral:  
-**Nenhum outlier será removido sem justificativa documentada.**
+Nenhum outlier será removido sem justificativa documentada.
 
 ---
 
@@ -1115,7 +1115,7 @@ Os dados qualitativos virão de:
 - justificativas de notas  
 - observações sobre smells e problemas estruturais  
 
-Será usada **Análise de Conteúdo Temática**, com três etapas:
+Será usada Análise de Conteúdo Temática, com três etapas:
 
 #### Etapa 1 — Codificação aberta
 Identificação de categorias emergentes, como:
@@ -1144,87 +1144,93 @@ Agrupamento em temas gerais:
 
 
 ## 13. Avaliação de validade (ameaças e mitigação)
+Esta seção segue rigorosamente a classificação e a terminologia apresentada por Wohlin et al. (2012), adaptada ao contexto do estudo: a investigação observacional sobre a relação entre code smells documentados em React (variáveis independentes) e as métricas estruturais M1–M12 propostas neste trabalho (variáveis dependentes).
 
 ### 13.1 Validade de conclusão
+A validade de conclusão diz respeito à capacidade de tirar conclusões estatísticas corretas sobre a relação entre code smells (tratamento observado) e as métricas estruturais (resultado). As principais ameaças e mitigações são:
 
-Ameaças:
+#### Low statistical power
 
-* Baixo poder estatístico devido a tamanho reduzido de amostra ou variabilidade alta entre repositórios.
-* Violação de suposições estatísticas (normalidade, homogeneidade de variâncias) ao aplicar testes paramétricos.
-* Erros de medida gerados por parsing incorreto, heurísticas imprecisas ou falhas do detector de métricas.
-* Correlação não genuína causada por múltiplas comparações estatísticas sem correção adequada.
+- Ameaça: Se o número de componentes analisados for pequeno, ou se a distribuição entre smell / no smell for muito desigual, alguns efeitos reais podem não ser detectados.
+- Mitigação: Aumentar o número total de componentes analisados (1000–3000). Garantir proporção mínima por smell (≥ 30 por grupo).
 
-Mitigação:
+#### Random heterogeneity of subjects
 
-* Garantir n ≥ 100 componentes na amostra final e avaliação prévia de variabilidade durante o piloto.
-* Usar testes não paramétricos automaticamente quando suposições forem violadas (KS, Mann-Whitney, Kendall τ).
-* Validar métricas com amostra manual e cálculo de precisão/recall para reduzir erros sistemáticos.
-* Aplicar correção de múltiplas comparações (Bonferroni ou FDR) quando necessário.
-* Usar análise de sensibilidade: repetir com subconjuntos estratificados por tamanho, tipo e repo.
+Aqui, os “sujeitos” são componentes React coletados de diversos projetos.
+
+- Ameaça: Heterogeneidade extrema (design systems, apps com server components, monorepos complexos) pode aumentar a variância dos dados e mascarar efeitos.
+- Mitigação: Estratificação por tipo de projeto (Next.js, CRA, Design Systems). Comparações dentro de cada estrato.
 
 ---
 
 ### 13.2 Validade interna
 
-Ameaças:
+#### History
 
-* Selection bias: repositórios selecionados podem não representar a população real de projetos React.
-* History/maturation: alterações recentes nos repositórios podem impactar métricas temporais (p.ex. churn).
-* Confounders não controlados: uso de UI libraries, padrões arquiteturais específicos, monorepos, codegen.
-* Instrumentação diferencial: alguns projetos podem ser analisados com menos precisão que outros devido a complexidade sintática.
+- Ameaça: Componentes analisados em diferentes janelas de tempo podem refletir práticas de desenvolvimento distintas (React 16 vs 19).
+- Mitigação: Restringir análise aos últimos 12 meses de commits. Excluir código legado ou abandonado.
 
-Mitigação:
+#### Selection
 
-* Seleção estratificada de repositórios por stars, atividade, tipo e tamanho.
-* Utilizar apenas commits dentro de uma janela temporal consistente (ex.: últimos 12 meses).
-* Registrar e controlar variáveis de confusão via estratificação (com/sem UI libs, monorepo vs standalone).
-* Uniformizar instrumentação: fallback para Babel e logs de parsing para todos os arquivos.
+- Ameaça: Escolha enviesada de repositórios pode gerar correlação artificial (ex.: repositórios high-quality tendem a usar padrões melhores).
+- Mitigação: Amostragem estratificada baseada em Stars, atividade e tipo de projeto. Seleção automatizada, sem julgamento subjetivo.
 
----
+#### Ambiguity about Direction of Causal Influence
+
+- Ameaça: Como o experimento é observacional, não é possível afirmar causalidade: smells podem causar métricas altas, métricas altas podem facilitar smells, um terceiro fator pode causar ambos.
+- Mitigação: Interpretar resultados como associações, não causalidade. Modelos multivariados controlando fatores estruturais. Discussão explícita da impossibilidade de inferência causal.
 
 ### 13.3 Validade de constructo
 
-Ameaças:
+Refere-se à ligação entre o que é medido (métricas M1–M12) e o conceito abstrato de “qualidade estrutural”.
 
-* Métricas podem não representar adequadamente o conceito de “qualidade estrutural”.
-* Ambiguidade nas métricas abstratas.
-* Interpretações distintas entre avaliadores humanos.
+#### Confounding Constructs and Levels
 
-Mitigação:
+- Ameaça: Não é apenas “tem smell ou não tem”, mas também o grau do smell (por exemplo, nível de prop drilling).
+- Mitigação: Registrar intensidade quando aplicável. Modelos que usam escalas contínuas em vez de binárias.
 
-* Definir operacionalmente cada métrica com regras, thresholds e exemplos concretos.
-* Validar construtos com especialistas React (3–5 devs seniors) usando amostra de componentes rotulados manualmente.
-* Calcular coeficiente Kappa para verificar consistência das avaliações manuais.
-* Documentar claramente a ligação entre cada métrica → pergunta GQM → objetivo estratégico.
+
+#### Inadequate Preoperational Explication of Constructs
+
+- Ameaça: As métricas podem não capturar adequadamente o construto de “qualidade estrutural”.
+- Mitigação: Definir cada métrica com formalização: fórmula, thresholds e exemplos. Mapeamento explícito métrica → pergunta GQM → objetivo
 
 ---
 
 ### 13.4 Validade externa
 
-Ameaças:
+#### Interaction of Selection and Treatment
 
-* Resultados podem generalizar apenas para projetos open-source, não para sistemas privados corporativos.
-* Variações de stack (Next.js, Remix, Expo) podem gerar métricas distintas.
-* Projetos com uso pesado de UI libraries, code generation ou meta-frameworks podem não ser comparáveis.
+- Ameaça: Repositórios open-source podem não representar sistemas privados corporativos.
+- Mitigação: Documentar claramente o escopo de generalização. Incluir subsets específicos (ex.: design systems, apps grandes).
 
-Mitigação:
+#### Interaction of Setting and Treatment
 
-* Deixar explícito que a generalização é válida principalmente para React OSS com componentes manuais.
-* Testar sensibilidade em subsets (Next.js, CRA, monorepo, design systems).
-* Documentar limitações de uso em projetos corporativos que diferem fortemente do ecossistema OSS.
+- Ameaça: Ferramentas, padrões e práticas de OSS podem ser diferentes do ambiente empresarial real.
+- Mitigação: Classificar os projetos por tipo de stack (Next.js, CRA, Expo). Analisar separadamente subsets relevantes.
+
+#### Interaction of History and Treatment
+
+- Ameaça: As conclusões podem valer apenas para o ecossistema atual de React (Hooks API, React 19).
+- Mitigação: Registrar versão das bibliotecas utilizadas. Indicar que resultados podem mudar com futuras APIs (ex.: server components, actions).
 
 ---
 
 ### 13.5 Resumo das principais ameaças e mitigação
 
-| Ameaça                                  | Tipo       | Ação de Mitigação                                            |
-| --------------------------------------- | ---------- | ------------------------------------------------------------ |
-| Erros de medida                         | Conclusão  | Validação manual + precisão/recall                           |
-| Seleção enviesada de repositórios       | Interna    | Amostragem estratificada                                     |
-| Construção inadequada de métricas       | Constructo | Definição operacional + consenso de especialistas            |
-| Variabilidade temporal dos repositórios | Interna    | Janela de commits padronizada                                |
-| Generalização limitada                  | Externa    | Documentação dos contextos válidos e inválidos               |
-| Violações estatísticas                  | Conclusão  | Testes não paramétricos + correções de múltiplas comparações |
+| Categoria de Validade | Ameaça Utilizada                                        | Ação de Mitigação                                                                                                        |
+| --------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Conclusão         | Low statistical power                               | Aumentar o número de componentes; garantir proporção mínima por smell; estratificar adequadamente.                       |
+| Conclusão         | Random heterogeneity of subjects                    | Estratificação por tipo de projeto (Next.js, CRA, Design Systems); análises dentro de cada estrato.                      |
+| Interna           | History                                             | Restringir análise à janela de commits dos últimos 12 meses; excluir código legado/abandonado.                           |
+| Interna           | Selection                                           | Amostragem estratificada com critérios objetivos (Stars, atividade, tipo); seleção automatizada.                         |
+| Interna           | Ambiguity about Direction of Causal Influence       | Interpretar somente como associação; usar modelos multivariados; declarar explicitamente impossibilidade de causalidade. |
+| Constructo        | Confounding Constructs and Levels                   | Registrar intensidade do smell; empregar variáveis contínuas quando aplicável.                                           |
+| Constructo        | Inadequate Preoperational Explication of Constructs | Definir operacionalmente cada métrica; incluir exemplos e thresholds; mapear métrica → GQM → objetivo.                   |
+| Externa           | Interaction of Selection and Treatment              | Delimitar claramente o escopo de generalização; analisar subsets como design systems e projetos grandes.                 |
+| Externa           | Interaction of Setting and Treatment                | Classificar projetos por tipo de stack; comparar ambientes OSS versus cenários corporativos.                             |
+| Externa           | Interaction of History and Treatment                | Registrar versões das libs (React, bundler, framework); documentar dependência da API atual (Hooks, Server Components).  |
+
 
 ---
 
